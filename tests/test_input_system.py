@@ -50,6 +50,41 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(len(in_sys.mastermind.current_history), 0)
         self.assertEqual(len(in_sys.mastermind.entire_history), 0)
 
+    def test_guess_take_input(self):
+        in_sys = InputSystem()
+
+        custom_seq = [1, 2, 3, 4]
+        in_sys.mastermind.gen_sequence = custom_seq
+
+        win, valid = in_sys.take_input("1 5 4 3")
+
+        self.assertFalse(win)
+        self.assertTrue(valid)
+        self.assertEqual(in_sys.round, 2)
+        self.assertEqual(in_sys.game, 1)
+
+        win, valid = in_sys.take_input("1 2 3 4")
+
+        self.assertTrue(win)
+        self.assertTrue(valid)
+        self.assertEqual(in_sys.round, 1)
+        self.assertEqual(in_sys.game, 2)
+
+    def test_reset_take_input(self):
+        in_sys = InputSystem()
+
+        # invalid sequence assignment (since only >= 0 will be created).
+        in_sys.mastermind.gen_sequence = [-1, -1, -1, -1]
+        old_seq = in_sys.mastermind.gen_sequence
+
+        win, valid = in_sys.take_input("reset")
+
+        self.assertFalse(win)
+        self.assertTrue(valid)
+
+        self.assertEqual(in_sys.round, 1)
+        self.assertNotEqual(in_sys.mastermind.gen_sequence, old_seq)
+
 
 if __name__ == "__main__":
     unittest.main()
