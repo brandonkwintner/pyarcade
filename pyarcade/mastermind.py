@@ -1,4 +1,5 @@
 from typing import Optional, List
+from pyarcade.eval_input import Evaluation
 import random
 
 
@@ -23,12 +24,63 @@ class Mastermind:
         self.entire_history = []
 
     def generate_hidden_sequence(self) -> List[int]:
-        """
+        """ Generates a hidden sequence for mastermind game.
+
         Returns:
-            hidden_sequence List[int]: A sequence of integers to be guessed by the player.
+            hidden_sequence List[int]: A sequence of integers to be guessed.
+
         """
 
         self.gen_sequence = \
             [random.randint(0, self.max_range) for _ in range(self.width)]
 
         return self.gen_sequence
+
+    def guess_sequence(self, guess: List[int]) -> bool:
+        """ Checks if guess matches the hidden sequence.
+
+        Returns:
+            result (bool): True if correct, false otherwise.
+
+        """
+
+        if len(guess) != len(self.gen_sequence):
+            return False
+
+        for num in guess:
+            if not isinstance(num, int) or num < 0 or num > 9:
+                return False
+
+        history = []
+
+        for idx in range(len(guess)):
+            guess_num = guess[idx]
+            if guess_num == self.gen_sequence[idx]:
+                history.append((guess_num, Evaluation.CORRECT))
+            elif guess_num in self.gen_sequence:
+                history.append((guess_num, Evaluation.SOMEWHERE))
+            else:
+                history.append((guess_num, Evaluation.INCORRECT))
+
+        self.current_history.append(history)
+
+        if guess == self.gen_sequence:
+            self.correct_guess()
+            return True
+        else:
+            return False
+
+    def correct_guess(self):
+        """ Correct guess was issued, add current history to entire histor
+        Generate new sequence.
+
+        """
+
+        self.entire_history.append(self.current_history)
+        self.clear_history()
+        self.generate_hidden_sequence()
+
+    def clear_history(self):
+        """ Clears history of current session.
+        """
+        self.current_history = []
