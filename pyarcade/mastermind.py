@@ -27,4 +27,8 @@ class Mastermind:
         Returns:
             hidden_sequence List[int]: A sequence of integers to be guessed by the player.
         """
-        return [random.randint(0, self.max_range) for _ in range(self.width)]
+
+        self.gen_sequence = \
+            [random.randint(0, self.max_range) for _ in range(self.width)]
+
+        return self.gen_sequence
