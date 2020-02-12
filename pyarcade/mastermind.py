@@ -55,6 +55,10 @@ class Mastermind:
 
         for idx in range(len(guess)):
             guess_num = guess[idx]
+
+            # check exact location
+            # check somewhere inside
+            # not in
             if guess_num == self.gen_sequence[idx]:
                 history.append((guess_num, Evaluation.CORRECT))
             elif guess_num in self.gen_sequence:
@@ -80,7 +84,29 @@ class Mastermind:
         self.clear_history()
         self.generate_hidden_sequence()
 
+    def reset_game(self):
+        """ Reset single game. (input reset)
+        """
+
+        self.clear_history()
+        self.generate_hidden_sequence()
+
+    def clear_game(self):
+        """ Clears entire game. (input clear)
+        """
+
+        self.clear_all_history()
+        self.generate_hidden_sequence()
+
+    def clear_all_history(self):
+        """ Clears history of entire game.
+        """
+
+        self.current_history = []
+        self.entire_history = []
+
     def clear_history(self):
         """ Clears history of current session.
         """
+
         self.current_history = []
