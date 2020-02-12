@@ -11,9 +11,16 @@ class Mastermind:
             max_range (int): The range that a single digit can vary
 
     """
-    def __init__(self, width: Optional[int] = 4, max_range: Optional[int] = 10):
+    def __init__(self, width: Optional[int] = 4, max_range: Optional[int] = 9):
         self.width = width
         self.max_range = max_range
+
+        # generated sequence
+        self.gen_sequence = []
+
+        # histories
+        self.current_history = []
+        self.entire_history = []
 
     def generate_hidden_sequence(self) -> List[int]:
         """
