@@ -85,6 +85,20 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(in_sys.round, 1)
         self.assertNotEqual(in_sys.mastermind.gen_sequence, old_seq)
 
+    def test_get_last_guess(self):
+        in_sys = InputSystem()
+
+        self.assertEqual([], in_sys.get_last_guess())
+
+        in_sys.mastermind.gen_sequence = [1, 2, 3, 4]
+        in_sys.make_guess([1, 5, 4, 3])
+
+        expected = [(1, Evaluation.CORRECT.value),
+                    (5, Evaluation.INCORRECT.value),
+                    (4, Evaluation.SOMEWHERE.value),
+                    (3, Evaluation.SOMEWHERE.value)]
+
+        self.assertEqual(expected, in_sys.get_last_guess())
 
 if __name__ == "__main__":
     unittest.main()
