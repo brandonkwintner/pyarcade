@@ -1,5 +1,6 @@
 from typing import Tuple, List
 from pyarcade.mastermind import Mastermind
+import re
 
 
 class InputSystem:
@@ -35,10 +36,35 @@ class InputSystem:
             self.reset()
         elif cmd == "clear":
             self.clear()
+        # matches only input with 4 numbers separated by whitespace
+        elif re.match(r"^\s*[0-9]\s+[0-9]\s+[0-9]\s+[0-9]\s*$", cmd):
+            # turns the string guess into an int list
+            guess = [int(num) for num in cmd.split()]
+            correct_guess = self.make_guess(guess)
+
+            if correct_guess:
+                self.round = 1
+                self.game += 1
+            else:
+                self.round += 1
+
+            win = correct_guess
         else:
             valid_cmd = False
 
         return win, valid_cmd
+
+    def make_guess(self, guess: List[int]) -> bool:
+        """ Checks if guess matches the hidden sequence.
+
+        Args:
+            guess (List[int]): user's guess list
+        Returns:
+            result (bool): True if correct, false otherwise.
+
+        """
+
+        return self.mastermind.guess_sequence(guess)
 
     def reset(self):
         """ Resets the mastermind game to starting state.
