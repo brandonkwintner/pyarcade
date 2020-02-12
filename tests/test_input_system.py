@@ -155,6 +155,29 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertTrue(win)
         self.assertTrue(valid)
 
+    def test_incorrect_take_input(self):
+        in_sys = InputSystem()
+
+        win, valid = in_sys.take_input("someBadInput")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+        win, valid = in_sys.take_input("1 -1 1 1")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+        win, valid = in_sys.take_input("1 1 1")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+        win, valid = in_sys.take_input("10 1 1 1")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+        win, valid = in_sys.take_input("1 1 clear 1")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
 
 if __name__ == "__main__":
     unittest.main()
