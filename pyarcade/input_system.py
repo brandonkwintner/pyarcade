@@ -80,3 +80,17 @@ class InputSystem:
         self.round = 1
         self.game = 1
         self.mastermind.clear_game()
+
+    def get_last_guess(self) -> List[Tuple[int, str]]:
+        """ Retrieves the player's last guess.
+
+        Returns:
+            List[Tuple[int, str]]: The evaluation list of last guess.
+
+        """
+
+        if len(self.mastermind.current_history) < 1:
+            return []
+        # gets # of guess and converts to eval enum into a string value
+        return [(guess[0], guess[1].value)
+                for guess in self.mastermind.current_history[-1]]
