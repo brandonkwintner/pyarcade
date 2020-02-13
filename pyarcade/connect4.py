@@ -100,7 +100,7 @@ class Connect4:
             Returns:
                 True if game has been won.
         """
-        return self.check_win_rows() and self.check_win_cols()
+        return self.check_win_rows() or self.check_win_cols()
 
     def check_win_cols(self) -> bool:
         """ Checks if a player has won vertically.
