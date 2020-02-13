@@ -54,23 +54,87 @@ class Connect4:
 
         return C4State.X if len(self.current_history) % 2 == 0 else C4State.O
 
-    def guess_sequence(self, row: int, col: int) -> bool:
+    def guess_sequence(self, col: int) -> bool:
         """ Inputs a player's move.
 
             Args:
-                col - x position, indexed at 0.
-                row - y position, indexed at 0.
+                col - column to drop "piece" in
 
             Returns:
                 True if winning move was made.
 
         """
 
-        if not isinstance(row, int) or not isinstance(col, int):
-            return False
-        elif row < 0 or col < 0:
-            return False
-        elif row >= Connect4.MAX_ROWS or col >= Connect4.MAX_COLS:
+        row = self.get_free_row(col)
+
+        if row == -1:
             return False
 
         self.current_history[row][col] = self.get_turn()
+        return self.check_win()
+
+    def get_free_row(self, col: int) -> int:
+        """ Gets a free row given a column.
+
+            Returns:
+                index of free row or -1 if row is full or invalid input.
+        """
+
+        # parameter checking
+        if not isinstance(col, int):
+            return -1
+        elif col < 0 or col >= Connect4.MAX_COLS:
+            return -1
+
+        # start at bottom, going up given a column
+        for row in reversed(range(Connect4.MAX_ROWS)):
+            # found empty [row][col]
+            if self.current_history[row][col] == C4State.E:
+                return row
+
+        return -1
+
+    def check_win(self) -> bool:
+        """ Checks if a player has won on the current board.
+
+            Returns:
+                True if game has been won.
+        """
+        return self.check_win_rows() and self.check_win_cols()
+
+    def check_win_cols(self) -> bool:
+        """ Checks if a player has won vertically.
+
+            Returns:
+                True if game has been won.
+
+        """
+
+        lookahead_limit = Connect4.MAX_ROWS - 3
+
+        for col in range(Connect4.MAX_COLS):
+            for row in range(lookahead_limit):
+                if self.current_history[row][col] != 0 and \
+                        self.current_history[row][col] == \
+                        self.current_history[row+1][col] == \
+                        self.current_history[row+2][col] == \
+                        self.current_history[row+3][col]:
+                    return True
+
+        return False
+
+    def check_win_rows(self) -> bool:
+        """ Checks if a player has won horizontally.
+
+            Returns:
+                True if game has been won.
+
+        """
+        # e.g., 7 - 3 = 4, limit to 4 iterations
+        lookahead_limit = Connect4.MAX_COLS - 3
+
+        for row in self.current_history:
+            for idx in range(lookahead_limit):
+                if row[idx] != C4State.O and \
+                        row[idx] == row[idx+1] == row[idx+2] == row[idx+3]:
+                    return True
