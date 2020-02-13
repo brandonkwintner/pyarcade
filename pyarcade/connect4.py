@@ -1,3 +1,4 @@
+from pyarcade.connect4_states import C4State
 
 
 class Connect4:
@@ -7,12 +8,21 @@ class Connect4:
         # all previous games
         self.entire_history = []
         # current 6x7 board
-        self.current_history = []
+        self.current_history = Connect4.setup_board()
 
-    def setup_board(self):
+    @staticmethod
+    def setup_board():
         """ Sets up a blank connect 4 game.
 
             Returns:
                 6x7 Array of empty states
         """
-        return []
+        board = []
+
+        for row in range(6):
+            # array of size 7 filled with empty states
+            row_array = [C4State.E] * 7
+
+            board.append(row_array)
+
+        return board
