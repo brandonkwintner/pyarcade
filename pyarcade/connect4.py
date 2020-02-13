@@ -19,10 +19,23 @@ class Connect4:
         """
         board = []
 
-        for row in range(6):
+        for _ in range(6):
             # array of size 7 filled with empty states
             row_array = [C4State.E] * 7
 
             board.append(row_array)
 
         return board
+
+    def reset_game(self):
+        """ Reset single game. (input reset)
+        """
+
+        self.current_history = Connect4.setup_board()
+
+    def clear_game(self):
+        """ Clears entire game. (input clear)
+        """
+
+        self.entire_history = []
+        self.current_history = Connect4.setup_board()
