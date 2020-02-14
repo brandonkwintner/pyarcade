@@ -61,7 +61,7 @@ class Connect4:
                 col - column to drop "piece" in
 
             Returns:
-                True if winning move was made.
+                True if winning move was made False otherwise.
 
         """
 
@@ -100,13 +100,14 @@ class Connect4:
             Returns:
                 True if game has been won.
         """
-        return self.check_win_rows() or self.check_win_cols()
+        return self.check_win_rows() or self.check_win_cols() \
+            or self.check_win_diag_up() or self.check_win_diag_down()
 
     def check_win_cols(self) -> bool:
         """ Checks if a player has won vertically.
 
             Returns:
-                True if game has been won.
+                True if game has been won False otherwise.
 
         """
 
@@ -114,7 +115,7 @@ class Connect4:
 
         for col in range(Connect4.MAX_COLS):
             for row in range(lookahead_limit):
-                if self.current_history[row][col] != 0 and \
+                if self.current_history[row][col] != C4State.E and \
                         self.current_history[row][col] == \
                         self.current_history[row+1][col] == \
                         self.current_history[row+2][col] == \
@@ -127,7 +128,7 @@ class Connect4:
         """ Checks if a player has won horizontally.
 
             Returns:
-                True if game has been won.
+                True if game has been won False otherwise.
 
         """
         # e.g., 7 - 3 = 4, limit to 4 iterations
@@ -135,6 +136,57 @@ class Connect4:
 
         for row in self.current_history:
             for idx in range(lookahead_limit):
-                if row[idx] != C4State.O and \
+                if row[idx] != C4State.E and \
                         row[idx] == row[idx+1] == row[idx+2] == row[idx+3]:
                     return True
+
+        return False
+
+    def check_win_diag_up(self):
+        """ Checks if a player has won diagonally.
+            (y = x).
+
+            Returns:
+                True if game has been won False otherwise.
+
+        """
+
+        for row in reversed(range(Connect4.MAX_ROWS)):
+            for col in range(Connect4.MAX_COLS):
+                # disregard starting point with x < 3 or y > 3
+                # since they are not able to get 4 in a row
+                if row < 3 or col > 3:
+                    break
+
+                if self.current_history[row][col] != C4State.E and \
+                        self.current_history[row][col] == \
+                        self.current_history[row - 1][col + 1] == \
+                        self.current_history[row - 2][col + 2] == \
+                        self.current_history[row - 3][col + 3]:
+                    return True
+
+        return False
+
+    def check_win_diag_down(self):
+        """ Checks if a player has won diagonally.
+            (y = -x).
+
+            Returns:
+                True if game has been won False otherwise.
+
+        """
+
+        for row in range(Connect4.MAX_ROWS):
+            for col in range(Connect4.MAX_COLS):
+                if row > 2 or col > 3:
+                    break
+
+                if self.current_history[row][col] != 0 and \
+                        self.current_history[row][col] == \
+                        self.current_history[row + 1][col + 1] == \
+                        self.current_history[row + 2][col + 2] == \
+                        self.current_history[row + 3][col + 3]:
+                    return True
+
+        return False
+
