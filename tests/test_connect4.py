@@ -11,7 +11,6 @@ class Connect4TestCase(unittest.TestCase):
         self.assertEqual(len(game.current_history), 6)
         self.assertEqual(len(game.current_history[0]), 7)
 
-
     def test_board_setup(self):
         # static method, returns 6x7 board of all empty states
         expected = [[C4State.E] * 7] * 6
