@@ -181,7 +181,7 @@ class Connect4:
                 if row > 2 or col > 3:
                     break
 
-                if self.current_history[row][col] != 0 and \
+                if self.current_history[row][col] != C4State.E and \
                         self.current_history[row][col] == \
                         self.current_history[row + 1][col + 1] == \
                         self.current_history[row + 2][col + 2] == \
