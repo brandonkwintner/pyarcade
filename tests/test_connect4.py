@@ -186,11 +186,35 @@ class Connect4TestCase(unittest.TestCase):
             self.assertTrue(game.check_win_cols())
             Connect4TestCase._shift_2d_array(game.current_history)
 
-    def test_check_win_diag_up(self):
-        self.assertTrue(True)
-
     def test_check_win_diag_down(self):
-        self.assertTrue(True)
+        game = Connect4()
+
+        # from the top downwards
+        for row in range(2):
+            for idx in range(4):
+                game.current_history[idx+row][idx+row] = C4State.X
+
+            # shift right
+            for _ in range(3):
+                self.assertTrue(game.check_win_diag_down())
+                Connect4TestCase._shift_2d_array(game.current_history)
+
+            game.setup_board()
+
+    def test_check_win_diag_up(self):
+        game = Connect4()
+
+        for idx in range(2):
+            col = 0
+            for row in reversed(range(4)):
+                game.current_history[row+idx][col+idx] = C4State.X
+                col += 1
+
+            for _ in range(3):
+                self.assertTrue(game.check_win_diag_up())
+                Connect4TestCase._shift_2d_array(game.current_history)
+
+            game.setup_board()
 
     def test_check_win(self):
         self.assertTrue(True)
