@@ -4,6 +4,33 @@ import unittest
 
 
 class Connect4TestCase(unittest.TestCase):
+    @staticmethod
+    def _shift_array(array):
+        if not isinstance(array, list):
+            return None
+
+        right = array.pop()
+        array.insert(0, right)
+
+    @staticmethod
+    def _shift_2d_array(array):
+        if not isinstance(array, list):
+            return None
+
+        for sub in array:
+            Connect4TestCase._shift_array(sub)
+
+    def test_for_shifting(self):
+        array = [
+            [2, 3, 1],
+            [5, 6, 4]
+        ]
+
+        expected = [[1, 2, 3], [4, 5, 6]]
+        Connect4TestCase._shift_2d_array(array)
+
+        self.assertEqual(expected, array)
+
     def test_init(self):
         game = Connect4()
 
@@ -116,15 +143,48 @@ class Connect4TestCase(unittest.TestCase):
             win_row.pop()
             win_row.insert(0, C4State.O)
 
-            for idx in range(len(game.current_history)):
+            for idx in range(Connect4.MAX_ROWS):
                 # move the win row down
                 game.current_history[idx] = win_row
                 self.assertFalse(game.check_win_rows())
                 # go back to original
                 game.current_history = og_board.copy()
 
-    def test_check_win_cols(self):
-        self.assertTrue(True)
+    def test_check_win_cols_top(self):
+        game = Connect4()
+
+        # 7 - 2 = 5 (-1 for range) rows to change
+        for idx in range(Connect4.MAX_ROWS - 2):
+            game.current_history[idx].pop()
+            game.current_history[idx].insert(0, C4State.X)
+
+        for _ in range(Connect4.MAX_COLS):
+            self.assertTrue(game.check_win_cols())
+            Connect4TestCase._shift_2d_array(game.current_history)
+
+    def test_check_win_cols_mid(self):
+        game = Connect4()
+
+        # 7 - 2 = 5 (-1 for range) rows to change
+        for idx in range(Connect4.MAX_ROWS - 2):
+            game.current_history[idx+1].pop()
+            game.current_history[idx+1].insert(0, C4State.X)
+
+        for _ in range(Connect4.MAX_COLS):
+            self.assertTrue(game.check_win_cols())
+            Connect4TestCase._shift_2d_array(game.current_history)
+
+    def test_check_win_cols_bottom(self):
+        game = Connect4()
+
+        # 7 - 2 = 5 (-1 for range) rows to change
+        for idx in range(Connect4.MAX_ROWS - 2):
+            game.current_history[idx+2].pop()
+            game.current_history[idx+2].insert(0, C4State.X)
+
+        for _ in range(Connect4.MAX_COLS):
+            self.assertTrue(game.check_win_cols())
+            Connect4TestCase._shift_2d_array(game.current_history)
 
     def test_check_win_diag_up(self):
         self.assertTrue(True)
