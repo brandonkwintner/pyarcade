@@ -3,15 +3,18 @@ from typing import List
 
 
 class Connect4:
-    MAX_ROWS = 6
-    MAX_COLS = 7
     """ A class representing a Connect4 game session
     """
+
+    MAX_ROWS = 6
+    MAX_COLS = 7
+
     def __init__(self):
         # all previous games
         self.entire_history = []
         # current 6x7 board
         self.current_history = Connect4.setup_board()
+        self.turn = 0
 
     @staticmethod
     def setup_board() -> List[List[C4State]]:
@@ -47,12 +50,12 @@ class Connect4:
         """ Determines the turn of the 2 players.
 
             Returns:
-                C4State.X if even
-                C4State.O if odd
+                C4State.X if turn even
+                C4State.O if turn odd
 
         """
 
-        return C4State.X if len(self.current_history) % 2 == 0 else C4State.O
+        return C4State.X if self.turn % 2 == 0 else C4State.O
 
     def guess_sequence(self, col: int) -> bool:
         """ Inputs a player's move.
