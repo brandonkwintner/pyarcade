@@ -74,6 +74,8 @@ class Connect4:
             return False
 
         self.current_history[row][col] = self.get_turn()
+        self.turn += 1
+
         return self.check_win()
 
     def get_free_row(self, col: int) -> int:
