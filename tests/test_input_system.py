@@ -8,6 +8,10 @@ import unittest
 
 
 class InputSystemTestCase(unittest.TestCase):
+    @staticmethod
+    def _get_empty_c4_board_str():
+        return [[C4State.E.value] * Connect4.MAX_COLS] * Connect4.MAX_ROWS
+
     def test_init_mastermind(self):
         in_sys = InputSystem()
 
@@ -110,11 +114,13 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(in_sys.round, 1)
         self.assertEqual(in_sys.game_num, 2)
 
+        in_sys.game.gen_sequence = [1, 2, 3, 4]
+        self.assertEqual((False, True), in_sys.take_input("   1  2 3 5   "))
+
     def test_guess_take_input_c4(self):
         in_sys = InputSystem(Game.CONNECT4)
 
-#todo
-        # self.assertEqual(f"Player {C4State.X.value}", in_sys.get_round_info())
+        self.assertEqual(f"Player {C4State.X.value}:", in_sys.get_round_info())
         win, valid = in_sys.take_input("1")
 
         self.assertFalse(win)
@@ -122,13 +128,17 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(in_sys.round, 2)
         self.assertEqual(in_sys.game_num, 1)
 
-        # correct sequence
+        self.assertEqual(f"Player {C4State.O.value}:", in_sys.get_round_info())
+
+        # invalid input for c4
         win, valid = in_sys.take_input("1 2 3 4")
 
         self.assertFalse(win)
         self.assertFalse(valid)
 
-    def test_reset_take_input(self):
+        self.assertEqual((False, True), in_sys.take_input("   1   "))
+
+    def test_reset_take_input_mastermind(self):
         in_sys = InputSystem()
 
         # invalid sequence assignment (since only >= 0 will be created).
@@ -143,7 +153,19 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(in_sys.round, 1)
         self.assertNotEqual(in_sys.game.gen_sequence, old_seq)
 
-    def test_get_last_guess(self):
+    def test_reset_take_input_c4(self):
+        in_sys = InputSystem(Game.CONNECT4)
+
+        in_sys.take_input("1")
+        win, valid = in_sys.take_input("reset")
+
+        self.assertFalse(win)
+        self.assertTrue(valid)
+
+        self.assertEqual(in_sys.round, 1)
+        self.assertEqual(Connect4.setup_board(), in_sys.game.current_history)
+
+    def test_get_last_guess_mastermind(self):
         in_sys = InputSystem()
 
         self.assertEqual([], in_sys.get_last_guess())
@@ -158,7 +180,24 @@ class InputSystemTestCase(unittest.TestCase):
 
         self.assertEqual(expected, in_sys.get_last_guess())
 
-    def test_clear_take_input(self):
+    def test_get_last_guess_c4(self):
+        in_sys = InputSystem(Game.CONNECT4)
+
+        self.assertEqual(InputSystemTestCase._get_empty_c4_board_str(),
+                         in_sys.get_last_guess())
+
+        in_sys.take_input("1")
+
+        expected = InputSystemTestCase._get_empty_c4_board_str().copy()
+        expected.pop()
+        last_row = [C4State.E.value] * (Connect4.MAX_COLS-1)
+        last_row.insert(0, C4State.X.value)
+
+        expected.insert(len(expected), last_row)
+
+        self.assertEqual(expected, in_sys.get_last_guess())
+
+    def test_clear_take_input_mastermind(self):
         in_sys = InputSystem()
 
         in_sys.game.gen_sequence = [-1, -1, -1, -1]
@@ -174,7 +213,21 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(in_sys.get_last_guess(), [])
         self.assertNotEqual(in_sys.game.gen_sequence, old_seq)
 
-    def test_correct_take_input_many(self):
+    def test_clear_take_input_c4(self):
+        in_sys = InputSystem(Game.CONNECT4)
+
+        in_sys.take_input("1")
+
+        win, valid = in_sys.take_input("clear")
+
+        self.assertFalse(win)
+        self.assertTrue(valid)
+
+        self.assertEqual(in_sys.round, 1)
+        self.assertEqual(in_sys.game_num, 1)
+        self.assertEqual(Connect4.setup_board(), in_sys.game.current_history)
+
+    def test_correct_take_input_many_mastermind(self):
         in_sys = InputSystem()
 
         custom_seq = [1, 2, 3, 4]
@@ -212,7 +265,33 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertTrue(win)
         self.assertTrue(valid)
 
-    def test_incorrect_take_input(self):
+    def test_correct_take_input_many_c4(self):
+        in_sys = InputSystem(Game.CONNECT4)
+
+        self.assertEqual((False, True), in_sys.take_input("1"))
+        self.assertEqual((False, True), in_sys.take_input("2"))
+        self.assertEqual((False, True), in_sys.take_input("1"))
+        self.assertEqual((False, True), in_sys.take_input("2"))
+        self.assertEqual((False, True), in_sys.take_input("1"))
+        self.assertEqual((False, True), in_sys.take_input("2"))
+
+        self.assertEqual(7, in_sys.round)
+
+        self.assertEqual((True, True), in_sys.take_input("1"))
+        self.assertEqual(Connect4.setup_board(), in_sys.game.current_history)
+        self.assertEqual(1, in_sys.round)
+        self.assertEqual(2, in_sys.game_num)
+
+        self.assertEqual((False, True), in_sys.take_input("1"))
+        self.assertEqual((False, True), in_sys.take_input("reset"))
+        self.assertEqual(Connect4.setup_board(), in_sys.game.current_history)
+        self.assertEqual(2, in_sys.game_num)
+
+        self.assertEqual((False, True), in_sys.take_input("clear"))
+        self.assertEqual(Connect4.setup_board(), in_sys.game.current_history)
+        self.assertEqual(1, in_sys.game_num)
+
+    def test_incorrect_take_input_mastermind(self):
         in_sys = InputSystem()
 
         win, valid = in_sys.take_input("someBadInput")
@@ -234,6 +313,75 @@ class InputSystemTestCase(unittest.TestCase):
         win, valid = in_sys.take_input("1 1 clear 1")
         self.assertFalse(win)
         self.assertFalse(valid)
+
+    def test_incorrect_take_input_c4(self):
+        in_sys = InputSystem(Game.CONNECT4)
+
+        win, valid = in_sys.take_input("someBadInput")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+        win, valid = in_sys.take_input("1 -1 1 1")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+        win, valid = in_sys.take_input("0")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+        win, valid = in_sys.take_input("-1")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+        win, valid = in_sys.take_input(f"{Connect4.MAX_COLS+1}")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+        win, valid = in_sys.take_input("1 clear")
+        self.assertFalse(win)
+        self.assertFalse(valid)
+
+    def test_make_guess_for_mastermind_invalid(self):
+        in_sys = InputSystem(Game.CONNECT4)
+
+        self.assertFalse(in_sys.make_guess_for_mastermind([1]))
+
+    def test_make_guess_for_mastermind(self):
+        in_sys = InputSystem()
+
+        in_sys.game.gen_sequence = [1, 1, 1, 1]
+        self.assertTrue(in_sys.make_guess_for_mastermind([1, 1, 1, 1]))
+
+    def test_make_guess_for_c4_invalid(self):
+        in_sys = InputSystem()
+
+        self.assertFalse(in_sys.make_guess_for_connect4([1, 2, 3, 4]))
+
+        in_sys = InputSystem(Game.CONNECT4)
+        self.assertFalse(in_sys.make_guess_for_connect4(1))
+        self.assertFalse(in_sys.make_guess_for_connect4([]))
+        self.assertFalse(in_sys.make_guess_for_connect4(["1"]))
+
+    def test_make_guess_for_c4(self):
+        in_sys = InputSystem(Game.CONNECT4)
+
+        self.assertFalse(in_sys.make_guess_for_connect4([1]))
+
+    def test_get_round_info_for_mastermind(self):
+        in_sys = InputSystem()
+
+        self.assertEqual("Round #1:", in_sys.get_round_info())
+
+        in_sys.game.gen_sequence = [1, 1, 1, 1]
+        in_sys.take_input("1 2 3 4")
+        self.assertEqual("Round #2:", in_sys.get_round_info())
+
+    def test_get_round_info_for_c4(self):
+        in_sys = InputSystem(Game.CONNECT4)
+
+        self.assertEqual(f"Player {C4State.X.value}:", in_sys.get_round_info())
+        in_sys.take_input("1")
+        self.assertEqual(f"Player {C4State.O.value}:", in_sys.get_round_info())
 
 
 if __name__ == "__main__":
