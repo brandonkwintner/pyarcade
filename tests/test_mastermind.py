@@ -199,6 +199,21 @@ class MastermindTestCase(unittest.TestCase):
         self.assertEqual(len(game.current_history), 0)
         self.assertEqual(len(game.entire_history), 0)
 
+    def test_get_last_turn(self):
+        game = Mastermind()
+
+        self.assertEqual([], game.get_last_turn())
+
+        game.gen_sequence = [1, 2, 3, 4]
+        game.guess_sequence([1, 3, 2, 5])
+
+        expected = [(1, Evaluation.CORRECT.value),
+                    (3, Evaluation.SOMEWHERE.value),
+                    (2, Evaluation.SOMEWHERE.value),
+                    (5, Evaluation.INCORRECT.value)]
+
+        self.assertEqual(expected, game.get_last_turn())
+
 
 if __name__ == "__main__":
     unittest.main()
