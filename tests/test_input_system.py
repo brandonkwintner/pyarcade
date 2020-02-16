@@ -8,21 +8,21 @@ class InputSystemTestCase(unittest.TestCase):
         in_sys = InputSystem()
 
         self.assertEqual(in_sys.round, 1)
-        self.assertEqual(in_sys.game, 1)
-        self.assertIsNotNone(in_sys.mastermind)
+        self.assertEqual(in_sys.game_num, 1)
+        self.assertIsNotNone(in_sys.game)
 
     def test_make_guess(self):
         in_sys = InputSystem()
 
-        current_seq = in_sys.mastermind.gen_sequence
+        current_seq = in_sys.game.gen_sequence
         # purposely make an incorrect guess
         guess = [x+1 for x in current_seq]
 
-        self.assertFalse(in_sys.make_guess(guess))
+        self.assertFalse(in_sys.make_guess_for_mastermind(guess))
 
-        self.assertEqual(in_sys.game, 1)
+        self.assertEqual(in_sys.game_num, 1)
 
-        self.assertTrue(in_sys.make_guess(current_seq))
+        self.assertTrue(in_sys.make_guess_for_mastermind(current_seq))
 
         self.assertEqual(in_sys.round, 1)
 
@@ -30,38 +30,38 @@ class InputSystemTestCase(unittest.TestCase):
         in_sys = InputSystem()
 
         in_sys.round = 100
-        old_sequence = in_sys.mastermind.gen_sequence
+        old_sequence = in_sys.game.gen_sequence
 
         in_sys.reset()
 
         self.assertEqual(in_sys.round, 1)
-        self.assertEqual(in_sys.game, 1)
-        self.assertIsNot(old_sequence, in_sys.mastermind.gen_sequence)
+        self.assertEqual(in_sys.game_num, 1)
+        self.assertIsNot(old_sequence, in_sys.game.gen_sequence)
 
     def test_clear(self):
         in_sys = InputSystem()
 
-        in_sys.make_guess([1, 2, 3, 4])
+        in_sys.make_guess_for_mastermind([1, 2, 3, 4])
 
-        self.assertEqual(len(in_sys.mastermind.current_history), 1)
+        self.assertEqual(len(in_sys.game.current_history), 1)
 
         in_sys.clear()
 
-        self.assertEqual(len(in_sys.mastermind.current_history), 0)
-        self.assertEqual(len(in_sys.mastermind.entire_history), 0)
+        self.assertEqual(len(in_sys.game.current_history), 0)
+        self.assertEqual(len(in_sys.game.entire_history), 0)
 
     def test_guess_take_input(self):
         in_sys = InputSystem()
 
         custom_seq = [1, 2, 3, 4]
-        in_sys.mastermind.gen_sequence = custom_seq
+        in_sys.game.gen_sequence = custom_seq
 
         win, valid = in_sys.take_input("1 5 4 3")
 
         self.assertFalse(win)
         self.assertTrue(valid)
         self.assertEqual(in_sys.round, 2)
-        self.assertEqual(in_sys.game, 1)
+        self.assertEqual(in_sys.game_num, 1)
 
         # correct sequence
         win, valid = in_sys.take_input("1 2 3 4")
@@ -69,14 +69,14 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertTrue(win)
         self.assertTrue(valid)
         self.assertEqual(in_sys.round, 1)
-        self.assertEqual(in_sys.game, 2)
+        self.assertEqual(in_sys.game_num, 2)
 
     def test_reset_take_input(self):
         in_sys = InputSystem()
 
         # invalid sequence assignment (since only >= 0 will be created).
-        in_sys.mastermind.gen_sequence = [-1, -1, -1, -1]
-        old_seq = in_sys.mastermind.gen_sequence
+        in_sys.game.gen_sequence = [-1, -1, -1, -1]
+        old_seq = in_sys.game.gen_sequence
 
         win, valid = in_sys.take_input("reset")
 
@@ -84,15 +84,15 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertTrue(valid)
 
         self.assertEqual(in_sys.round, 1)
-        self.assertNotEqual(in_sys.mastermind.gen_sequence, old_seq)
+        self.assertNotEqual(in_sys.game.gen_sequence, old_seq)
 
     def test_get_last_guess(self):
         in_sys = InputSystem()
 
         self.assertEqual([], in_sys.get_last_guess())
 
-        in_sys.mastermind.gen_sequence = [1, 2, 3, 4]
-        in_sys.make_guess([1, 5, 4, 3])
+        in_sys.game.gen_sequence = [1, 2, 3, 4]
+        in_sys.make_guess_for_mastermind([1, 5, 4, 3])
 
         expected = [(1, Evaluation.CORRECT.value),
                     (5, Evaluation.INCORRECT.value),
@@ -104,8 +104,8 @@ class InputSystemTestCase(unittest.TestCase):
     def test_clear_take_input(self):
         in_sys = InputSystem()
 
-        in_sys.mastermind.gen_sequence = [-1, -1, -1, -1]
-        old_seq = in_sys.mastermind.gen_sequence
+        in_sys.game.gen_sequence = [-1, -1, -1, -1]
+        old_seq = in_sys.game.gen_sequence
 
         win, valid = in_sys.take_input("clear")
 
@@ -113,22 +113,22 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertTrue(valid)
 
         self.assertEqual(in_sys.round, 1)
-        self.assertEqual(in_sys.game, 1)
+        self.assertEqual(in_sys.game_num, 1)
         self.assertEqual(in_sys.get_last_guess(), [])
-        self.assertNotEqual(in_sys.mastermind.gen_sequence, old_seq)
+        self.assertNotEqual(in_sys.game.gen_sequence, old_seq)
 
     def test_correct_take_input_many(self):
         in_sys = InputSystem()
 
         custom_seq = [1, 2, 3, 4]
-        in_sys.mastermind.gen_sequence = custom_seq
+        in_sys.game.gen_sequence = custom_seq
 
         win, valid = in_sys.take_input("1 5 4 3")
 
         self.assertFalse(win)
         self.assertTrue(valid)
         self.assertEqual(in_sys.round, 2)
-        self.assertEqual(in_sys.game, 1)
+        self.assertEqual(in_sys.game_num, 1)
 
         expected_last_guess = [(1, Evaluation.CORRECT.value),
                                (5, Evaluation.INCORRECT.value),
@@ -149,7 +149,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertTrue(valid)
         self.assertEqual(in_sys.get_last_guess(), [])
 
-        in_sys.mastermind.gen_sequence = custom_seq
+        in_sys.game.gen_sequence = custom_seq
         win, valid = in_sys.take_input("1 2 3 4")
 
         self.assertTrue(win)
