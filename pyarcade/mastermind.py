@@ -18,6 +18,7 @@ class Mastermind:
 
         # generated sequence
         self.gen_sequence = []
+        self.generate_hidden_sequence()
 
         # histories
         self.current_history = []
