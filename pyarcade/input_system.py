@@ -165,6 +165,6 @@ class InputSystem:
         """
 
         if isinstance(self.game, Connect4):
-            return f"Player {self.game.get_turn()}:"
+            return f"Player {self.game.get_turn().value}:"
         else:
             return f"Round #{self.round}:"
