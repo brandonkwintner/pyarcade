@@ -73,10 +73,16 @@ class Connect4:
         if row == -1:
             return False
 
-        self.current_history[row][col] = self.get_turn()
+        current_turn = self.get_turn()
+
+        self.current_history[row][col] = current_turn
         self.turn += 1
 
-        return self.check_win()
+        if self.check_win():
+            self.entire_history.append((self.current_history, current_turn))
+            return True
+        else:
+            return False
 
     def get_free_row(self, col: int) -> int:
         """ Gets a free row given a column.
@@ -194,4 +200,3 @@ class Connect4:
                     return True
 
         return False
-
