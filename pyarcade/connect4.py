@@ -226,5 +226,5 @@ class Connect4:
 
     def player_won(self, player: C4State):
         self.entire_history.append((self.current_history, player))
-        self.current_history = []
+        self.current_history = Connect4.setup_board()
         self.turn = 0
