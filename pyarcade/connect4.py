@@ -79,7 +79,7 @@ class Connect4:
         self.turn += 1
 
         if self.check_win():
-            self.entire_history.append((self.current_history, current_turn))
+            self.player_won(current_turn)
             return True
         else:
             return False
@@ -223,3 +223,8 @@ class Connect4:
             C4State.X.value: player_x_wins,
             C4State.O.value: player_o_wins
                 }
+
+    def player_won(self, player: C4State):
+        self.entire_history.append((self.current_history, player))
+        self.current_history = []
+        self.turn = 0
