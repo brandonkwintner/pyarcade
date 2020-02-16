@@ -1,5 +1,5 @@
 from pyarcade.connect4_states import C4State
-from typing import List
+from typing import List, Mapping
 
 
 class Connect4:
@@ -200,3 +200,26 @@ class Connect4:
                     return True
 
         return False
+
+    def get_last_turn(self) -> List[List[str]]:
+        result = []
+
+        # convert enum into its value
+        for row in self.current_history:
+            result.append([element.value for element in row])
+
+        return result
+
+    def get_wins(self) -> Mapping[str, int]:
+        if len(self.entire_history) < 1:
+            return dict()
+
+        # entire history is a list of tuples (game, winner)
+        # getting tuple[1] returns the winner
+        player_x_wins = len(list(filter(lambda x: x[1] == C4State.X, self.entire_history)))
+        player_o_wins = len(list(filter(lambda x: x[1] == C4State.O, self.entire_history)))
+
+        return {
+            C4State.X.value: player_x_wins,
+            C4State.O.value: player_o_wins
+                }
