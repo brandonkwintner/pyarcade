@@ -21,7 +21,8 @@ class Connect4:
         """ Sets up a blank connect 4 game.
 
             Returns:
-                MAX_ROWS x MAX_COLS 2d array of empty states.
+                MAX_ROWS x MAX_COLS 2D array of empty states.
+
         """
         board = []
 
@@ -89,6 +90,7 @@ class Connect4:
 
             Returns:
                 index of free row or -1 if row is full or invalid input.
+
         """
 
         # parameter checking
@@ -110,6 +112,7 @@ class Connect4:
 
             Returns:
                 True if game has been won.
+
         """
         return self.check_win_rows() or self.check_win_cols() \
             or self.check_win_diag_up() or self.check_win_diag_down()
@@ -153,7 +156,7 @@ class Connect4:
 
         return False
 
-    def check_win_diag_up(self):
+    def check_win_diag_up(self) -> bool:
         """ Checks if a player has won diagonally.
             (y = x).
 
@@ -178,7 +181,7 @@ class Connect4:
 
         return False
 
-    def check_win_diag_down(self):
+    def check_win_diag_down(self) -> bool:
         """ Checks if a player has won diagonally.
             (y = -x).
 
@@ -202,6 +205,14 @@ class Connect4:
         return False
 
     def get_last_turn(self) -> List[List[str]]:
+        """ Gets the latest board state.
+
+            Returns (List[List[str]]):
+                2D array of strings representing
+                player location and empty slots.
+
+        """
+
         result = []
 
         # convert enum into its value
@@ -211,6 +222,13 @@ class Connect4:
         return result
 
     def get_wins(self) -> Mapping[str, int]:
+        """ Gets the wins of each player throughout the game.
+
+            Returns (Mapping[str, int]):
+                {X: # of wins, O: # of wins}
+
+        """
+
         if len(self.entire_history) < 1:
             return dict()
 
@@ -225,6 +243,13 @@ class Connect4:
                 }
 
     def player_won(self, player: C4State):
+        """ Resets game state after player has won.
+
+            Args:
+                player (C4State): player who won.
+
+        """
+
         self.entire_history.append((self.current_history, player))
         self.current_history = Connect4.setup_board()
         self.turn = 0
