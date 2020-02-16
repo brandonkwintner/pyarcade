@@ -83,7 +83,7 @@ class Connect4TestCase(unittest.TestCase):
         self.assertEqual(-1, game.get_free_row(-1))
         # bad type
         self.assertEqual(-1, game.get_free_row("yes"))
-        self.assertEqual(-1, game.get_free_row(7))
+        self.assertEqual(-1, game.get_free_row(Connect4.MAX_COLS))
 
     def test_get_good_single_free_row(self):
         game = Connect4()
@@ -186,6 +186,20 @@ class Connect4TestCase(unittest.TestCase):
             self.assertTrue(game.check_win_cols())
             Connect4TestCase._shift_2d_array(game.current_history)
 
+    def test_check_win_cols_invalid(self):
+        game = Connect4()
+
+        for idx in range(Connect4.MAX_ROWS - 3):
+            game.current_history[idx+1].pop()
+            game.current_history[idx+1].insert(0, C4State.X)
+
+        # skip one row so looks like transpose([x, x, x, -, x])
+        game.current_history[5][0] = C4State.X
+
+        for _ in range(Connect4.MAX_COLS):
+            self.assertFalse(game.check_win_cols())
+            Connect4TestCase._shift_2d_array(game.current_history)
+
     def test_check_win_diag_down(self):
         game = Connect4()
 
@@ -199,7 +213,23 @@ class Connect4TestCase(unittest.TestCase):
                 self.assertTrue(game.check_win_diag_down())
                 Connect4TestCase._shift_2d_array(game.current_history)
 
-            game.setup_board()
+            game.reset_game()
+
+    def test_check_win_diag_down_invalid(self):
+        game = Connect4()
+
+        for row in range(2):
+            for idx in range(3):
+                game.current_history[idx+row][idx+row] = C4State.X
+
+            game.current_history[4+row][4+row] = C4State.X
+
+            # shift right
+            for _ in range(3):
+                self.assertFalse(game.check_win_diag_down())
+                Connect4TestCase._shift_2d_array(game.current_history)
+
+            game.reset_game()
 
     def test_check_win_diag_up(self):
         game = Connect4()
@@ -214,13 +244,88 @@ class Connect4TestCase(unittest.TestCase):
                 self.assertTrue(game.check_win_diag_up())
                 Connect4TestCase._shift_2d_array(game.current_history)
 
-            game.setup_board()
+            game.reset_game()
+
+    def test_check_win_diag_up_invalid(self):
+        game = Connect4()
+
+        for idx in range(2):
+            col = 0
+            for row in reversed(range(3)):
+                game.current_history[row+idx][col+idx] = C4State.X
+                col += 1
+
+            game.current_history[4+idx][col+1] = C4State.X
+
+            for _ in range(3):
+                self.assertFalse(game.check_win_diag_up())
+                Connect4TestCase._shift_2d_array(game.current_history)
+
+            game.reset_game()
 
     def test_check_win(self):
         self.assertTrue(True)
 
-    def test_check_guess_sequence(self):
-        self.assertTrue(True)
+    def test_check_guess_sequence_basic_moves(self):
+        game = Connect4()
+
+        self.assertFalse(game.guess_sequence(0))
+        self.assertEqual(game.current_history[Connect4.MAX_ROWS-1][0],
+                         C4State.X)
+
+        self.assertFalse(game.guess_sequence(0))
+        self.assertEqual(game.current_history[Connect4.MAX_ROWS-2][0],
+                         C4State.O)
+
+        self.assertFalse(game.guess_sequence(1))
+        self.assertEqual(game.current_history[Connect4.MAX_ROWS-1][1],
+                         C4State.X)
+
+        self.assertFalse(game.guess_sequence(Connect4.MAX_COLS-1))
+        self.assertEqual(game.current_history[Connect4.MAX_ROWS-1][Connect4.MAX_COLS-1],
+                         C4State.O)
+
+    def test_check_guess_sequence_invalid_input(self):
+        game = Connect4()
+
+        self.assertFalse(game.guess_sequence(-1))
+        self.assertFalse(game.guess_sequence("yes"))
+        self.assertFalse(game.guess_sequence(Connect4.MAX_COLS))
+
+    def test_interactions(self):
+        game = Connect4()
+
+        self.assertFalse(game.guess_sequence(2))
+
+        self.assertEqual(game.get_turn(), C4State.O)
+        self.assertFalse(game.guess_sequence(3))
+        self.assertFalse(game.guess_sequence(3))
+        self.assertFalse(game.guess_sequence(3))
+        self.assertFalse(game.guess_sequence(3))
+
+        self.assertEqual(game.get_turn(), C4State.O)
+        self.assertFalse(game.guess_sequence(5))
+        self.assertFalse(game.guess_sequence(4))
+        self.assertFalse(game.guess_sequence(5))
+        self.assertFalse(game.guess_sequence(4))
+        self.assertFalse(game.guess_sequence(5))
+        self.assertFalse(game.guess_sequence(4))
+
+        self.assertEqual(game.get_turn(), C4State.O)
+        self.assertFalse(game.guess_sequence(4))
+        self.assertTrue(game.guess_sequence(5))
+
+        expected = [
+            [C4State.E] * Connect4.MAX_COLS,
+            [C4State.E] * Connect4.MAX_COLS,
+            [C4State.E, C4State.E, C4State.E, C4State.X, C4State.O, C4State.X, C4State.E],
+            [C4State.E, C4State.E, C4State.E, C4State.O, C4State.X, C4State.O, C4State.E],
+            [C4State.E, C4State.E, C4State.E, C4State.X, C4State.X, C4State.O, C4State.E],
+            [C4State.E, C4State.E, C4State.X, C4State.O, C4State.X, C4State.O, C4State.E]
+        ]
+
+        self.assertEqual(expected, game.current_history)
+        # self.assertEqual(1, len(game.entire_history))
 
 
 if __name__ == "__main__":
