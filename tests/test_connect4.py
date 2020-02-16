@@ -98,14 +98,19 @@ class Connect4TestCase(unittest.TestCase):
         # check if getting correct row
         for row in range(Connect4.MAX_ROWS):
             for col in range(Connect4.MAX_COLS):
-                self.assertEqual(Connect4.MAX_ROWS - row - 1,
-                                 game.get_free_row(col))
+                free_row = game.get_free_row(col)
 
-                game.guess_sequence(col)
+                self.assertEqual(Connect4.MAX_ROWS - row - 1,
+                                 free_row)
+
+                game.current_history[free_row][col] = C4State.X
 
         # no empty slot should be left
         for row in game.current_history:
             self.assertFalse(C4State.E in row)
+
+        for col in range(Connect4.MAX_COLS):
+            self.assertEqual(-1, game.get_free_row(col))
 
     def test_check_win_rows(self):
         game = Connect4()
@@ -282,7 +287,8 @@ class Connect4TestCase(unittest.TestCase):
                          C4State.X)
 
         self.assertFalse(game.guess_sequence(Connect4.MAX_COLS-1))
-        self.assertEqual(game.current_history[Connect4.MAX_ROWS-1][Connect4.MAX_COLS-1],
+        self.assertEqual(game.current_history[Connect4.MAX_ROWS-1]
+                         [Connect4.MAX_COLS-1],
                          C4State.O)
 
     def test_check_guess_sequence_invalid_input(self):
@@ -291,6 +297,37 @@ class Connect4TestCase(unittest.TestCase):
         self.assertFalse(game.guess_sequence(-1))
         self.assertFalse(game.guess_sequence("yes"))
         self.assertFalse(game.guess_sequence(Connect4.MAX_COLS))
+
+    def test_get_wins(self):
+        game = Connect4()
+
+        self.assertEqual({}, game.get_wins())
+
+        game.entire_history = [
+            ([[]], C4State.X),
+            ([[]], C4State.X),
+            ([[]], C4State.X),
+            ([[]], C4State.X),
+        ]
+
+        wins = game.get_wins()
+
+        self.assertEqual(4, wins[C4State.X.value])
+        self.assertEqual(0, wins[C4State.O.value])
+
+    def test_get_last_turn(self):
+        game = Connect4()
+
+        expected = []
+        for row in Connect4.setup_board():
+            expected.append([element.value for element in row])
+
+        self.assertEqual(expected, game.get_last_turn())
+
+        game.guess_sequence(0)
+        expected[Connect4.MAX_ROWS-1][0] = C4State.X.value
+
+        self.assertEqual(expected, game.get_last_turn())
 
     def test_interactions(self):
         game = Connect4()
@@ -318,14 +355,26 @@ class Connect4TestCase(unittest.TestCase):
         expected = [
             [C4State.E] * Connect4.MAX_COLS,
             [C4State.E] * Connect4.MAX_COLS,
-            [C4State.E, C4State.E, C4State.E, C4State.X, C4State.O, C4State.X, C4State.E],
-            [C4State.E, C4State.E, C4State.E, C4State.O, C4State.X, C4State.O, C4State.E],
-            [C4State.E, C4State.E, C4State.E, C4State.X, C4State.X, C4State.O, C4State.E],
-            [C4State.E, C4State.E, C4State.X, C4State.O, C4State.X, C4State.O, C4State.E]
+
+            [C4State.E, C4State.E, C4State.E, C4State.X,
+             C4State.O, C4State.X, C4State.E],
+
+            [C4State.E, C4State.E, C4State.E, C4State.O,
+             C4State.X, C4State.O, C4State.E],
+
+            [C4State.E, C4State.E, C4State.E, C4State.X,
+             C4State.X, C4State.O, C4State.E],
+
+            [C4State.E, C4State.E, C4State.X, C4State.O,
+             C4State.X, C4State.O, C4State.E]
         ]
 
-        self.assertEqual(expected, game.current_history)
-        # self.assertEqual(1, len(game.entire_history))
+        self.assertEqual(1, len(game.entire_history))
+        self.assertEqual(expected, game.entire_history[0][0])
+        self.assertEqual(C4State.X, game.entire_history[0][1])
+        self.assertEqual({C4State.X.value: 1, C4State.O.value: 0},
+                         game.get_wins())
+        self.assertEqual(Connect4.setup_board(), game.current_history)
 
 
 if __name__ == "__main__":
