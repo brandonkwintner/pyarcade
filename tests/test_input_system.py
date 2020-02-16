@@ -18,11 +18,11 @@ class InputSystemTestCase(unittest.TestCase):
         # purposely make an incorrect guess
         guess = [x+1 for x in current_seq]
 
-        self.assertFalse(in_sys.make_guess(guess))
+        self.assertFalse(in_sys.make_guess_for_mastermind(guess))
 
         self.assertEqual(in_sys.game_num, 1)
 
-        self.assertTrue(in_sys.make_guess(current_seq))
+        self.assertTrue(in_sys.make_guess_for_mastermind(current_seq))
 
         self.assertEqual(in_sys.round, 1)
 
@@ -41,7 +41,7 @@ class InputSystemTestCase(unittest.TestCase):
     def test_clear(self):
         in_sys = InputSystem()
 
-        in_sys.make_guess([1, 2, 3, 4])
+        in_sys.make_guess_for_mastermind([1, 2, 3, 4])
 
         self.assertEqual(len(in_sys.game.current_history), 1)
 
@@ -92,7 +92,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual([], in_sys.get_last_guess())
 
         in_sys.game.gen_sequence = [1, 2, 3, 4]
-        in_sys.make_guess([1, 5, 4, 3])
+        in_sys.make_guess_for_mastermind([1, 5, 4, 3])
 
         expected = [(1, Evaluation.CORRECT.value),
                     (5, Evaluation.INCORRECT.value),
