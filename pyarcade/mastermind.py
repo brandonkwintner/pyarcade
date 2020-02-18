@@ -1,9 +1,10 @@
 from typing import Optional, List, Tuple
 from pyarcade.eval_input import Evaluation
+from pyarcade.abstract_game import AbstractGame
 import random
 
 
-class Mastermind:
+class Mastermind(AbstractGame):
     """ A class representing a Mastermind game session
 
         Args:
@@ -13,16 +14,14 @@ class Mastermind:
 
     """
     def __init__(self, width: Optional[int] = 4, max_range: Optional[int] = 9):
+        AbstractGame.__init__(self)
+
         self.width = width
         self.max_range = max_range
 
         # generated sequence
         self.gen_sequence = []
         self.generate_hidden_sequence()
-
-        # histories
-        self.current_history = []
-        self.entire_history = []
 
     def generate_hidden_sequence(self) -> List[int]:
         """ Generates a hidden sequence for mastermind game.
@@ -37,7 +36,7 @@ class Mastermind:
 
         return self.gen_sequence
 
-    def guess_sequence(self, guess: List[int]) -> bool:
+    def enter_user_turn(self, guess: List[int]) -> bool:
         """ Checks if guess matches the hidden sequence.
 
         Returns:

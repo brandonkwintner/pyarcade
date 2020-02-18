@@ -83,7 +83,7 @@ class InputSystem:
         if not isinstance(self.game, Mastermind):
             return False
 
-        return self.game.guess_sequence(guess)
+        return self.game.enter_user_turn(guess)
 
     def reset(self):
         """ Resets the current game to starting state.
@@ -153,7 +153,7 @@ class InputSystem:
             return False
 
         # board index from 0, but QOL for players start at 1
-        return self.game.guess_sequence(col-1)
+        return self.game.enter_user_turn(col - 1)
 
     def get_round_info(self) -> str:
         """ Gets the round information.

@@ -70,10 +70,10 @@ class Connect4TestCase(unittest.TestCase):
         # player X goes first
         self.assertEqual(C4State.X, game.get_turn())
 
-        game.guess_sequence(0)
+        game.enter_user_turn(0)
         self.assertEqual(C4State.O, game.get_turn())
 
-        game.guess_sequence(0)
+        game.enter_user_turn(0)
         self.assertEqual(C4State.X, game.get_turn())
 
     def test_get_bad_free_row(self):
@@ -274,19 +274,19 @@ class Connect4TestCase(unittest.TestCase):
     def test_check_guess_sequence_basic_moves(self):
         game = Connect4()
 
-        self.assertFalse(game.guess_sequence(0))
+        self.assertFalse(game.enter_user_turn(0))
         self.assertEqual(game.current_history[Connect4.MAX_ROWS-1][0],
                          C4State.X)
 
-        self.assertFalse(game.guess_sequence(0))
+        self.assertFalse(game.enter_user_turn(0))
         self.assertEqual(game.current_history[Connect4.MAX_ROWS-2][0],
                          C4State.O)
 
-        self.assertFalse(game.guess_sequence(1))
+        self.assertFalse(game.enter_user_turn(1))
         self.assertEqual(game.current_history[Connect4.MAX_ROWS-1][1],
                          C4State.X)
 
-        self.assertFalse(game.guess_sequence(Connect4.MAX_COLS-1))
+        self.assertFalse(game.enter_user_turn(Connect4.MAX_COLS - 1))
         self.assertEqual(game.current_history[Connect4.MAX_ROWS-1]
                          [Connect4.MAX_COLS-1],
                          C4State.O)
@@ -294,9 +294,9 @@ class Connect4TestCase(unittest.TestCase):
     def test_check_guess_sequence_invalid_input(self):
         game = Connect4()
 
-        self.assertFalse(game.guess_sequence(-1))
-        self.assertFalse(game.guess_sequence("yes"))
-        self.assertFalse(game.guess_sequence(Connect4.MAX_COLS))
+        self.assertFalse(game.enter_user_turn(-1))
+        self.assertFalse(game.enter_user_turn("yes"))
+        self.assertFalse(game.enter_user_turn(Connect4.MAX_COLS))
 
     def test_get_wins(self):
         game = Connect4()
@@ -324,7 +324,7 @@ class Connect4TestCase(unittest.TestCase):
 
         self.assertEqual(expected, game.get_last_turn())
 
-        game.guess_sequence(0)
+        game.enter_user_turn(0)
         expected[Connect4.MAX_ROWS-1][0] = C4State.X.value
 
         self.assertEqual(expected, game.get_last_turn())
@@ -332,25 +332,25 @@ class Connect4TestCase(unittest.TestCase):
     def test_interactions(self):
         game = Connect4()
 
-        self.assertFalse(game.guess_sequence(2))
+        self.assertFalse(game.enter_user_turn(2))
 
         self.assertEqual(game.get_turn(), C4State.O)
-        self.assertFalse(game.guess_sequence(3))
-        self.assertFalse(game.guess_sequence(3))
-        self.assertFalse(game.guess_sequence(3))
-        self.assertFalse(game.guess_sequence(3))
+        self.assertFalse(game.enter_user_turn(3))
+        self.assertFalse(game.enter_user_turn(3))
+        self.assertFalse(game.enter_user_turn(3))
+        self.assertFalse(game.enter_user_turn(3))
 
         self.assertEqual(game.get_turn(), C4State.O)
-        self.assertFalse(game.guess_sequence(5))
-        self.assertFalse(game.guess_sequence(4))
-        self.assertFalse(game.guess_sequence(5))
-        self.assertFalse(game.guess_sequence(4))
-        self.assertFalse(game.guess_sequence(5))
-        self.assertFalse(game.guess_sequence(4))
+        self.assertFalse(game.enter_user_turn(5))
+        self.assertFalse(game.enter_user_turn(4))
+        self.assertFalse(game.enter_user_turn(5))
+        self.assertFalse(game.enter_user_turn(4))
+        self.assertFalse(game.enter_user_turn(5))
+        self.assertFalse(game.enter_user_turn(4))
 
         self.assertEqual(game.get_turn(), C4State.O)
-        self.assertFalse(game.guess_sequence(4))
-        self.assertTrue(game.guess_sequence(5))
+        self.assertFalse(game.enter_user_turn(4))
+        self.assertTrue(game.enter_user_turn(5))
 
         expected = [
             [C4State.E] * Connect4.MAX_COLS,
