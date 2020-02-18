@@ -29,6 +29,7 @@ class AbstractGame(metaclass=ABCMeta):
         """
         pass
 
+    @abstractmethod
     def get_last_turn(self):
         """ Gets the last turn/state of game.
 
