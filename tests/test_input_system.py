@@ -117,6 +117,17 @@ class InputSystemTestCase(unittest.TestCase):
 
         self.assertEqual((False, True), in_sys.take_input("   1   "))
 
+    def test_make_guess_for_game(self):
+        in_sys = InputSystem()
+
+        self.assertFalse(in_sys.make_guess_for_game([]))
+        self.assertFalse(in_sys.make_guess_for_game([1]))
+
+        in_sys = InputSystem(Game.CONNECT4)
+
+        self.assertFalse(in_sys.make_guess_for_game([1, 2]))
+        self.assertFalse(in_sys.make_guess_for_game(["1"]))
+
     def test_reset_take_input_mastermind(self):
         in_sys = InputSystem()
 
