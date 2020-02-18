@@ -66,7 +66,7 @@ class Connect4(AbstractGame):
         """ Inputs a player's move.
 
             Args:
-                col - column to drop "piece" in
+                col: (int) column to drop "piece" in
 
             Returns:
                 True if winning move was made False otherwise.
@@ -93,6 +93,9 @@ class Connect4(AbstractGame):
 
     def get_free_row(self, col: int) -> int:
         """ Gets a free row given a column.
+
+            Args:
+                col: (int) column to drop piece in.
 
             Returns:
                 index of free row or -1 if row is full or invalid input.
@@ -232,8 +235,8 @@ class Connect4(AbstractGame):
     def get_wins(self) -> Mapping[str, int]:
         """ Gets the wins of each player throughout the game.
 
-            Returns (Mapping[str, int]):
-                {X: # of wins, O: # of wins}
+            Returns
+                (Mapping[str, int]): {X: # of wins, O: # of wins}
 
         """
 
@@ -254,7 +257,7 @@ class Connect4(AbstractGame):
         """ Resets game state after player has won.
 
             Args:
-                player (C4State): player who won.
+                player: (C4State) player who won.
 
         """
 

@@ -8,9 +8,9 @@ class Mastermind(AbstractGame):
     """ A class representing a Mastermind game session
 
         Args:
-            width (int): The number of random digits to generate
+            width: (int) The number of random digits to generate
 
-            max_range (int): The range that a single digit can vary
+            max_range: (int) The range that a single digit can vary
 
     """
     def __init__(self, width: Optional[int] = 4, max_range: Optional[int] = 9):
@@ -26,7 +26,7 @@ class Mastermind(AbstractGame):
         """ Generates a hidden sequence for mastermind game.
 
         Returns:
-            hidden_sequence List[int]: A sequence of integers to be guessed.
+            hidden_sequence: List[int] A sequence of integers to be guessed.
 
         """
 
@@ -37,7 +37,7 @@ class Mastermind(AbstractGame):
         """ Checks if guess matches the hidden sequence.
 
         Returns:
-            result (bool): True if correct, false otherwise.
+            result: (bool) True if correct, false otherwise.
 
         """
 
@@ -74,7 +74,7 @@ class Mastermind(AbstractGame):
             return False
 
     def correct_guess(self):
-        """ Correct guess was issued, add current history to entire histor
+        """ Correct guess was issued, add current history to entire history
         Generate new sequence.
 
         """
@@ -117,8 +117,8 @@ class Mastermind(AbstractGame):
     def get_last_turn(self) -> List[Tuple[int, str]]:
         """ Retrieves the player's last guess.
 
-               Returns:
-                   List[Tuple[int, str]]: The evaluation list of last guess.
+           Returns:
+               List[Tuple[int, str]]: The evaluation list of last guess.
 
         """
 
