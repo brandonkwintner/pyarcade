@@ -9,7 +9,11 @@ class AbstractGame(metaclass=ABCMeta):
 
     @abstractmethod
     def enter_user_turn(self, guess) -> bool:
-        """ Checks if guess matches the hidden sequence.
+        """ Checks if guess is correct in some way according
+        to the current game.
+
+        Args:
+            guess: User's to the game.
 
         Returns:
             result (bool): True if correct, false otherwise.
