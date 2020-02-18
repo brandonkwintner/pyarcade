@@ -97,22 +97,6 @@ class InputSystem:
 
         return self.game.enter_user_turn(proper_guess)
 
-    def make_guess_for_mastermind(self, guess: List[int]) -> bool:
-        """ Checks if guess matches the hidden sequence.
-
-        Args:
-            guess (List[int]): user's guess list
-        Returns:
-            result (bool): True if correct, false otherwise.
-
-        """
-
-        # make sure that instance is indeed mastermind
-        if not isinstance(self.game, Mastermind):
-            return False
-
-        return self.game.enter_user_turn(guess)
-
     def reset(self):
         """ Resets the current game to starting state.
         """
@@ -157,30 +141,6 @@ class InputSystem:
             re_exp = r"^\s*[0-9]\s+[0-9]\s+[0-9]\s+[0-9]\s*$"
 
         return True if re.match(re_exp, cmd) else False
-
-    def make_guess_for_connect4(self, guess: List[int]) -> bool:
-        """ Checks if players move wins the game.
-
-        Args:
-            guess (List[int]): user's guess list
-        Returns:
-            result (bool): True if correct, false otherwise.
-
-        """
-
-        # make sure that instance is indeed connect4 and guess is valid
-        if not isinstance(self.game, Connect4):
-            return False
-
-        if not isinstance(guess, List) or len(guess) < 1:
-            return False
-
-        col = guess[0]
-
-        if not isinstance(col, int):
-            return False
-
-        return self.game.enter_user_turn(col - 1)
 
     def get_round_info(self) -> str:
         """ Gets the round information.
