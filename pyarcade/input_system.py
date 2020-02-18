@@ -14,7 +14,7 @@ class InputSystem:
         """ Input System session.
 
             Args:
-                game (Game enum): Which game to play
+                game: (Game enum) Which game to play
 
         """
         # other parameters starts mastermind game by default
@@ -31,7 +31,7 @@ class InputSystem:
         accordingly.
 
         Args:
-            cmd (string): user's command.
+            cmd: (string) user's command.
 
         Returns:
             A 2-tuple boolean representing (win, valid_cmd).
@@ -52,12 +52,6 @@ class InputSystem:
             # turns the string guess into an int list
             guess = [int(num) for num in cmd.split()]
 
-            '''
-            if isinstance(self.game, Connect4):
-                correct_guess = self.make_guess_for_connect4(guess)
-            else:
-                correct_guess = self.make_guess_for_mastermind(guess)
-            '''
             correct_guess = self.make_guess_for_game(guess)
 
             if correct_guess:
