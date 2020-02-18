@@ -38,11 +38,15 @@ class Connect4(AbstractGame):
         """ Reset single game. (input reset)
         """
 
+        super().reset_game()
+
         self.current_history = Connect4.setup_board()
 
     def clear_game(self):
         """ Clears entire game. (input clear)
         """
+
+        super().clear_game()
 
         self.entire_history = []
         self.current_history = Connect4.setup_board()
@@ -68,6 +72,8 @@ class Connect4(AbstractGame):
                 True if winning move was made False otherwise.
 
         """
+
+        super().enter_user_turn(col)
 
         row = self.get_free_row(col)
 
@@ -212,6 +218,8 @@ class Connect4(AbstractGame):
                 player location and empty slots.
 
         """
+
+        super().get_last_turn()
 
         result = []
 

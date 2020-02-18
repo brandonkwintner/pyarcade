@@ -44,6 +44,8 @@ class Mastermind(AbstractGame):
 
         """
 
+        super().enter_user_turn(guess)
+
         if len(guess) != len(self.gen_sequence):
             return False
 
@@ -88,12 +90,16 @@ class Mastermind(AbstractGame):
         """ Reset single game. (input reset)
         """
 
+        super().reset_game()
+
         self.clear_history()
         self.generate_hidden_sequence()
 
     def clear_game(self):
         """ Clears entire game. (input clear)
         """
+
+        super().clear_game()
 
         self.clear_all_history()
         self.generate_hidden_sequence()
@@ -117,7 +123,9 @@ class Mastermind(AbstractGame):
                Returns:
                    List[Tuple[int, str]]: The evaluation list of last guess.
 
-       """
+        """
+
+        super().get_last_turn()
 
         if len(self.current_history) < 1:
             return []
