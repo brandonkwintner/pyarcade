@@ -52,10 +52,13 @@ class InputSystem:
             # turns the string guess into an int list
             guess = [int(num) for num in cmd.split()]
 
+            '''
             if isinstance(self.game, Connect4):
                 correct_guess = self.make_guess_for_connect4(guess)
             else:
                 correct_guess = self.make_guess_for_mastermind(guess)
+            '''
+            correct_guess = self.make_guess_for_game(guess)
 
             if correct_guess:
                 self.round = 1
@@ -69,21 +72,30 @@ class InputSystem:
 
         return win, valid_cmd
 
-    def make_guess_for_mastermind(self, guess: List[int]) -> bool:
-        """ Checks if guess matches the hidden sequence.
+    def make_guess_for_game(self, guess: List[int]) -> bool:
+        """ Make a guess based on current game.
 
         Args:
-            guess (List[int]): user's guess list
+            guess: (List[int]) user's guess list.
+
         Returns:
-            result (bool): True if correct, false otherwise.
+            True if correct according to the game, False otherwise.
 
         """
 
-        # make sure that instance is indeed mastermind
-        if not isinstance(self.game, Mastermind):
+        if len(guess) < 1:
             return False
 
-        return self.game.guess_sequence(guess)
+        if isinstance(self.game, Connect4):
+            if not isinstance(guess[0], int):
+                return False
+
+            # board index from 0, but QOL for players start at 1
+            proper_guess = guess[0] - 1
+        else:
+            proper_guess = guess
+
+        return self.game.enter_user_turn(proper_guess)
 
     def reset(self):
         """ Resets the current game to starting state.
@@ -129,31 +141,6 @@ class InputSystem:
             re_exp = r"^\s*[0-9]\s+[0-9]\s+[0-9]\s+[0-9]\s*$"
 
         return True if re.match(re_exp, cmd) else False
-
-    def make_guess_for_connect4(self, guess: List[int]) -> bool:
-        """ Checks if players move wins the game.
-
-        Args:
-            guess (List[int]): user's guess list
-        Returns:
-            result (bool): True if correct, false otherwise.
-
-        """
-
-        # make sure that instance is indeed connect4 and guess is valid
-        if not isinstance(self.game, Connect4):
-            return False
-
-        if not isinstance(guess, List) or len(guess) < 1:
-            return False
-
-        col = guess[0]
-
-        if not isinstance(col, int):
-            return False
-
-        # board index from 0, but QOL for players start at 1
-        return self.game.guess_sequence(col-1)
 
     def get_round_info(self) -> str:
         """ Gets the round information.

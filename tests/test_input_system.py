@@ -26,27 +26,6 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(in_sys.round, 1)
         self.assertEqual(in_sys.game_num, 1)
 
-    def test_make_guess_mastermind(self):
-        in_sys = InputSystem()
-
-        current_seq = in_sys.game.gen_sequence
-        # purposely make an incorrect guess
-        guess = [x+1 for x in current_seq]
-
-        self.assertFalse(in_sys.make_guess_for_mastermind(guess))
-
-        self.assertEqual(in_sys.game_num, 1)
-
-        self.assertTrue(in_sys.make_guess_for_mastermind(current_seq))
-
-        self.assertEqual(in_sys.round, 1)
-
-    def test_make_guess_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
-
-        # TODO
-        self.assertTrue(True)
-
     def test_reset_mastermind(self):
         in_sys = InputSystem()
 
@@ -74,7 +53,7 @@ class InputSystemTestCase(unittest.TestCase):
     def test_clear_mastermind(self):
         in_sys = InputSystem()
 
-        in_sys.make_guess_for_mastermind([1, 2, 3, 4])
+        in_sys.make_guess_for_game([1, 2, 3, 4])
 
         self.assertEqual(len(in_sys.game.current_history), 1)
 
@@ -86,7 +65,7 @@ class InputSystemTestCase(unittest.TestCase):
     def test_clear_c4(self):
         in_sys = InputSystem(Game.CONNECT4)
 
-        self.assertFalse(in_sys.make_guess_for_connect4([0]))
+        self.assertFalse(in_sys.make_guess_for_game([0]))
 
         in_sys.clear()
 
@@ -171,7 +150,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual([], in_sys.get_last_guess())
 
         in_sys.game.gen_sequence = [1, 2, 3, 4]
-        in_sys.make_guess_for_mastermind([1, 5, 4, 3])
+        in_sys.make_guess_for_game([1, 5, 4, 3])
 
         expected = [(1, Evaluation.CORRECT.value),
                     (5, Evaluation.INCORRECT.value),
@@ -340,32 +319,6 @@ class InputSystemTestCase(unittest.TestCase):
         win, valid = in_sys.take_input("1 clear")
         self.assertFalse(win)
         self.assertFalse(valid)
-
-    def test_make_guess_for_mastermind_invalid(self):
-        in_sys = InputSystem(Game.CONNECT4)
-
-        self.assertFalse(in_sys.make_guess_for_mastermind([1]))
-
-    def test_make_guess_for_mastermind(self):
-        in_sys = InputSystem()
-
-        in_sys.game.gen_sequence = [1, 1, 1, 1]
-        self.assertTrue(in_sys.make_guess_for_mastermind([1, 1, 1, 1]))
-
-    def test_make_guess_for_c4_invalid(self):
-        in_sys = InputSystem()
-
-        self.assertFalse(in_sys.make_guess_for_connect4([1, 2, 3, 4]))
-
-        in_sys = InputSystem(Game.CONNECT4)
-        self.assertFalse(in_sys.make_guess_for_connect4(1))
-        self.assertFalse(in_sys.make_guess_for_connect4([]))
-        self.assertFalse(in_sys.make_guess_for_connect4(["1"]))
-
-    def test_make_guess_for_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
-
-        self.assertFalse(in_sys.make_guess_for_connect4([1]))
 
     def test_get_round_info_for_mastermind(self):
         in_sys = InputSystem()

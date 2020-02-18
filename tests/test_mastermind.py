@@ -21,7 +21,7 @@ class MastermindTestCase(unittest.TestCase):
         game.gen_sequence = [1, 2, 3, 4]
         guess = [5, 5, 5, 5]
 
-        self.assertFalse(game.guess_sequence(guess))
+        self.assertFalse(game.enter_user_turn(guess))
 
         self.assertEqual(len(game.current_history), 1)
 
@@ -37,7 +37,7 @@ class MastermindTestCase(unittest.TestCase):
         game.gen_sequence = [5] * 4
         guess = game.gen_sequence
 
-        self.assertTrue(game.guess_sequence(guess))
+        self.assertTrue(game.enter_user_turn(guess))
 
         self.assertEqual(len(game.current_history), 0)
 
@@ -53,7 +53,7 @@ class MastermindTestCase(unittest.TestCase):
         game.gen_sequence = [4, 3, 2, 1]
         guess = [1, 2, 3, 4]
 
-        game.guess_sequence(guess)
+        game.enter_user_turn(guess)
 
         self.assertEqual(len(game.current_history), 1)
 
@@ -72,7 +72,7 @@ class MastermindTestCase(unittest.TestCase):
         game.gen_sequence = [1, 2, 3, 4]
         guess = [1, 5, 4, 3]
 
-        game.guess_sequence(guess)
+        game.enter_user_turn(guess)
 
         self.assertEqual(len(game.current_history), 1)
 
@@ -94,10 +94,10 @@ class MastermindTestCase(unittest.TestCase):
         bad_type = [1, 5, 4, "1"]
         bad_len = []
 
-        self.assertFalse(game.guess_sequence(over_range))
-        self.assertFalse(game.guess_sequence(under_range))
-        self.assertFalse(game.guess_sequence(bad_type))
-        self.assertFalse(game.guess_sequence(bad_len))
+        self.assertFalse(game.enter_user_turn(over_range))
+        self.assertFalse(game.enter_user_turn(under_range))
+        self.assertFalse(game.enter_user_turn(bad_type))
+        self.assertFalse(game.enter_user_turn(bad_len))
 
     def test_correct_guess_entire_history(self):
         game = Mastermind()
@@ -106,7 +106,7 @@ class MastermindTestCase(unittest.TestCase):
         game.gen_sequence = [5] * 4
         guess = game.gen_sequence
 
-        game.guess_sequence(guess)
+        game.enter_user_turn(guess)
 
         self.assertEqual(len(game.current_history), 0)
         self.assertEqual(len(game.entire_history), 1)
@@ -124,8 +124,8 @@ class MastermindTestCase(unittest.TestCase):
         bad_guess = [1, 5, 3, 5]
         guess = game.gen_sequence
 
-        game.guess_sequence(bad_guess)
-        game.guess_sequence(guess)
+        game.enter_user_turn(bad_guess)
+        game.enter_user_turn(guess)
 
         self.assertEqual(len(game.current_history), 0)
         self.assertEqual(len(game.entire_history), 1)
@@ -136,7 +136,7 @@ class MastermindTestCase(unittest.TestCase):
         game.generate_hidden_sequence()
         current_seq = game.gen_sequence
 
-        self.assertTrue(game.guess_sequence(current_seq))
+        self.assertTrue(game.enter_user_turn(current_seq))
 
         self.assertNotEqual(current_seq, game.gen_sequence)
         self.assertEqual(len(game.current_history), 0)
@@ -153,7 +153,7 @@ class MastermindTestCase(unittest.TestCase):
         game.generate_hidden_sequence()
         current_seq = game.gen_sequence
 
-        self.assertTrue(game.guess_sequence(current_seq))
+        self.assertTrue(game.enter_user_turn(current_seq))
 
         self.assertEqual(len(game.current_history), 0)
         self.assertEqual(len(game.entire_history), 1)
@@ -171,7 +171,7 @@ class MastermindTestCase(unittest.TestCase):
         game.generate_hidden_sequence()
         guess = [1, 2, 3, 4]
 
-        game.guess_sequence(guess)
+        game.enter_user_turn(guess)
 
         self.assertEqual(len(game.current_history), 1)
 
@@ -186,11 +186,11 @@ class MastermindTestCase(unittest.TestCase):
         current_seq = game.gen_sequence
         guess = [1, 2, 3, 4]
 
-        game.guess_sequence(guess)
+        game.enter_user_turn(guess)
 
         self.assertEqual(len(game.current_history), 1)
 
-        game.guess_sequence(current_seq)
+        game.enter_user_turn(current_seq)
 
         self.assertEqual(len(game.entire_history), 1)
 
@@ -205,7 +205,7 @@ class MastermindTestCase(unittest.TestCase):
         self.assertEqual([], game.get_last_turn())
 
         game.gen_sequence = [1, 2, 3, 4]
-        game.guess_sequence([1, 3, 2, 5])
+        game.enter_user_turn([1, 3, 2, 5])
 
         expected = [(1, Evaluation.CORRECT.value),
                     (3, Evaluation.SOMEWHERE.value),

@@ -1,8 +1,9 @@
 from pyarcade.connect4_states import C4State
+from pyarcade.abstract_game import AbstractGame
 from typing import List, Mapping
 
 
-class Connect4:
+class Connect4(AbstractGame):
     """ A class representing a Connect4 game session
     """
 
@@ -10,8 +11,7 @@ class Connect4:
     MAX_COLS = 7
 
     def __init__(self):
-        # all previous games
-        self.entire_history = []
+        AbstractGame.__init__(self)
         # current 6x7 board
         self.current_history = Connect4.setup_board()
         self.turn = 0
@@ -58,7 +58,7 @@ class Connect4:
 
         return C4State.X if self.turn % 2 == 0 else C4State.O
 
-    def guess_sequence(self, col: int) -> bool:
+    def enter_user_turn(self, col: int) -> bool:
         """ Inputs a player's move.
 
             Args:
