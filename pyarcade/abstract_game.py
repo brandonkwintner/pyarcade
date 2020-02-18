@@ -36,4 +36,4 @@ class AbstractGame(metaclass=ABCMeta):
         Returns:
             Meaningful state of the current game.
         """
-    pass
+        pass

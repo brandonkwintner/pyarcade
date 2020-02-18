@@ -52,10 +52,13 @@ class InputSystem:
             # turns the string guess into an int list
             guess = [int(num) for num in cmd.split()]
 
+            '''
             if isinstance(self.game, Connect4):
                 correct_guess = self.make_guess_for_connect4(guess)
             else:
                 correct_guess = self.make_guess_for_mastermind(guess)
+            '''
+            correct_guess = self.make_guess_for_game(guess)
 
             if correct_guess:
                 self.round = 1
@@ -68,6 +71,31 @@ class InputSystem:
             valid_cmd = False
 
         return win, valid_cmd
+
+    def make_guess_for_game(self, guess: List[int]) -> bool:
+        """ Make a guess based on current game.
+
+        Args:
+            guess: (List[int]) user's guess list.
+
+        Returns:
+            True if correct according to the game, False otherwise.
+
+        """
+
+        if len(guess) < 1:
+            return False
+
+        if isinstance(self.game, Connect4):
+            if not isinstance(guess[0], int):
+                return False
+
+            # board index from 0, but QOL for players start at 1
+            proper_guess = guess[0] - 1
+        else:
+            proper_guess = guess
+
+        return self.game.enter_user_turn(proper_guess)
 
     def make_guess_for_mastermind(self, guess: List[int]) -> bool:
         """ Checks if guess matches the hidden sequence.
@@ -152,7 +180,6 @@ class InputSystem:
         if not isinstance(col, int):
             return False
 
-        # board index from 0, but QOL for players start at 1
         return self.game.enter_user_turn(col - 1)
 
     def get_round_info(self) -> str:
