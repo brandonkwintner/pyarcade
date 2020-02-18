@@ -133,7 +133,6 @@ class MastermindTestCase(unittest.TestCase):
     def test_reset_game(self):
         game = Mastermind()
 
-        game.generate_hidden_sequence()
         current_seq = game.gen_sequence
 
         self.assertTrue(game.enter_user_turn(current_seq))
@@ -150,7 +149,6 @@ class MastermindTestCase(unittest.TestCase):
     def test_clear_game(self):
         game = Mastermind()
 
-        game.generate_hidden_sequence()
         current_seq = game.gen_sequence
 
         self.assertTrue(game.enter_user_turn(current_seq))
@@ -168,7 +166,7 @@ class MastermindTestCase(unittest.TestCase):
     def test_clear_history(self):
         game = Mastermind()
 
-        game.generate_hidden_sequence()
+        game.gen_sequence = [1, 1, 1, 1]
         guess = [1, 2, 3, 4]
 
         game.enter_user_turn(guess)
@@ -182,7 +180,6 @@ class MastermindTestCase(unittest.TestCase):
     def test_clear_all_history(self):
         game = Mastermind()
 
-        game.generate_hidden_sequence()
         current_seq = game.gen_sequence
         guess = [1, 2, 3, 4]
 

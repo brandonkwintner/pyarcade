@@ -20,8 +20,7 @@ class Mastermind(AbstractGame):
         self.max_range = max_range
 
         # generated sequence
-        self.gen_sequence = []
-        self.generate_hidden_sequence()
+        self.gen_sequence = self.generate_hidden_sequence()
 
     def generate_hidden_sequence(self) -> List[int]:
         """ Generates a hidden sequence for mastermind game.
@@ -31,10 +30,8 @@ class Mastermind(AbstractGame):
 
         """
 
-        self.gen_sequence = \
+        return \
             [random.randint(0, self.max_range) for _ in range(self.width)]
-
-        return self.gen_sequence
 
     def enter_user_turn(self, guess: List[int]) -> bool:
         """ Checks if guess matches the hidden sequence.
@@ -53,7 +50,7 @@ class Mastermind(AbstractGame):
             if not isinstance(num, int) or num < 0 or num > 9:
                 return False
 
-        history = []
+        guesses_eval = []
 
         for idx in range(len(guess)):
             guess_num = guess[idx]
@@ -62,13 +59,13 @@ class Mastermind(AbstractGame):
             # check somewhere inside
             # not in
             if guess_num == self.gen_sequence[idx]:
-                history.append((guess_num, Evaluation.CORRECT))
+                guesses_eval.append((guess_num, Evaluation.CORRECT))
             elif guess_num in self.gen_sequence:
-                history.append((guess_num, Evaluation.SOMEWHERE))
+                guesses_eval.append((guess_num, Evaluation.SOMEWHERE))
             else:
-                history.append((guess_num, Evaluation.INCORRECT))
+                guesses_eval.append((guess_num, Evaluation.INCORRECT))
 
-        self.current_history.append(history)
+        self.current_history.append(guesses_eval)
 
         if guess == self.gen_sequence:
             self.correct_guess()
@@ -84,7 +81,7 @@ class Mastermind(AbstractGame):
 
         self.entire_history.append(self.current_history)
         self.clear_history()
-        self.generate_hidden_sequence()
+        self.gen_sequence = self.generate_hidden_sequence()
 
     def reset_game(self):
         """ Reset single game. (input reset)
@@ -93,7 +90,7 @@ class Mastermind(AbstractGame):
         super().reset_game()
 
         self.clear_history()
-        self.generate_hidden_sequence()
+        self.gen_sequence = self.generate_hidden_sequence()
 
     def clear_game(self):
         """ Clears entire game. (input clear)
@@ -102,7 +99,7 @@ class Mastermind(AbstractGame):
         super().clear_game()
 
         self.clear_all_history()
-        self.generate_hidden_sequence()
+        self.gen_sequence = self.generate_hidden_sequence()
 
     def clear_all_history(self):
         """ Clears history of entire game.
