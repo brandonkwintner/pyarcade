@@ -92,8 +92,6 @@ class Mastermind(AbstractGame):
 
         return guesses_eval
 
-
-
     def correct_guess(self):
         """ Correct guess was issued, add current history to entire history
         Generate new sequence.
