@@ -55,9 +55,6 @@ class Mastermind(AbstractGame):
         for idx in range(len(guess)):
             guess_num = guess[idx]
 
-            # check exact location
-            # check somewhere inside
-            # not in
             if guess_num == self.gen_sequence[idx]:
                 guesses_eval.append((guess_num, Evaluation.CORRECT))
             elif guess_num in self.gen_sequence:
