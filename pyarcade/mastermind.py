@@ -36,6 +36,9 @@ class Mastermind(AbstractGame):
     def enter_user_turn(self, guess: List[int]) -> bool:
         """ Checks if guess matches the hidden sequence.
 
+        Args:
+            guess: User's list of int to guess
+
         Returns:
             result: (bool) True if correct, false otherwise.
 
@@ -43,12 +46,37 @@ class Mastermind(AbstractGame):
 
         super().enter_user_turn(guess)
 
-        if len(guess) != len(self.gen_sequence):
+        guesses_eval = self.check_guess(guess)
+
+        if not guesses_eval:
             return False
+
+        self.current_history.append(guesses_eval)
+
+        if guess == self.gen_sequence:
+            self.correct_guess()
+            return True
+        else:
+            return False
+
+    def check_guess(self, guess: List[int]) -> List[Tuple[int, Evaluation]]:
+        """ Evaluates a guess to the current generated sequence.
+
+        Args:
+            guess: User's list of int to guess
+
+        Returns:
+            Evaluation list of tuples(int, evaluation).
+            Empty list if invalid array given.
+
+        """
+
+        if len(guess) != len(self.gen_sequence):
+            return []
 
         for num in guess:
             if not isinstance(num, int) or num < 0 or num > 9:
-                return False
+                return []
 
         guesses_eval = []
 
@@ -62,13 +90,9 @@ class Mastermind(AbstractGame):
             else:
                 guesses_eval.append((guess_num, Evaluation.INCORRECT))
 
-        self.current_history.append(guesses_eval)
+        return guesses_eval
 
-        if guess == self.gen_sequence:
-            self.correct_guess()
-            return True
-        else:
-            return False
+
 
     def correct_guess(self):
         """ Correct guess was issued, add current history to entire history
