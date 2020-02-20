@@ -1,5 +1,7 @@
-from typing import Tuple, List
+from typing import Tuple, List, Union
 from pyarcade.mastermind import Mastermind
+from pyarcade.game_option import Game
+from pyarcade.connect4 import Connect4
 import re
 
 
@@ -8,18 +10,28 @@ class InputSystem:
         And executes commands on user input.
 
     """
-    def __init__(self):
-        self.mastermind = Mastermind()
-        self.mastermind.generate_hidden_sequence()
+    def __init__(self, game: Game = Game.MASTERMIND):
+        """ Input System session.
+
+            Args:
+                game: (Game enum) Which game to play
+
+        """
+        # other parameters starts mastermind game by default
+        if game == Game.CONNECT4:
+            self.game = Connect4()
+        else:
+            self.game = Mastermind()
+
         self.round = 1
-        self.game = 1
+        self.game_num = 1
 
     def take_input(self, cmd: str) -> Tuple[bool, bool]:
         """ Takes in a user's input and interacts with mastermind
         accordingly.
 
         Args:
-            cmd (string): user's command.
+            cmd: (string) user's command.
 
         Returns:
             A 2-tuple boolean representing (win, valid_cmd).
@@ -36,15 +48,15 @@ class InputSystem:
             self.reset()
         elif cmd == "clear":
             self.clear()
-        # matches only input with 4 numbers separated by whitespace
-        elif re.match(r"^\s*[0-9]\s+[0-9]\s+[0-9]\s+[0-9]\s*$", cmd):
+        elif self.is_valid_input_for_game(cmd):
             # turns the string guess into an int list
             guess = [int(num) for num in cmd.split()]
-            correct_guess = self.make_guess(guess)
+
+            correct_guess = self.make_guess_for_game(guess)
 
             if correct_guess:
                 self.round = 1
-                self.game += 1
+                self.game_num += 1
             else:
                 self.round += 1
 
@@ -54,43 +66,86 @@ class InputSystem:
 
         return win, valid_cmd
 
-    def make_guess(self, guess: List[int]) -> bool:
-        """ Checks if guess matches the hidden sequence.
+    def make_guess_for_game(self, guess: List[int]) -> bool:
+        """ Make a guess based on current game.
 
         Args:
-            guess (List[int]): user's guess list
+            guess: (List[int]) user's guess list.
+
         Returns:
-            result (bool): True if correct, false otherwise.
+            True if correct according to the game, False otherwise.
 
         """
 
-        return self.mastermind.guess_sequence(guess)
+        if len(guess) < 1:
+            return False
+
+        if isinstance(self.game, Connect4):
+            if not isinstance(guess[0], int):
+                return False
+
+            # board index from 0, but QOL for players start at 1
+            proper_guess = guess[0] - 1
+        else:
+            proper_guess = guess
+
+        return self.game.enter_user_turn(proper_guess)
 
     def reset(self):
-        """ Resets the mastermind game to starting state.
+        """ Resets the current game to starting state.
         """
 
         self.round = 1
-        self.mastermind.reset_game()
+        self.game.reset_game()
 
     def clear(self):
-        """ Clear the mastermind game history.
+        """ Clear the all game history.
         """
 
         self.round = 1
-        self.game = 1
-        self.mastermind.clear_game()
+        self.game_num = 1
+        self.game.clear_game()
 
-    def get_last_guess(self) -> List[Tuple[int, str]]:
-        """ Retrieves the player's last guess.
+    def get_last_guess(self) -> Union[List[Tuple[int, str]], List[List[str]]]:
+        """ Retrieves the player's last move/guess.
 
         Returns:
-            List[Tuple[int, str]]: The evaluation list of last guess.
+            List[Tuple[int, str]]: The evaluation of last guess (mastermind).
+            List[List[str]]: Board state of last move (connect4).
 
         """
 
-        if len(self.mastermind.current_history) < 1:
-            return []
-        # gets # of guess and converts to eval enum into a string value
-        return [(guess[0], guess[1].value)
-                for guess in self.mastermind.current_history[-1]]
+        return self.game.get_last_turn()
+
+    def is_valid_input_for_game(self, cmd: str) -> bool:
+        """ Determines if cmd is valid for the current game instance.
+
+            Args:
+                cmd (str): User's input.
+
+            Returns:
+                True if valid for current game.
+        """
+
+        if isinstance(self.game, Connect4):
+            # matches only input with 1 number between [1-max cols] on board
+            re_exp = r"^\s*[1-{}]\s*$".format(Connect4.MAX_COLS)
+        else:
+            # matches only input with 4 numbers separated by whitespace
+            re_exp = r"^\s*[0-9]\s+[0-9]\s+[0-9]\s+[0-9]\s*$"
+
+        return True if re.match(re_exp, cmd) else False
+
+    def get_round_info(self) -> str:
+        """ Gets the round information.
+        If game is Mastermind, return round number
+        If game is Connect4, return the current player's turn
+
+            Returns:
+                round_info (str)
+        """
+
+        if isinstance(self.game, Connect4):
+            return f"Player {self.game.get_turn().value}:"
+        else:
+            return f"Round #{self.round}:"
