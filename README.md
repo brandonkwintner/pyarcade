@@ -1,7 +1,6 @@
 # PyArcade -- The Back End Test Suite
 
 # Refactoring Explanation
-## Code Smells
 1. Comments
     - I had some comments in some functions which were from the project description.
     Even though these comments describe the way the code is supposed to run, they were not needed as I believe that the code itself was readable enough.
