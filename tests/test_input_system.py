@@ -53,7 +53,7 @@ class InputSystemTestCase(unittest.TestCase):
     def test_clear_mastermind(self):
         in_sys = InputSystem()
 
-        in_sys.make_guess_for_game([1, 2, 3, 4])
+        in_sys.make_guess_for_game("1 2 3 4")
 
         self.assertEqual(len(in_sys.game.current_history), 1)
 
@@ -65,7 +65,7 @@ class InputSystemTestCase(unittest.TestCase):
     def test_clear_c4(self):
         in_sys = InputSystem(Game.CONNECT4)
 
-        self.assertFalse(in_sys.make_guess_for_game([0]))
+        self.assertFalse(in_sys.make_guess_for_game("0"))
 
         in_sys.clear()
 
@@ -120,13 +120,12 @@ class InputSystemTestCase(unittest.TestCase):
     def test_make_guess_for_game(self):
         in_sys = InputSystem()
 
-        self.assertFalse(in_sys.make_guess_for_game([]))
-        self.assertFalse(in_sys.make_guess_for_game([1]))
+        self.assertFalse(in_sys.make_guess_for_game(" "))
+        self.assertFalse(in_sys.make_guess_for_game("1"))
 
         in_sys = InputSystem(Game.CONNECT4)
 
-        self.assertFalse(in_sys.make_guess_for_game([1, 2]))
-        self.assertFalse(in_sys.make_guess_for_game(["1"]))
+        self.assertFalse(in_sys.make_guess_for_game("1"))
 
     def test_reset_take_input_mastermind(self):
         in_sys = InputSystem()
@@ -161,7 +160,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual([], in_sys.get_last_guess())
 
         in_sys.game.gen_sequence = [1, 2, 3, 4]
-        in_sys.make_guess_for_game([1, 5, 4, 3])
+        in_sys.make_guess_for_game("1 5 4 3")
 
         expected = [(1, Evaluation.CORRECT.value),
                     (5, Evaluation.INCORRECT.value),
