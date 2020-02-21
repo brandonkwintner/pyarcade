@@ -1,5 +1,6 @@
 from pyarcade.blackjack import Blackjack
 from pyarcade.cards import Ranks, Suits
+from pyarcade.blackjack_players import BlackJackWinner
 
 import unittest
 import copy
@@ -49,7 +50,6 @@ class BlackJackTestCase(unittest.TestCase):
         card_3 = (Ranks.Two, Suits.Diamonds)
 
         game.player_hand = [card_1, card_2, card_3]
-        self.assertTrue(game.player_draw())
         self.assertFalse(game.player_draw())
 
     def test_dealer_draw(self):
@@ -115,36 +115,36 @@ class BlackJackTestCase(unittest.TestCase):
         game.player_hand = [card_lose_1, card_lose_2]
         game.dealer_hand = [card_win_1, card_win_2]
         winner = game.calculate_winner()
-        self.assertEqual("Dealer Win", winner)
+        self.assertEqual(BlackJackWinner.DEALER, winner)
 
         game.player_hand = [card_win_1, card_win_2]
         game.dealer_hand = [card_lose_1, card_lose_2]
         winner = game.calculate_winner()
-        self.assertEqual("Player Win", winner)
+        self.assertEqual(BlackJackWinner.PLAYER, winner)
 
         game.player_hand = [card_win_1, card_win_2, card_bust]
         game.dealer_hand = [card_lose_1, card_lose_2]
         winner = game.calculate_winner()
-        self.assertEqual("Dealer Win", winner)
+        self.assertEqual(BlackJackWinner.DEALER, winner)
 
         game.player_hand = [card_lose_1, card_lose_2]
         game.dealer_hand = [card_win_1, card_win_2, card_bust]
         winner = game.calculate_winner()
-        self.assertEqual("Player Win", winner)
+        self.assertEqual(BlackJackWinner.PLAYER, winner)
 
     def test_history(self):
         game = Blackjack()
         game.start_game()
         card_1 = (Ranks.One, Suits.Clubs)
-        self.assertEqual(len(game.history), 1)
+        self.assertEqual(len(game.current_history), 1)
 
         game.player_hand = [card_1, card_1]
         game.player_draw()
-        self.assertEqual(len(game.history), 2)
+        self.assertEqual(len(game.current_history), 2)
 
         game.player_hand = [card_1, card_1, card_1]
         game.player_draw()
-        self.assertEqual(len(game.history), 3)
+        self.assertEqual(len(game.current_history), 3)
 
     def test_complete_history(self):
         game = Blackjack()
@@ -157,14 +157,14 @@ class BlackJackTestCase(unittest.TestCase):
         game.player_hand = [card_lose_1, card_lose_2]
         game.dealer_hand = [card_win_3, card_win_4]
         game.stand()
-        self.assertEqual(len(game.complete_history), 1)
-        self.assertEqual(game.complete_history[0][0], "Dealer Win")
+        self.assertEqual(len(game.entire_history), 1)
+        self.assertEqual(game.entire_history[0][0], BlackJackWinner.DEALER)
 
         game.player_hand = [card_win_3, card_win_4]
         game.dealer_hand = [card_lose_1, card_lose_2]
         game.stand()
-        self.assertEqual(len(game.complete_history), 2)
-        self.assertEqual(game.complete_history[1][0], "Player Win")
+        self.assertEqual(len(game.entire_history), 2)
+        self.assertEqual(game.entire_history[1][0], BlackJackWinner.PLAYER)
 
-        game.clear_all()
-        self.assertEqual(len(game.complete_history), 0)
+        game.clear_game()
+        self.assertEqual(len(game.entire_history), 0)

@@ -264,3 +264,28 @@ class Connect4(AbstractGame):
         self.entire_history.append((self.current_history, player))
         self.current_history = Connect4.setup_board()
         self.turn = 0
+
+    @staticmethod
+    def get_regex_pattern() -> str:
+        """ Gets pattern for connect 4.
+
+        Returns:
+            Pattern for only number between 1-MAX_COLS.
+
+        """
+        AbstractGame.get_regex_pattern()
+
+        return r"^\s*[1-{}]\s*$".format(Connect4.MAX_COLS)
+
+    @staticmethod
+    def get_instructions() -> str:
+        """ Instructions for game.
+
+        Returns:
+            Instructions for connect4.
+
+        """
+
+        AbstractGame.get_instructions()
+
+        return "Instructions for connect4"

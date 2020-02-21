@@ -149,3 +149,28 @@ class Mastermind(AbstractGame):
         # gets # of guess and converts to eval enum into a string value
         return [(guess[0], guess[1].value)
                 for guess in self.current_history[-1]]
+
+    @staticmethod
+    def get_regex_pattern() -> str:
+        """ Gets pattern for mastermind.
+
+        Returns:
+            Pattern for only numbers between 0-9 inclusive.
+
+        """
+        AbstractGame.get_regex_pattern()
+
+        return r"^\s*[0-9]\s+[0-9]\s+[0-9]\s+[0-9]\s*$"
+
+    @staticmethod
+    def get_instructions() -> str:
+        """ Instructions for game.
+
+        Returns:
+            Instructions for mastermind.
+
+        """
+
+        AbstractGame.get_instructions()
+
+        return "Instructions for mastermind"
