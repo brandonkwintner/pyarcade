@@ -41,3 +41,24 @@ class AbstractGame(metaclass=ABCMeta):
             Meaningful state of the current game.
         """
         pass
+
+    @staticmethod
+    @abstractmethod
+    def get_regex_pattern() -> str:
+        """ Gets validator for game.
+
+        Returns:
+            Regex string.
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def get_instructions() -> str:
+        """ Gets the game instructions.
+
+        Returns:
+            Instructions of the game.
+
+        """
+        pass

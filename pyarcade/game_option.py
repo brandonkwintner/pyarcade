@@ -7,3 +7,4 @@ class Game(Enum):
 
     MASTERMIND = "Mastermind"
     CONNECT4 = "Connect4"
+    BLACKJACK = "BlackJack"
