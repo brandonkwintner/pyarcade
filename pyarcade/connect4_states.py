@@ -15,5 +15,3 @@ class C4State(Enum):
     E = "-"
     X = "X"
     O = "O"
-
-
