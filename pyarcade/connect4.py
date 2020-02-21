@@ -288,4 +288,5 @@ class Connect4(AbstractGame):
 
         AbstractGame.get_instructions()
 
-        return "Instructions for connect4"
+        return \
+            f"Enter a column between 1-{Connect4.MAX_COLS} (inclusive)."

@@ -376,6 +376,11 @@ class Connect4TestCase(unittest.TestCase):
                          game.get_wins())
         self.assertEqual(Connect4.setup_board(), game.current_history)
 
+    def test_get_instructions(self):
+        game = Connect4()
+
+        self.assertIsNotNone(game.get_instructions())
+
 
 if __name__ == "__main__":
     unittest.main()
