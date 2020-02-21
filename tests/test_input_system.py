@@ -4,6 +4,9 @@ from pyarcade.game_option import Game
 from pyarcade.mastermind import Mastermind
 from pyarcade.connect4 import Connect4
 from pyarcade.connect4_states import C4State
+from pyarcade.blackjack import Blackjack
+from pyarcade.blackjack_players import BlackJackWinner
+from pyarcade.cards import Ranks, Suits
 import unittest
 
 
@@ -11,6 +14,13 @@ class InputSystemTestCase(unittest.TestCase):
     @staticmethod
     def _get_empty_c4_board_str():
         return [[C4State.E.value] * Connect4.MAX_COLS] * Connect4.MAX_ROWS
+
+    @staticmethod
+    def _get_basic_hand():
+        card_1 = (Ranks.Nine, Suits.Diamonds)
+        card_2 = (Ranks.Queen, Suits.Diamonds)
+
+        return [card_1, card_2]
 
     def test_init_mastermind(self):
         in_sys = InputSystem()
@@ -23,6 +33,13 @@ class InputSystemTestCase(unittest.TestCase):
         in_sys = InputSystem(Game.CONNECT4)
 
         self.assertTrue(isinstance(in_sys.game, Connect4))
+        self.assertEqual(in_sys.round, 1)
+        self.assertEqual(in_sys.game_num, 1)
+
+    def test_init_blackjack(self):
+        in_sys = InputSystem(Game.BLACKJACK)
+
+        self.assertTrue(isinstance(in_sys.game, Blackjack))
         self.assertEqual(in_sys.round, 1)
         self.assertEqual(in_sys.game_num, 1)
 
@@ -50,6 +67,18 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(in_sys.game_num, 1)
         self.assertIsNot(Connect4.setup_board(), in_sys.game.current_history)
 
+    def test_reset_blackjack(self):
+        in_sys = InputSystem(Game.BLACKJACK)
+
+        in_sys.round = 100
+        in_sys.game.current_history = []
+
+        in_sys.reset()
+
+        self.assertEqual(in_sys.round, 1)
+        self.assertEqual(in_sys.game_num, 1)
+        self.assertEqual(len(in_sys.game.current_history[0]), 2)
+
     def test_clear_mastermind(self):
         in_sys = InputSystem()
 
@@ -70,6 +99,19 @@ class InputSystemTestCase(unittest.TestCase):
         in_sys.clear()
 
         self.assertEqual(in_sys.game.current_history, Connect4.setup_board())
+        self.assertEqual(len(in_sys.game.entire_history), 0)
+
+    def test_clear_blackjack(self):
+        in_sys = InputSystem(Game.BLACKJACK)
+        in_sys.game.player_hand = InputSystemTestCase._get_basic_hand()
+
+        self.assertTrue(in_sys.make_guess_for_game("stand"))
+
+        self.assertEqual(len(in_sys.game.entire_history), 1)
+
+        in_sys.clear()
+
+        self.assertEqual(len(in_sys.game.current_history[0]), 2)
         self.assertEqual(len(in_sys.game.entire_history), 0)
 
     def test_guess_take_input_mastermind(self):
@@ -117,6 +159,12 @@ class InputSystemTestCase(unittest.TestCase):
 
         self.assertEqual((False, True), in_sys.take_input("   1   "))
 
+    def test_guess_take_input_for_blackjack(self):
+        in_sys = InputSystem(Game.BLACKJACK)
+        in_sys.game.player_hand = InputSystemTestCase._get_basic_hand()
+
+        self.assertEqual((False, True), in_sys.take_input("hit"))
+
     def test_make_guess_for_game(self):
         in_sys = InputSystem()
 
@@ -126,6 +174,10 @@ class InputSystemTestCase(unittest.TestCase):
         in_sys = InputSystem(Game.CONNECT4)
 
         self.assertFalse(in_sys.make_guess_for_game("1"))
+
+        in_sys = InputSystem(Game.BLACKJACK)
+
+        self.assertTrue(in_sys.make_guess_for_game("stand"))
 
     def test_reset_take_input_mastermind(self):
         in_sys = InputSystem()
@@ -280,6 +332,27 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(Connect4.setup_board(), in_sys.game.current_history)
         self.assertEqual(1, in_sys.game_num)
 
+    def test_correct_take_input_many_blackjack(self):
+        in_sys = InputSystem(Game.BLACKJACK)
+
+        self.assertTrue(in_sys.take_input("stand")[1])
+        self.assertTrue(in_sys.take_input("stand")[1])
+        self.assertTrue(in_sys.take_input("stand")[1])
+
+        self.assertEqual((False, True), in_sys.take_input("reset"))
+
+        self.assertEqual(1, in_sys.round)
+
+        in_sys.game.player_hand = InputSystemTestCase._get_basic_hand()
+        in_sys.game.player_hand.append((Ranks.Two, Suits.Diamonds))
+
+        self.assertEqual((True, True), in_sys.take_input("stand"))
+        self.assertTrue(in_sys.game_num > 1)
+
+        self.assertEqual((False, True), in_sys.take_input("clear"))
+        self.assertEqual(1, in_sys.round)
+        self.assertEqual(1, in_sys.game_num)
+
     def test_incorrect_take_input_mastermind(self):
         in_sys = InputSystem()
 
@@ -329,6 +402,15 @@ class InputSystemTestCase(unittest.TestCase):
         win, valid = in_sys.take_input("1 clear")
         self.assertFalse(win)
         self.assertFalse(valid)
+
+    def test_incorrect_take_input_blackjack(self):
+        in_sys = InputSystem(Game.BLACKJACK)
+
+        self.assertEqual((False, False), in_sys.take_input("someBadInput"))
+        self.assertEqual((False, False), in_sys.take_input("hi"))
+        self.assertEqual((False, False), in_sys.take_input("stan"))
+        self.assertEqual((False, False), in_sys.take_input("hitstand"))
+        self.assertEqual((False, False), in_sys.take_input(" "))
 
     def test_get_round_info_for_mastermind(self):
         in_sys = InputSystem()
