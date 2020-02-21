@@ -211,6 +211,11 @@ class MastermindTestCase(unittest.TestCase):
 
         self.assertEqual(expected, game.get_last_turn())
 
+    def test_get_instructions(self):
+        game = Mastermind()
+
+        self.assertIsNotNone(game.get_instructions())
+
 
 if __name__ == "__main__":
     unittest.main()

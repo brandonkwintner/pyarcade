@@ -173,4 +173,4 @@ class Mastermind(AbstractGame):
 
         AbstractGame.get_instructions()
 
-        return "Instructions for mastermind"
+        return "Enter 4 digits between 0-9 (inclusive)."
