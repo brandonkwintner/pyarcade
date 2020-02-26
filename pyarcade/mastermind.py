@@ -99,8 +99,6 @@ class Mastermind(AbstractGame):
         """
 
         self.entire_history.append(self.current_history)
-        self.clear_history()
-        self.gen_sequence = self.generate_hidden_sequence()
 
     def reset_game(self):
         """ Reset single game. (input reset)
@@ -133,7 +131,7 @@ class Mastermind(AbstractGame):
 
         self.current_history = []
 
-    def get_last_turn(self) -> List[Tuple[int, str]]:
+    def get_last_turn(self) -> str:
         """ Retrieves the player's last guess.
 
            Returns:
@@ -144,11 +142,18 @@ class Mastermind(AbstractGame):
         super().get_last_turn()
 
         if len(self.current_history) < 1:
-            return []
+            return ""
 
         # gets # of guess and converts to eval enum into a string value
-        return [(guess[0], guess[1].value)
-                for guess in self.current_history[-1]]
+        result_list = [(guess[0], guess[1].value)
+                       for guess in self.current_history[-1]]
+
+        result = ""
+
+        for element in result_list:
+            result += str(element[0]) + " : " + element[1] + "\n"
+
+        return result
 
     @staticmethod
     def get_regex_pattern() -> str:
@@ -161,16 +166,3 @@ class Mastermind(AbstractGame):
         AbstractGame.get_regex_pattern()
 
         return r"^\s*[0-9]\s+[0-9]\s+[0-9]\s+[0-9]\s*$"
-
-    @staticmethod
-    def get_instructions() -> str:
-        """ Instructions for game.
-
-        Returns:
-            Instructions for mastermind.
-
-        """
-
-        AbstractGame.get_instructions()
-
-        return "Enter 4 digits between 0-9 (inclusive)."
