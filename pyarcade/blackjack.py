@@ -11,18 +11,19 @@ class Blackjack(AbstractGame):
 
     def __init__(self):
         AbstractGame.__init__(self)
-
         self.deck_of_cards = Blackjack.generate_new_deck()
         self.shuffle_deck()
         self.player_hand = []
         self.dealer_hand = []
+        self.start_game()
+        self.hasWon = False
 
     @staticmethod
     def generate_new_deck() -> [(Ranks, Suits)]:
         deck = []
 
         for rank in Ranks:
-            if rank == Ranks.One:
+            if rank == Ranks.ONE:
                 continue
             for suit in Suits:
                 deck.append((rank, suit))
@@ -69,7 +70,7 @@ class Blackjack(AbstractGame):
 
         return card
 
-    def evaluate_hand(self, card_hand: List[Ranks]) -> int:
+    def evaluate_hand(self, card_hand: List[Tuple[Ranks, Suits]]) -> int:
         hand_total = self.MAX_WINNING_LIMIT + 1
 
         while hand_total > self.MAX_WINNING_LIMIT:
@@ -87,8 +88,8 @@ class Blackjack(AbstractGame):
     @staticmethod
     def change_ace_to_one(card_hand: [Ranks]) -> bool:
         for idx in range(len(card_hand)):
-            if card_hand[idx][0] == Ranks.Ace:
-                card_hand[idx] = (Ranks.One, card_hand[idx][1])
+            if card_hand[idx][0] == Ranks.ACE:
+                card_hand[idx] = (Ranks.ONE, card_hand[idx][1])
                 return True
 
         return False
@@ -96,8 +97,8 @@ class Blackjack(AbstractGame):
     def stand(self) -> BlackJackWinner:
         self.npc_draw(self.dealer_hand)
         winner = self.calculate_winner()
-        self.entire_history.append((winner, [self.player_hand, self.dealer_hand]))
-        self.reset_game()
+        self.entire_history.append(
+            (winner, [self.player_hand, self.dealer_hand]))
 
         return winner
 
@@ -109,9 +110,11 @@ class Blackjack(AbstractGame):
             return BlackJackWinner.DEALER
 
         if dealer_value > self.MAX_WINNING_LIMIT:
+            self.hasWon = True
             return BlackJackWinner.PLAYER
 
         if player_value > dealer_value:
+            self.hasWon = True
             return BlackJackWinner.PLAYER
         else:
             return BlackJackWinner.DEALER
@@ -125,6 +128,7 @@ class Blackjack(AbstractGame):
         self.shuffle_deck()
         self.current_history = []
         self.start_game()
+        self.hasWon = False
 
     def clear_game(self):
         super().clear_game()
@@ -132,10 +136,25 @@ class Blackjack(AbstractGame):
         self.reset_game()
         self.entire_history = []
 
-    def get_last_turn(self) -> str:
+    def get_last_turn(self) -> Tuple[Tuple[str, str], bool]:
         super().get_last_turn()
 
-        return "".join(self.player_hand)
+        player_cards = Blackjack._hand_to_str(self.player_hand)
+        dealer_cards = Blackjack._hand_to_str(self.dealer_hand)
+
+        cards = (player_cards, dealer_cards)
+
+        return cards, self.hasWon
+
+    @staticmethod
+    def _hand_to_str(hand):
+        hand_str = ""
+        for card in hand:
+            if card[0].name == Ranks.ONE.name:
+                hand_str += "ACE, "
+            else:
+                hand_str += card[0].name + ", "
+        return hand_str[:-2]
 
     def enter_user_turn(self, cmd: str) -> bool:
         """ Enter's a user's input to the blackjack game.
@@ -163,22 +182,9 @@ class Blackjack(AbstractGame):
         """ Gets pattern for blackjack.
 
         Returns:
-            Pa
+            Pattern match for game.
 
         """
         AbstractGame.get_regex_pattern()
 
         return r"^\s*(hit)\s*$|^\s*(stand)\s*$"
-
-    @staticmethod
-    def get_instructions() -> str:
-        """ Instructions for game.
-
-        Returns:
-            Instructions for blackjack.
-
-        """
-
-        AbstractGame.get_instructions()
-
-        return "Instructions for blackjack"
