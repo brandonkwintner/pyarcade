@@ -243,6 +243,10 @@ class Menu:
             elif idx == len(options) - 1:
                 break
 
+    @staticmethod
+    def run():
+        curses.wrapper(Menu().main_menu)
+
 
 if __name__ == "__main__":
     menu = Menu()
