@@ -1,6 +1,6 @@
 from pyarcade.connect4_states import C4State
 from pyarcade.abstract_game import AbstractGame
-from typing import List, Mapping
+from typing import List, Mapping, Tuple
 
 
 class Connect4(AbstractGame):
@@ -213,7 +213,7 @@ class Connect4(AbstractGame):
 
         return False
 
-    def get_last_turn(self) -> List[List[str]]:
+    def get_last_turn(self) -> str:
         """ Gets the latest board state.
 
             Returns (List[List[str]]):
@@ -224,11 +224,12 @@ class Connect4(AbstractGame):
 
         super().get_last_turn()
 
-        result = []
+        result = ""
 
-        # convert enum into its value
         for row in self.current_history:
-            result.append([element.value for element in row])
+            for element in row:
+                result += element.value + " "
+            result += "\n"
 
         return result
 
@@ -262,7 +263,6 @@ class Connect4(AbstractGame):
         """
 
         self.entire_history.append((self.current_history, player))
-        self.current_history = Connect4.setup_board()
         self.turn = 0
 
     @staticmethod
@@ -276,17 +276,3 @@ class Connect4(AbstractGame):
         AbstractGame.get_regex_pattern()
 
         return r"^\s*[1-{}]\s*$".format(Connect4.MAX_COLS)
-
-    @staticmethod
-    def get_instructions() -> str:
-        """ Instructions for game.
-
-        Returns:
-            Instructions for connect4.
-
-        """
-
-        AbstractGame.get_instructions()
-
-        return \
-            f"Enter a column between 1-{Connect4.MAX_COLS} (inclusive)."
