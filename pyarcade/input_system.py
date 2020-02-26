@@ -105,7 +105,7 @@ class InputSystem:
         self.game_num = 1
         self.game.clear_game()
 
-    def get_last_guess(self) -> Union[List[Tuple[int, str]], List[List[str]]]:
+    def get_last_guess(self) -> Union[str, Tuple[Tuple[str, str], bool]]:
         """ Retrieves the player's last move/guess.
 
         Returns:
@@ -141,6 +141,10 @@ class InputSystem:
         """
 
         if isinstance(self.game, Connect4):
-            return f"Player {self.game.get_turn().value}:"
+            return f"Player {self.game.get_turn().value}"
+        if isinstance(self.game, Blackjack):
+            return f"Player Hand: {self.game.player_hand}"
         else:
             return f"Round #{self.round}:"
+
+
