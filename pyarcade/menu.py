@@ -139,11 +139,11 @@ class Menu:
     @staticmethod
     def mastermind_menu(stdscr):
         idx = 1
-        game = 1
         input_system = InputSystem(Game.MASTERMIND)
         options = MASTERMIND_OPTIONS
 
         while True:
+            game = input_system.game_num
             status = input_system.get_last_guess()
             game_info = ["Mastermind", status, str(game)]
 
@@ -153,14 +153,14 @@ class Menu:
             if options[idx] == "Take Guess":
                 message = "Please enter 4 digits 0 to 9 inclusive"
                 guess = Menu.user_input_window(stdscr, message, 1, 13)
+
                 if input_system.take_input(" ".join(guess))[0]:
                     options = MASTERMIND_RESULT
-                    game += 1
+
             elif options[idx] == "Reset" or options[idx] == "New Game":
                 options = MASTERMIND_OPTIONS
                 input_system.take_input("reset")
-            elif options[idx] == "clear":
-                game = 1
+            elif options[idx] == "Clear":
                 options = MASTERMIND_OPTIONS
                 input_system.take_input("clear")
             elif idx == len(options) - 1:
@@ -169,12 +169,12 @@ class Menu:
     @staticmethod
     def connect_four_menu(stdscr):
         idx = 1
-        game = 1
         options = CONNECT_FOUR_OPTIONS
         input_system = InputSystem(Game.CONNECT4)
 
         while True:
             status = input_system.get_last_guess()
+            game = input_system.game_num
             game_info = ["Connect Four", status, str(game), input_system.get_round_info()]
 
             Menu.print_menu(stdscr, options, idx, game_info)
@@ -186,16 +186,16 @@ class Menu:
 
                 if input_system.take_input(guess)[0]:
                     options = CONNECT_FOUR_RESULT
+                    
                     if game_info[3] == 'Player X':
                         options[0] = 'Player X Wins!'
                     else:
                         options[0] = 'Player O Wins!'
-                    game += 1
+
             elif options[idx] == "Reset" or options[idx] == "New Game":
                 input_system.take_input("reset")
                 options = CONNECT_FOUR_OPTIONS
             elif options[idx] == "Clear":
-                game = 1
                 options = CONNECT_FOUR_OPTIONS
                 input_system.take_input("clear")
             elif idx == len(options) - 1:
