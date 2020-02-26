@@ -5,7 +5,6 @@ from pyarcade.mastermind import Mastermind
 from pyarcade.connect4 import Connect4
 from pyarcade.connect4_states import C4State
 from pyarcade.blackjack import Blackjack
-from pyarcade.blackjack_players import BlackJackWinner
 from pyarcade.cards import Ranks, Suits
 import unittest
 

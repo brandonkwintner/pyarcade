@@ -1,6 +1,6 @@
 from pyarcade.connect4_states import C4State
 from pyarcade.abstract_game import AbstractGame
-from typing import List, Mapping, Tuple
+from typing import List, Mapping
 
 
 class Connect4(AbstractGame):

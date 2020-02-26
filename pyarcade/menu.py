@@ -1,10 +1,7 @@
 from pyarcade.input_system import InputSystem
-from pyarcade.mastermind import Mastermind
 from pyarcade.game_option import Game
-from pyarcade.connect4 import Connect4
-from pyarcade.blackjack import Blackjack
 from curses.textpad import rectangle, Textbox
-from typing import List, Tuple, Union
+from typing import List
 import curses
 
 MAIN_MENU_OPTIONS = ['', 'Play Mastermind', 'Play Connect Four', 'Play Blackjack', 'Exit']

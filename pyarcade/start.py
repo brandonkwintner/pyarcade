@@ -1,5 +1,3 @@
-# from pyarcade.mastermind import Mastermind
-# from pyarcade.input_system import InputSystem
 from pyarcade.menu import Menu
 
 
