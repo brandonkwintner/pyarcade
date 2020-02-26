@@ -2,26 +2,26 @@ from enum import Enum
 
 
 class Ranks(Enum):
-    One = 1
-    Two = 2
-    Three = 3
-    Four = 4
-    Five = 5
-    Six = 6
-    Seven = 7
-    Eight = 8
-    Nine = 9
-    Ten = 10
-    Jack = 10.1
-    Queen = 10.2
-    King = 10.3
-    Ace = 11
+    ONE = 1
+    TWO = 2
+    THREE = 3
+    FOUR = 4
+    FIVE = 5
+    SIX = 6
+    SEVEN = 7
+    EIGHT = 8
+    NINE = 9
+    TEN = 10
+    JACK = 10.1
+    QUEEN = 10.2
+    KING = 10.3
+    ACE = 11
 
 
 class Suits(Enum):
-    Diamonds = "Diamonds"
-    Clubs = "Clubs"
-    Hearts = "Hearts"
-    Spades = "Spades"
+    DIAMONDS = "Diamonds"
+    CLUBS = "Clubs"
+    HEARTS = "Hearts"
+    SPADES = "Spades"
 
 

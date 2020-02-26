@@ -17,10 +17,30 @@ class InputSystemTestCase(unittest.TestCase):
 
     @staticmethod
     def _get_basic_hand():
-        card_1 = (Ranks.Nine, Suits.Diamonds)
-        card_2 = (Ranks.Queen, Suits.Diamonds)
+        card_1 = (Ranks.NINE, Suits.DIAMONDS)
+        card_2 = (Ranks.QUEEN, Suits.DIAMONDS)
 
         return [card_1, card_2]
+
+    @staticmethod
+    def _mastermind_array_to_str(array):
+        result = ""
+
+        for element in array:
+            result += str(element[0]) + " : " + element[1] + "\n"
+
+        return result
+
+    @staticmethod
+    def _2d_to_str(array):
+        result = ""
+
+        for row in array:
+            for element in row:
+                result += element + " "
+            result += "\n"
+
+        return result
 
     def test_init_mastermind(self):
         in_sys = InputSystem()
@@ -141,7 +161,7 @@ class InputSystemTestCase(unittest.TestCase):
     def test_guess_take_input_c4(self):
         in_sys = InputSystem(Game.CONNECT4)
 
-        self.assertEqual(f"Player {C4State.X.value}:", in_sys.get_round_info())
+        self.assertEqual(f"Player {C4State.X.value}", in_sys.get_round_info())
         win, valid = in_sys.take_input("1")
 
         self.assertFalse(win)
@@ -149,7 +169,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(in_sys.round, 2)
         self.assertEqual(in_sys.game_num, 1)
 
-        self.assertEqual(f"Player {C4State.O.value}:", in_sys.get_round_info())
+        self.assertEqual(f"Player {C4State.O.value}", in_sys.get_round_info())
 
         # invalid input for c4
         win, valid = in_sys.take_input("1 2 3 4")
@@ -209,7 +229,7 @@ class InputSystemTestCase(unittest.TestCase):
     def test_get_last_guess_mastermind(self):
         in_sys = InputSystem()
 
-        self.assertEqual([], in_sys.get_last_guess())
+        self.assertEqual("", in_sys.get_last_guess())
 
         in_sys.game.gen_sequence = [1, 2, 3, 4]
         in_sys.make_guess_for_game("1 5 4 3")
@@ -218,25 +238,26 @@ class InputSystemTestCase(unittest.TestCase):
                     (5, Evaluation.INCORRECT.value),
                     (4, Evaluation.SOMEWHERE.value),
                     (3, Evaluation.SOMEWHERE.value)]
-
-        self.assertEqual(expected, in_sys.get_last_guess())
+        expected_str = InputSystemTestCase._mastermind_array_to_str(expected)
+        self.assertEqual(expected_str, in_sys.get_last_guess())
 
     def test_get_last_guess_c4(self):
         in_sys = InputSystem(Game.CONNECT4)
+        expected = InputSystemTestCase._get_empty_c4_board_str()
 
-        self.assertEqual(InputSystemTestCase._get_empty_c4_board_str(),
-                         in_sys.get_last_guess())
+        expected_str = InputSystemTestCase._2d_to_str(expected)
+        self.assertEqual(expected_str,in_sys.get_last_guess())
 
         in_sys.take_input("1")
 
-        expected = InputSystemTestCase._get_empty_c4_board_str().copy()
         expected.pop()
         last_row = [C4State.E.value] * (Connect4.MAX_COLS-1)
         last_row.insert(0, C4State.X.value)
 
         expected.insert(len(expected), last_row)
+        expected_str = InputSystemTestCase._2d_to_str(expected)
 
-        self.assertEqual(expected, in_sys.get_last_guess())
+        self.assertEqual(expected_str, in_sys.get_last_guess())
 
     def test_clear_take_input_mastermind(self):
         in_sys = InputSystem()
@@ -251,7 +272,7 @@ class InputSystemTestCase(unittest.TestCase):
 
         self.assertEqual(in_sys.round, 1)
         self.assertEqual(in_sys.game_num, 1)
-        self.assertEqual(in_sys.get_last_guess(), [])
+        self.assertEqual(in_sys.get_last_guess(), "")
         self.assertNotEqual(in_sys.game.gen_sequence, old_seq)
 
     def test_clear_take_input_c4(self):
@@ -286,19 +307,20 @@ class InputSystemTestCase(unittest.TestCase):
                                (4, Evaluation.SOMEWHERE.value),
                                (3, Evaluation.SOMEWHERE.value)]
 
-        self.assertEqual(expected_last_guess, in_sys.get_last_guess())
+        expected_str = InputSystemTestCase._mastermind_array_to_str(expected_last_guess)
+        self.assertEqual(expected_str, in_sys.get_last_guess())
 
         win, valid = in_sys.take_input("clear")
 
         self.assertFalse(win)
         self.assertTrue(valid)
-        self.assertEqual(in_sys.get_last_guess(), [])
+        self.assertEqual(in_sys.get_last_guess(), "")
 
         win, valid = in_sys.take_input("reset")
 
         self.assertFalse(win)
         self.assertTrue(valid)
-        self.assertEqual(in_sys.get_last_guess(), [])
+        self.assertEqual(in_sys.get_last_guess(), "")
 
         in_sys.game.gen_sequence = custom_seq
         win, valid = in_sys.take_input("1 2 3 4")
@@ -319,10 +341,10 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(7, in_sys.round)
 
         self.assertEqual((True, True), in_sys.take_input("1"))
-        self.assertEqual(Connect4.setup_board(), in_sys.game.current_history)
+
         self.assertEqual(1, in_sys.round)
         self.assertEqual(2, in_sys.game_num)
-
+        in_sys.take_input("reset")
         self.assertEqual((False, True), in_sys.take_input("1"))
         self.assertEqual((False, True), in_sys.take_input("reset"))
         self.assertEqual(Connect4.setup_board(), in_sys.game.current_history)
@@ -344,7 +366,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(1, in_sys.round)
 
         in_sys.game.player_hand = InputSystemTestCase._get_basic_hand()
-        in_sys.game.player_hand.append((Ranks.Two, Suits.Diamonds))
+        in_sys.game.player_hand.append((Ranks.TWO, Suits.DIAMONDS))
 
         self.assertEqual((True, True), in_sys.take_input("stand"))
         self.assertTrue(in_sys.game_num > 1)
@@ -424,9 +446,15 @@ class InputSystemTestCase(unittest.TestCase):
     def test_get_round_info_for_c4(self):
         in_sys = InputSystem(Game.CONNECT4)
 
-        self.assertEqual(f"Player {C4State.X.value}:", in_sys.get_round_info())
+        self.assertEqual(f"Player {C4State.X.value}", in_sys.get_round_info())
         in_sys.take_input("1")
-        self.assertEqual(f"Player {C4State.O.value}:", in_sys.get_round_info())
+        self.assertEqual(f"Player {C4State.O.value}", in_sys.get_round_info())
+
+    def test_get_round_info_for_blackjack(self):
+        in_sys = InputSystem(Game.BLACKJACK)
+        in_sys.game.player_hand = InputSystemTestCase._get_basic_hand()
+        expect = f"Player Hand: {InputSystemTestCase._get_basic_hand()}"
+        self.assertEqual(expect, in_sys.get_round_info())
 
 
 if __name__ == "__main__":

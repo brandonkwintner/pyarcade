@@ -20,6 +20,17 @@ class Connect4TestCase(unittest.TestCase):
         for sub in array:
             Connect4TestCase._shift_array(sub)
 
+    @staticmethod
+    def _2d_to_str(array):
+        result = ""
+
+        for row in array:
+            for element in row:
+                result += element + " "
+            result += "\n"
+
+        return result
+
     def test_for_shifting(self):
         array = [
             [2, 3, 1],
@@ -322,12 +333,14 @@ class Connect4TestCase(unittest.TestCase):
         for row in Connect4.setup_board():
             expected.append([element.value for element in row])
 
-        self.assertEqual(expected, game.get_last_turn())
+        expected_str = Connect4TestCase._2d_to_str(expected)
+        self.assertEqual(expected_str, game.get_last_turn())
 
         game.enter_user_turn(0)
         expected[Connect4.MAX_ROWS-1][0] = C4State.X.value
+        expected_str = Connect4TestCase._2d_to_str(expected)
 
-        self.assertEqual(expected, game.get_last_turn())
+        self.assertEqual(expected_str, game.get_last_turn())
 
     def test_interactions(self):
         game = Connect4()
@@ -374,12 +387,6 @@ class Connect4TestCase(unittest.TestCase):
         self.assertEqual(C4State.X, game.entire_history[0][1])
         self.assertEqual({C4State.X.value: 1, C4State.O.value: 0},
                          game.get_wins())
-        self.assertEqual(Connect4.setup_board(), game.current_history)
-
-    def test_get_instructions(self):
-        game = Connect4()
-
-        self.assertIsNotNone(game.get_instructions())
 
 
 if __name__ == "__main__":

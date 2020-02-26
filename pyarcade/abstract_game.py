@@ -51,14 +51,3 @@ class AbstractGame(metaclass=ABCMeta):
             Regex string.
         """
         pass
-
-    @staticmethod
-    @abstractmethod
-    def get_instructions() -> str:
-        """ Gets the game instructions.
-
-        Returns:
-            Instructions of the game.
-
-        """
-        pass
