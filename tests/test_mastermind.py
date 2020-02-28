@@ -4,6 +4,15 @@ import unittest
 
 
 class MastermindTestCase(unittest.TestCase):
+    @staticmethod
+    def _mastermind_array_to_str(array):
+        result = ""
+
+        for element in array:
+            result += str(element[0]) + " : " + element[1] + "\n"
+
+        return result
+
     def test_generate_random_sequence(self):
         game = Mastermind()
         self.assertEqual(len(game.generate_hidden_sequence()), 4)
@@ -39,12 +48,7 @@ class MastermindTestCase(unittest.TestCase):
 
         self.assertTrue(game.enter_user_turn(guess))
 
-        self.assertEqual(len(game.current_history), 0)
-
-        actual = game.entire_history[0][0]
-        expected = [(5, Evaluation.CORRECT)] * 4
-
-        self.assertEqual(actual, expected)
+        self.assertEqual(len(game.current_history), 1)
 
     def test_all_somewhere_guess(self):
         game = Mastermind()
@@ -108,13 +112,8 @@ class MastermindTestCase(unittest.TestCase):
 
         game.enter_user_turn(guess)
 
-        self.assertEqual(len(game.current_history), 0)
+        self.assertEqual(len(game.current_history), 1)
         self.assertEqual(len(game.entire_history), 1)
-
-        actual = game.entire_history[0][0]
-        expected = [(5, Evaluation.CORRECT)] * 4
-
-        self.assertEqual(actual, expected)
 
     def test_multiple_guess_entire_history(self):
         game = Mastermind()
@@ -127,7 +126,7 @@ class MastermindTestCase(unittest.TestCase):
         game.enter_user_turn(bad_guess)
         game.enter_user_turn(guess)
 
-        self.assertEqual(len(game.current_history), 0)
+        self.assertEqual(len(game.current_history), 2)
         self.assertEqual(len(game.entire_history), 1)
 
     def test_reset_game(self):
@@ -137,12 +136,12 @@ class MastermindTestCase(unittest.TestCase):
 
         self.assertTrue(game.enter_user_turn(current_seq))
 
-        self.assertNotEqual(current_seq, game.gen_sequence)
-        self.assertEqual(len(game.current_history), 0)
+        self.assertEqual(len(game.current_history), 1)
         self.assertEqual(len(game.entire_history), 1)
 
         game.reset_game()
 
+        self.assertNotEqual(current_seq, game.gen_sequence)
         self.assertEqual(len(game.current_history), 0)
         self.assertEqual(len(game.entire_history), 1)
 
@@ -153,7 +152,7 @@ class MastermindTestCase(unittest.TestCase):
 
         self.assertTrue(game.enter_user_turn(current_seq))
 
-        self.assertEqual(len(game.current_history), 0)
+        self.assertEqual(len(game.current_history), 1)
         self.assertEqual(len(game.entire_history), 1)
 
         current_seq = game.gen_sequence
@@ -180,6 +179,7 @@ class MastermindTestCase(unittest.TestCase):
     def test_clear_all_history(self):
         game = Mastermind()
 
+        game.gen_sequence = [1, 1, 1, 1]
         current_seq = game.gen_sequence
         guess = [1, 2, 3, 4]
 
@@ -190,6 +190,7 @@ class MastermindTestCase(unittest.TestCase):
         game.enter_user_turn(current_seq)
 
         self.assertEqual(len(game.entire_history), 1)
+        self.assertEqual(len(game.current_history), 2)
 
         game.clear_all_history()
 
@@ -199,7 +200,7 @@ class MastermindTestCase(unittest.TestCase):
     def test_get_last_turn(self):
         game = Mastermind()
 
-        self.assertEqual([], game.get_last_turn())
+        self.assertEqual("", game.get_last_turn())
 
         game.gen_sequence = [1, 2, 3, 4]
         game.enter_user_turn([1, 3, 2, 5])
@@ -209,7 +210,8 @@ class MastermindTestCase(unittest.TestCase):
                     (2, Evaluation.SOMEWHERE.value),
                     (5, Evaluation.INCORRECT.value)]
 
-        self.assertEqual(expected, game.get_last_turn())
+        expected_str = MastermindTestCase._mastermind_array_to_str(expected)
+        self.assertEqual(expected_str, game.get_last_turn())
 
 
 if __name__ == "__main__":

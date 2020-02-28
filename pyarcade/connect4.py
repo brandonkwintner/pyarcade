@@ -213,7 +213,7 @@ class Connect4(AbstractGame):
 
         return False
 
-    def get_last_turn(self) -> List[List[str]]:
+    def get_last_turn(self) -> str:
         """ Gets the latest board state.
 
             Returns (List[List[str]]):
@@ -224,11 +224,12 @@ class Connect4(AbstractGame):
 
         super().get_last_turn()
 
-        result = []
+        result = ""
 
-        # convert enum into its value
         for row in self.current_history:
-            result.append([element.value for element in row])
+            for element in row:
+                result += element.value + " "
+            result += "\n"
 
         return result
 
@@ -245,8 +246,10 @@ class Connect4(AbstractGame):
 
         # entire history is a list of tuples (game, winner)
         # getting tuple[1] returns the winner
-        player_x_wins = len(list(filter(lambda x: x[1] == C4State.X, self.entire_history)))
-        player_o_wins = len(list(filter(lambda x: x[1] == C4State.O, self.entire_history)))
+        player_x_wins = len(list(filter(lambda x: x[1] == C4State.X,
+                                        self.entire_history)))
+        player_o_wins = len(list(filter(lambda x: x[1] == C4State.O,
+                                        self.entire_history)))
 
         return {
             C4State.X.value: player_x_wins,
@@ -262,5 +265,16 @@ class Connect4(AbstractGame):
         """
 
         self.entire_history.append((self.current_history, player))
-        self.current_history = Connect4.setup_board()
         self.turn = 0
+
+    @staticmethod
+    def get_regex_pattern() -> str:
+        """ Gets pattern for connect 4.
+
+        Returns:
+            Pattern for only number between 1-MAX_COLS.
+
+        """
+        AbstractGame.get_regex_pattern()
+
+        return r"^\s*[1-{}]\s*$".format(Connect4.MAX_COLS)

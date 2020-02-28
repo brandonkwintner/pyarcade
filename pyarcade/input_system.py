@@ -2,6 +2,7 @@ from typing import Tuple, List, Union
 from pyarcade.mastermind import Mastermind
 from pyarcade.game_option import Game
 from pyarcade.connect4 import Connect4
+from pyarcade.blackjack import Blackjack
 import re
 
 
@@ -20,6 +21,8 @@ class InputSystem:
         # other parameters starts mastermind game by default
         if game == Game.CONNECT4:
             self.game = Connect4()
+        elif game == Game.BLACKJACK:
+            self.game = Blackjack()
         else:
             self.game = Mastermind()
 
@@ -49,10 +52,8 @@ class InputSystem:
         elif cmd == "clear":
             self.clear()
         elif self.is_valid_input_for_game(cmd):
-            # turns the string guess into an int list
-            guess = [int(num) for num in cmd.split()]
 
-            correct_guess = self.make_guess_for_game(guess)
+            correct_guess = self.make_guess_for_game(cmd)
 
             if correct_guess:
                 self.round = 1
@@ -66,27 +67,25 @@ class InputSystem:
 
         return win, valid_cmd
 
-    def make_guess_for_game(self, guess: List[int]) -> bool:
+    def make_guess_for_game(self, cmd: str) -> bool:
         """ Make a guess based on current game.
 
         Args:
-            guess: (List[int]) user's guess list.
+            cmd: (str) user's guess list.
 
         Returns:
             True if correct according to the game, False otherwise.
 
         """
 
-        if len(guess) < 1:
-            return False
-
-        if isinstance(self.game, Connect4):
-            if not isinstance(guess[0], int):
-                return False
-
+        if isinstance(self.game, Blackjack):
+            proper_guess = cmd
+        elif isinstance(self.game, Connect4):
             # board index from 0, but QOL for players start at 1
-            proper_guess = guess[0] - 1
+            proper_guess = int(cmd) - 1
         else:
+            # turns the string guess into an int list
+            guess = [int(num) for num in cmd.split()]
             proper_guess = guess
 
         return self.game.enter_user_turn(proper_guess)
@@ -106,7 +105,7 @@ class InputSystem:
         self.game_num = 1
         self.game.clear_game()
 
-    def get_last_guess(self) -> Union[List[Tuple[int, str]], List[List[str]]]:
+    def get_last_guess(self) -> Union[str, Tuple[Tuple[str, str], bool]]:
         """ Retrieves the player's last move/guess.
 
         Returns:
@@ -127,14 +126,10 @@ class InputSystem:
                 True if valid for current game.
         """
 
-        if isinstance(self.game, Connect4):
-            # matches only input with 1 number between [1-max cols] on board
-            re_exp = r"^\s*[1-{}]\s*$".format(Connect4.MAX_COLS)
+        if re.match(self.game.get_regex_pattern(), cmd):
+            return True
         else:
-            # matches only input with 4 numbers separated by whitespace
-            re_exp = r"^\s*[0-9]\s+[0-9]\s+[0-9]\s+[0-9]\s*$"
-
-        return True if re.match(re_exp, cmd) else False
+            return False
 
     def get_round_info(self) -> str:
         """ Gets the round information.
@@ -146,6 +141,8 @@ class InputSystem:
         """
 
         if isinstance(self.game, Connect4):
-            return f"Player {self.game.get_turn().value}:"
+            return f"Player {self.game.get_turn().value}"
+        if isinstance(self.game, Blackjack):
+            return f"Player Hand: {self.game.player_hand}"
         else:
             return f"Round #{self.round}:"
