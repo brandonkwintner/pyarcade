@@ -1,172 +1,205 @@
 from pyarcade.input_system import InputSystem
 from pyarcade.game_option import Game
+from pyarcade.menu_options import Options
 from curses.textpad import rectangle, Textbox
 from typing import List
 import curses
 
-MAIN_MENU_OPTIONS = ['', 'Play Mastermind', 'Play Connect Four', 'Play Blackjack', 'Exit']
-MASTERMIND_OPTIONS = ['', 'Take Guess', 'Reset', 'Clear', 'Back']
-MASTERMIND_RESULT = ['You Win!', 'New Game', 'Clear', 'Back']
-CONNECT_FOUR_OPTIONS = ['', 'Enter Column', 'Reset', 'Clear', 'Back']
-CONNECT_FOUR_RESULT = ['', 'New Game', 'Clear', 'Back']
-BLACKJACK_OPTIONS = ['', 'Hit', 'Stand', 'Reset', 'Clear', 'Back']
-BLACKJACK_RESULT = ['', 'New Game', 'Clear', 'Back']
-
 
 class Menu:
-    @staticmethod
-    def print_menu(stdscr, options: List[str], current_row: int, game_info: List[str]):
-        stdscr.clear()
-        height, width = stdscr.getmaxyx()
+    def __init__(self):
+        self.stdscr = curses.initscr()
+        curses.noecho()
+        curses.cbreak()
+        curses.start_color()
+
+        self.stdscr.keypad(True)
+        self.option_idx = 1
+        self.height, self.width = self.stdscr.getmaxyx()
+        self.rect_width = 13
+        self.rect_length = 1
+        self.x_start_position = self.width // 2 - self.width // 6
+        self.testing = False
+        self.testing_function = ""
+
         curses.curs_set(0)
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
 
-        line = Menu.display_game_info(stdscr, game_info) + 2
+    def close_curse(self):
+        curses.nocbreak()
+        self.stdscr.keypad(False)
+        curses.echo()
+        curses.endwin()
+
+    def display_options(self, options: List[str], game_info: List[str]) -> List[str]:
+        self.stdscr.clear()
+        line_num = self.display_game_info(game_info) + 2
 
         for idx, text in enumerate(options):
-            x_position = width // 2 - width // 6
-
-            if idx == current_row:
-                stdscr.attron(curses.color_pair(1))
-                stdscr.addstr(line, x_position, text)
-                stdscr.attroff(curses.color_pair(1))
+            if idx == self.option_idx:
+                self.stdscr.attron(curses.color_pair(1))
+                self.stdscr.addstr(line_num, self.x_start_position, text)
+                self.stdscr.attroff(curses.color_pair(1))
             else:
-                stdscr.addstr(line, x_position, text)
+                self.stdscr.addstr(line_num, self.x_start_position, text)
 
-            line += 2
+            line_num += 2
 
-        stdscr.refresh()
+        self.stdscr.refresh()
 
-    @staticmethod
-    def display_game_info(stdscr, game_info: List[str]) -> int:
-        line = 3
+        return options
+
+    def display_game_info(self, game_info: List[str]) -> int:
+        line_num = 3
         name = game_info[0]
-        width = stdscr.getmaxyx()[1]
-        x_position = width // 2 - width // 6
-        stdscr.addstr(2, x_position, name)
+
+        self.stdscr.addstr(line_num - 1, self.x_start_position, name)
 
         if name == "Mastermind":
             game_state = "Game #" + game_info[2]
-            stdscr.addstr(0, 0, game_state)
+            self.stdscr.addstr(0, 0, game_state)
 
             for row in game_info[1].split('\n'):
-                stdscr.addstr(line, x_position, row)
-                line += 1
+                line_num += 1
+                self.stdscr.addstr(line_num, self.x_start_position, row)
 
         elif name == "Connect Four":
             game_state = "Game #" + game_info[2]
-            stdscr.addstr(0, 0, game_state)
+            self.stdscr.addstr(0, 0, game_state)
+
             game_turn = "Turn: " + game_info[3]
-            stdscr.addstr(1, 0, game_turn)
+            self.stdscr.addstr(1, 0, game_turn)
 
             for row in game_info[1].split('\n'):
-                line += 1
-                stdscr.addstr(line, x_position, row)
+                line_num += 1
+                self.stdscr.addstr(line_num, self.x_start_position, row)
 
         elif name == "Blackjack":
             game_state = "Games Won: " + game_info[2]
-            stdscr.addstr(0, 0, game_state)
+            self.stdscr.addstr(0, 0, game_state)
 
-            line += 1
-            stdscr.addstr(line, x_position, "Player Hand: ")
-            stdscr.addstr(line + 1, x_position, game_info[1][0])
+            line_num += 1
+            self.stdscr.addstr(line_num, self.x_start_position, "Player Hand: ")
+            self.stdscr.addstr(line_num + 1, self.x_start_position, game_info[1][0])
 
             if game_info[3] == "Show":
-                line += 3
-                stdscr.addstr(line, x_position, "Dealer Hand: ")
-                stdscr.addstr(line + 1, x_position, game_info[1][1])
-            line += 2
+                line_num += 3
+                self.stdscr.addstr(line_num, self.x_start_position, "Dealer Hand: ")
+                self.stdscr.addstr(line_num + 1, self.x_start_position, game_info[1][1])
 
-        return line
+            line_num += 2
 
-    @staticmethod
-    def scroll_options(stdscr, options: List[str], current_row: int, game_info: List[str]) -> int:
+        return line_num
+
+    def scroll_options(self, options: List[str], game_info: List[str]) -> int:
         while True:
-            key = stdscr.getch()
-            stdscr.clear()
+            key = self.stdscr.getch()
+            self.stdscr.clear()
 
-            if key == curses.KEY_UP and current_row > 1:
-                current_row -= 1
-            elif key == curses.KEY_DOWN and current_row < len(options) - 1:
-                current_row += 1
+            if key == curses.KEY_UP and self.option_idx > 1:
+                self.option_idx -= 1
+            elif key == curses.KEY_DOWN and self.option_idx < len(options) - 1:
+                self.option_idx += 1
             elif key == curses.KEY_ENTER or key in [10, 13]:
-                return current_row
+                return self.option_idx
+            self.display_options(options, game_info)
+            self.stdscr.refresh()
 
-            Menu.print_menu(stdscr, options, current_row, game_info)
-            stdscr.refresh()
-
-    @staticmethod
-    def user_input_window(stdscr, message: str, rect_length: int, rect_width: int) -> str:
-        height, width = stdscr.getmaxyx()
-        stdscr.addstr(0, width//2 - len(message)//2, message)
-        exit_message = "Press ENTER to submit"
-        stdscr.addstr(2, width // 2 - len(exit_message) // 2, exit_message)
-
-        edit_begin_y = height // 4
-        edit_begin_x = width // 2 - rect_width // 2
-        edit_window = curses.newwin(1, 13, edit_begin_y, edit_begin_x)
-
-        rectangle(stdscr, edit_begin_y - 1, edit_begin_x - 2,
-                  edit_begin_y + rect_length, edit_begin_x + rect_width)
-        stdscr.refresh()
-        box = Textbox(edit_window)
-        box.edit()
-
-        return box.gather()
-
-    @staticmethod
-    def main_menu(stdscr):
-        idx = 1
-
-        while True:
-            Menu.print_menu(stdscr, MAIN_MENU_OPTIONS, idx, ["Pyarcade"])
-            idx = Menu.scroll_options(stdscr, MAIN_MENU_OPTIONS, idx, ["Pyarcade"])
-
-            if idx == 1:
-                Menu.mastermind_menu(stdscr)
-            elif idx == 2:
-                Menu.connect_four_menu(stdscr)
-            elif idx == 3:
-                Menu.blackjack_menu(stdscr)
-            elif idx == len(MAIN_MENU_OPTIONS) - 1:
+            if self.testing:
                 break
 
-        return stdscr
+    def user_input_window(self, message: str, user_input: str) -> str:
+        message_x_pos = self.width // 2 - len(message) // 2
+        self.stdscr.addstr(0, message_x_pos, message)
 
-    @staticmethod
-    def mastermind_menu(stdscr):
-        idx = 1
+        exit_message = "Press ENTER to submit"
+        exit_x_pos = self.width // 2 - len(exit_message) // 2
+        self.stdscr.addstr(2, exit_x_pos, exit_message)
+
+        if user_input == "":
+            edit_begin_y = self.height // 4
+            edit_begin_x = self.width // 2 - self.rect_width // 2
+            edit_window = curses.newwin(1, 13, edit_begin_y, edit_begin_x)
+
+            rectangle(self.stdscr, edit_begin_y - 1, edit_begin_x - 2,
+                      edit_begin_y + self.rect_length, edit_begin_x + self.rect_width)
+
+            self.stdscr.refresh()
+            box = Textbox(edit_window)
+
+            if self.testing:
+                return "user"
+            box.edit()
+            user_input = box.gather()
+
+        return user_input
+
+    def main_menu(self) -> List[str]:
+        menu_option = Options.MAIN_MENU_OPTIONS.value
+        result = []
+
+        while True:
+            if not self.testing:
+                self.display_options(menu_option, ["Pyarcade"])
+                self.scroll_options(menu_option, ["Pyarcade"])
+
+            if self.option_idx == 1:
+                result = self.mastermind_menu()
+            elif self.option_idx == 2:
+                result = self.connect_four_menu()
+            elif self.option_idx == 3:
+                result = self.blackjack_menu()
+            elif self.option_idx == len(menu_option) - 1:
+                result = menu_option
+                break
+
+            if self.testing:
+                break
+
+        return result
+
+    def mastermind_menu(self) -> List[str]:
         input_system = InputSystem(Game.MASTERMIND)
-        options = MASTERMIND_OPTIONS
+        option_list = Options.MASTERMIND_OPTIONS.value
 
         while True:
             game = input_system.game_num
             status = input_system.get_last_guess()
             game_info = ["Mastermind", status, str(game)]
 
-            Menu.print_menu(stdscr, options, idx, game_info)
-            idx = Menu.scroll_options(stdscr, options, idx, game_info)
+            if not self.testing:
+                self.display_options(option_list, game_info)
+                self.scroll_options(option_list, game_info)
 
-            if options[idx] == "Take Guess":
+            if option_list[self.option_idx] == "Take Guess":
                 message = "Please enter 4 digits 0 to 9 inclusive"
-                guess = Menu.user_input_window(stdscr, message, 1, 13)
+                guess = self.user_input_window(message, "")
 
                 if input_system.take_input(" ".join(guess))[0]:
-                    options = MASTERMIND_RESULT
+                    option_list = Options.MASTERMIND_NEW_GAME.value
+                self.testing_function = "guess"
 
-            elif options[idx] == "Reset" or options[idx] == "New Game":
-                options = MASTERMIND_OPTIONS
+            elif option_list[self.option_idx] == "Reset" or option_list[self.option_idx] == "New Game":
+                option_list = Options.MASTERMIND_OPTIONS.value
                 input_system.take_input("reset")
-            elif options[idx] == "Clear":
-                options = MASTERMIND_OPTIONS
+                self.testing_function = "reset"
+
+            elif option_list[self.option_idx] == "Clear":
+                option_list = Options.MASTERMIND_OPTIONS.value
                 input_system.take_input("clear")
-            elif idx == len(options) - 1:
+                self.testing_function = "clear"
+
+            elif self.option_idx == len(option_list) - 1:
+                self.option_idx = 1
                 break
 
-    @staticmethod
-    def connect_four_menu(stdscr):
-        idx = 1
-        options = CONNECT_FOUR_OPTIONS
+            if self.testing:
+                break
+
+        return option_list
+
+    def connect_four_menu(self) -> List[str]:
+        option_list = Options.CONNECT_FOUR_OPTIONS.value
         input_system = InputSystem(Game.CONNECT4)
 
         while True:
@@ -174,36 +207,46 @@ class Menu:
             game = input_system.game_num
             game_info = ["Connect Four", status, str(game), input_system.get_round_info()]
 
-            Menu.print_menu(stdscr, options, idx, game_info)
-            idx = Menu.scroll_options(stdscr, options, idx, game_info)
+            if not self.testing:
+                self.display_options(option_list, game_info)
+                self.scroll_options(option_list, game_info)
 
-            if options[idx] == "Enter Column":
+            if option_list[self.option_idx] == "Enter Column":
                 message = "Please enter a digits between 1 to 7"
-                guess = Menu.user_input_window(stdscr, message, 1, 13)
+                guess = self.user_input_window(message, "")
 
                 if input_system.take_input(guess)[0]:
-                    options = CONNECT_FOUR_RESULT
+                    option_list = Options.CONNECT_FOUR_NEW_GAME.value
                     
                     if game_info[3] == 'Player X':
-                        options[0] = 'Player X Wins!'
+                        option_list[0] = 'Player X Wins!'
                     else:
-                        options[0] = 'Player O Wins!'
+                        option_list[0] = 'Player O Wins!'
+                self.testing_function = "column"
 
-            elif options[idx] == "Reset" or options[idx] == "New Game":
+            elif option_list[self.option_idx] == "Reset" or option_list[self.option_idx] == "New Game":
                 input_system.take_input("reset")
-                options = CONNECT_FOUR_OPTIONS
-            elif options[idx] == "Clear":
-                options = CONNECT_FOUR_OPTIONS
+                option_list = Options.CONNECT_FOUR_OPTIONS.value
+                self.testing_function = "reset"
+
+            elif option_list[self.option_idx] == "Clear":
+                option_list = Options.CONNECT_FOUR_OPTIONS.value
                 input_system.take_input("clear")
-            elif idx == len(options) - 1:
+                self.testing_function = "clear"
+
+            elif self.option_idx == len(option_list) - 1:
+                self.option_idx = 1
                 break
 
-    @staticmethod
-    def blackjack_menu(stdscr):
+            if self.testing:
+                break
+
+        return option_list
+
+    def blackjack_menu(self) -> List[str]:
         input_system = InputSystem(Game.BLACKJACK)
-        options = BLACKJACK_OPTIONS
-        idx = 1
         games_won = 0
+        option_list = Options.BLACKJACK_OPTIONS.value
         status = input_system.get_last_guess()
         game_info = ["Blackjack", status[0], str(games_won), ""]
 
@@ -212,42 +255,57 @@ class Menu:
             game_info[1] = status[0]
             game_info[2] = str(games_won)
 
-            Menu.print_menu(stdscr, options, idx, game_info)
-            idx = Menu.scroll_options(stdscr, options, idx, game_info)
+            if not self.testing:
+                self.display_options(option_list, game_info)
+                self.scroll_options(option_list, game_info)
 
-            if options[idx] == "Hit":
+            if option_list[self.option_idx] == "Hit":
                 input_system.take_input("hit")
-            elif options[idx] == "Stand":
+                self.testing_function = "hit"
+
+            elif option_list[self.option_idx] == "Reset" or option_list[self.option_idx] == "New Game":
+                input_system.take_input("reset")
+                option_list = Options.BLACKJACK_OPTIONS.value
+                game_info[3] = "Hidden"
+                self.testing_function = "reset"
+
+            elif option_list[self.option_idx] == "Clear":
+                input_system.take_input("clear")
+                option_list = Options.BLACKJACK_OPTIONS.value
+                game_info[3] = "Hidden"
+                games_won = 0
+                self.testing_function = "clear"
+
+            elif option_list[self.option_idx] == "Stand":
                 input_system.take_input("stand")
-                options = BLACKJACK_RESULT
+                option_list = Options.BLACKJACK_NEW_GAME.value
                 game_info[3] = "Show"
 
                 if input_system.get_last_guess()[1]:
-                    BLACKJACK_RESULT[0] = "Player Wins!"
+                    option_list[0] = "Player Wins!"
                     games_won += 1
                 else:
-                    BLACKJACK_RESULT[0] = "Dealer Wins!"
+                    option_list[0] = "Dealer Wins!"
+                self.testing_function = "stand"
 
-            elif options[idx] == "Reset" or options[idx] == "New Game":
-                input_system.take_input("reset")
-                options = BLACKJACK_OPTIONS
-                game_info[3] = "Hidden"
-            elif options[idx] == "Clear":
-                input_system.take_input("clear")
-                options = BLACKJACK_OPTIONS
-                game_info[3] = "Hidden"
-                games_won = 0
-            elif idx == len(options) - 1:
+            elif self.option_idx == len(option_list) - 1:
+                self.option_idx = 1
                 break
+
+            if self.testing:
+                break
+
+        return option_list
 
     @staticmethod
     def run():
-        curses.wrapper(Menu().main_menu)
+        menu_list = Menu()
+        menu_list.main_menu()
 
 
 if __name__ == "__main__":
     menu = Menu()
-    curses.wrapper(menu.main_menu)
+    menu.main_menu()
 
 
 
