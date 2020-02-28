@@ -23,5 +23,3 @@ class Suits(Enum):
     CLUBS = "Clubs"
     HEARTS = "Hearts"
     SPADES = "Spades"
-
-

@@ -31,11 +31,11 @@ class Menu:
         curses.echo()
         curses.endwin()
 
-    def display_options(self, options: List[str], game_info: List[str]) -> List[str]:
+    def display_options(self, opts: List[str], info: List[str]) -> List[str]:
         self.stdscr.clear()
-        line_num = self.display_game_info(game_info) + 2
+        line_num = self.display_game_info(info) + 2
 
-        for idx, text in enumerate(options):
+        for idx, text in enumerate(opts):
             if idx == self.option_idx:
                 self.stdscr.attron(curses.color_pair(1))
                 self.stdscr.addstr(line_num, self.x_start_position, text)
@@ -47,62 +47,65 @@ class Menu:
 
         self.stdscr.refresh()
 
-        return options
+        return opts
 
-    def display_game_info(self, game_info: List[str]) -> int:
+    def display_game_info(self, info: List[str]) -> int:
         line_num = 3
-        name = game_info[0]
+        name = info[0]
 
         self.stdscr.addstr(line_num - 1, self.x_start_position, name)
 
         if name == "Mastermind":
-            game_state = "Game #" + game_info[2]
+            game_state = "Game #" + info[2]
             self.stdscr.addstr(0, 0, game_state)
 
-            for row in game_info[1].split('\n'):
+            for row in info[1].split('\n'):
                 line_num += 1
                 self.stdscr.addstr(line_num, self.x_start_position, row)
 
         elif name == "Connect Four":
-            game_state = "Game #" + game_info[2]
+            game_state = "Game #" + info[2]
             self.stdscr.addstr(0, 0, game_state)
 
-            game_turn = "Turn: " + game_info[3]
+            game_turn = "Turn: " + info[3]
             self.stdscr.addstr(1, 0, game_turn)
 
-            for row in game_info[1].split('\n'):
+            for row in info[1].split('\n'):
                 line_num += 1
                 self.stdscr.addstr(line_num, self.x_start_position, row)
 
         elif name == "Blackjack":
-            game_state = "Games Won: " + game_info[2]
+            game_state = "Games Won: " + info[2]
             self.stdscr.addstr(0, 0, game_state)
 
             line_num += 1
-            self.stdscr.addstr(line_num, self.x_start_position, "Player Hand: ")
-            self.stdscr.addstr(line_num + 1, self.x_start_position, game_info[1][0])
+            self.stdscr.addstr(line_num, self.x_start_position,
+                               "Player Hand: ")
+            self.stdscr.addstr(line_num + 1, self.x_start_position, info[1][0])
 
-            if game_info[3] == "Show":
+            if info[3] == "Show":
                 line_num += 3
-                self.stdscr.addstr(line_num, self.x_start_position, "Dealer Hand: ")
-                self.stdscr.addstr(line_num + 1, self.x_start_position, game_info[1][1])
+                self.stdscr.addstr(line_num, self.x_start_position,
+                                   "Dealer Hand: ")
+                self.stdscr.addstr(line_num + 1, self.x_start_position,
+                                   info[1][1])
 
             line_num += 2
 
         return line_num
 
-    def scroll_options(self, options: List[str], game_info: List[str]) -> int:
+    def scroll_options(self, opts: List[str], info: List[str]) -> int:
         while True:
             key = self.stdscr.getch()
             self.stdscr.clear()
 
             if key == curses.KEY_UP and self.option_idx > 1:
                 self.option_idx -= 1
-            elif key == curses.KEY_DOWN and self.option_idx < len(options) - 1:
+            elif key == curses.KEY_DOWN and self.option_idx < len(opts) - 1:
                 self.option_idx += 1
             elif key == curses.KEY_ENTER or key in [10, 13]:
                 return self.option_idx
-            self.display_options(options, game_info)
+            self.display_options(opts, info)
             self.stdscr.refresh()
 
             if self.testing:
@@ -122,7 +125,8 @@ class Menu:
             edit_window = curses.newwin(1, 13, edit_begin_y, edit_begin_x)
 
             rectangle(self.stdscr, edit_begin_y - 1, edit_begin_x - 2,
-                      edit_begin_y + self.rect_length, edit_begin_x + self.rect_width)
+                      edit_begin_y + self.rect_length,
+                      edit_begin_x + self.rect_width)
 
             self.stdscr.refresh()
             box = Textbox(edit_window)
@@ -179,7 +183,8 @@ class Menu:
                     option_list = Options.MASTERMIND_NEW_GAME.value
                 self.testing_function = "guess"
 
-            elif option_list[self.option_idx] == "Reset" or option_list[self.option_idx] == "New Game":
+            elif option_list[self.option_idx] == "Reset" or \
+                    option_list[self.option_idx] == "New Game":
                 option_list = Options.MASTERMIND_OPTIONS.value
                 input_system.take_input("reset")
                 self.testing_function = "reset"
@@ -205,7 +210,8 @@ class Menu:
         while True:
             status = input_system.get_last_guess()
             game = input_system.game_num
-            game_info = ["Connect Four", status, str(game), input_system.get_round_info()]
+            game_info = ["Connect Four", status, str(game),
+                         input_system.get_round_info()]
 
             if not self.testing:
                 self.display_options(option_list, game_info)
@@ -224,7 +230,8 @@ class Menu:
                         option_list[0] = 'Player O Wins!'
                 self.testing_function = "column"
 
-            elif option_list[self.option_idx] == "Reset" or option_list[self.option_idx] == "New Game":
+            elif option_list[self.option_idx] == "Reset" or \
+                    option_list[self.option_idx] == "New Game":
                 input_system.take_input("reset")
                 option_list = Options.CONNECT_FOUR_OPTIONS.value
                 self.testing_function = "reset"
@@ -263,7 +270,8 @@ class Menu:
                 input_system.take_input("hit")
                 self.testing_function = "hit"
 
-            elif option_list[self.option_idx] == "Reset" or option_list[self.option_idx] == "New Game":
+            elif option_list[self.option_idx] == "Reset" or \
+                    option_list[self.option_idx] == "New Game":
                 input_system.take_input("reset")
                 option_list = Options.BLACKJACK_OPTIONS.value
                 game_info[3] = "Hidden"
@@ -306,8 +314,3 @@ class Menu:
 if __name__ == "__main__":
     menu = Menu()
     menu.main_menu()
-
-
-
-
-

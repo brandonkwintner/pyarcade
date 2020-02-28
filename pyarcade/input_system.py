@@ -146,5 +146,3 @@ class InputSystem:
             return f"Player Hand: {self.game.player_hand}"
         else:
             return f"Round #{self.round}:"
-
-
