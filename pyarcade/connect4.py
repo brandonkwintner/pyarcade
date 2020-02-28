@@ -246,8 +246,10 @@ class Connect4(AbstractGame):
 
         # entire history is a list of tuples (game, winner)
         # getting tuple[1] returns the winner
-        player_x_wins = len(list(filter(lambda x: x[1] == C4State.X, self.entire_history)))
-        player_o_wins = len(list(filter(lambda x: x[1] == C4State.O, self.entire_history)))
+        player_x_wins = len(list(filter(lambda x: x[1] == C4State.X,
+                                        self.entire_history)))
+        player_o_wins = len(list(filter(lambda x: x[1] == C4State.O,
+                                        self.entire_history)))
 
         return {
             C4State.X.value: player_x_wins,

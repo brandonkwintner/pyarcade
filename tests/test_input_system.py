@@ -306,7 +306,8 @@ class InputSystemTestCase(unittest.TestCase):
                                (4, Evaluation.SOMEWHERE.value),
                                (3, Evaluation.SOMEWHERE.value)]
 
-        expected_str = InputSystemTestCase._mastermind_array_to_str(expected_last_guess)
+        expected_str = \
+            InputSystemTestCase._mastermind_array_to_str(expected_last_guess)
         self.assertEqual(expected_str, in_sys.get_last_guess())
 
         win, valid = in_sys.take_input("clear")
