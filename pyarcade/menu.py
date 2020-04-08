@@ -155,6 +155,7 @@ class Menu:
                 result = self.blackjack_menu()
             elif self.option_idx == len(menu_option) - 1:
                 result = menu_option
+                self.close_curse()
                 break
 
             if self.testing:
