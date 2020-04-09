@@ -3,6 +3,7 @@ from pyarcade.mastermind import Mastermind
 from pyarcade.game_option import Game
 from pyarcade.connect4 import Connect4
 from pyarcade.blackjack import Blackjack
+from pyarcade.war import War
 import re
 
 
@@ -78,7 +79,7 @@ class InputSystem:
 
         """
 
-        if isinstance(self.game, Blackjack):
+        if isinstance(self.game, Blackjack) or isinstance(self.game, War):
             proper_guess = cmd
         elif isinstance(self.game, Connect4):
             # board index from 0, but QOL for players start at 1
