@@ -1,4 +1,4 @@
-from random import random
+import random
 from enum import Enum
 from pyarcade.cards import Suits
 from pyarcade.abstract_game import AbstractGame
@@ -43,12 +43,15 @@ class War(AbstractGame):
         Returns:
             True if the game is to be continued, False if there is a winner.
         """
-        # Check if there is a winner.
+        # Check if there is a winner. Need check here also in case where after
+        # 3 cards flipped for war results in a player having 0 cards left.
         if len(self.player_one_hand) == 0:
             self.last_turn_winner = 2
+            self.update_current_history()
             return False
         elif len(self.player_two_hand) == 0:
             self.last_turn_winner = 1
+            self.update_current_history()
             return False
 
         player_one_card = War.flip(self.player_one_hand)
@@ -57,14 +60,23 @@ class War(AbstractGame):
         evaluation = War.compare_to(player_one_card, player_two_card)
 
         # Turn evaluation.
-        if evaluation > 0:
-            self.last_turn_winner = 1
-            self.player_one_hand.extend(pile)
-            return True
-        elif evaluation < 0:
-            self.last_turn_winner = 2
-            self.player_two_hand.extend(pile)
-            return True
+        if evaluation != 0:
+            if evaluation > 0:
+                self.last_turn_winner = 1
+                self.player_one_hand.extend(pile)
+                self.update_current_history()
+            elif evaluation < 0:
+                self.last_turn_winner = 2
+                self.player_two_hand.extend(pile)
+                self.update_current_history()
+
+            # Check if there is a winner.
+            if len(self.player_one_hand) == 0:
+                return False
+            elif len(self.player_two_hand) == 0:
+                return False
+            else:
+                return True
         else:
             return self.war(pile)
 
@@ -100,7 +112,12 @@ class War(AbstractGame):
         Returns:
             Outcome of turn. (False if there is a winner)
         """
-        return self.play_turn([])
+        turn_outcome = self.play_turn([])
+        if turn_outcome:
+            return True
+        else:
+            self.update_entire_history()
+            return False
 
     def get_last_turn(self) -> (str, str, int):
         """
@@ -182,7 +199,7 @@ class War(AbstractGame):
         hand = ""
         for card in deck:
             hand += card[0].name + ", "
-        return hand
+        return hand[:-2]
 
     @staticmethod
     def flip(deck: [(Ranks, Suits)]):
@@ -221,3 +238,19 @@ class War(AbstractGame):
             Pattern match for game.
         """
         return r"^\s*(Flip Card)\s*$"
+
+    def update_current_history(self):
+        """
+        Adds each player's hand and previous turn winner to current history.
+        """
+        player_one = War.to_str(self.player_one_hand)
+        player_two = War.to_str(self.player_two_hand)
+        last_turn_winner = self.last_turn_winner
+        self.current_history.append((player_one, player_two, last_turn_winner))
+
+    def update_entire_history(self):
+        """
+        Adds winner of game, and current history, to entire history.
+        """
+        winner = self.last_turn_winner
+        self.entire_history.append((winner, self.current_history))
