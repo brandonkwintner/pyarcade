@@ -13,3 +13,6 @@ class Options(Enum):
 
     BLACKJACK_OPTIONS = ['', 'Hit', 'Stand', 'Reset', 'Clear', 'Back']
     BLACKJACK_NEW_GAME = ['', 'New Game', 'Clear', 'Back']
+
+    WAR_OPTIONS = ['', 'Flip Card', 'Reset', 'Clear', 'Back']
+    WAR_NEW_GAME = ['', 'New Game', 'Clear', 'Back']
