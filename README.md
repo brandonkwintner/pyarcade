@@ -1,5 +1,7 @@
 # Run Instructions
-docker-compose build
-docker-compose up -d
-docker run pyarcade\_frontend
+1. docker-compose build
+
+1. docker-compose up -d
+
+1. docker run pyarcade\_frontend
 
