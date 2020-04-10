@@ -36,8 +36,7 @@ class SignUpView(View):
 
         try:
             new_user.full_clean()
-        except ValidationError as e:
-            print(e)
+        except ValidationError:
             return JsonResponse({
                 "message": "Did not meet requirements."
             }, status=400)
