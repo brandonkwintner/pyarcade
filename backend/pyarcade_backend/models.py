@@ -1,18 +1,30 @@
 from django.db import models
 from django.core.validators import RegexValidator
 
+import re
+
 # Create your models here.
 
 
 class UserModel(models.Model):
-    username = models.CharField(max_length=30, unique=True,
+    MIN_PASSWORD_LEN = 4
+    MIN_USERNAME_LEN = 3
+    MAX_USERNAME_LEN = 30
+    MAX_STATUS_MSG_LEN = 30
+    USERNAME_REGEX = f"^[a-zA-Z0-9]{{{MIN_USERNAME_LEN},}}$"
+    PASSWORD_REGEX = f".{{{MIN_PASSWORD_LEN},}}"
+
+    username = models.CharField(max_length=MAX_USERNAME_LEN,
+                                unique=True,
                                 validators=[
-                                    RegexValidator(r'^[a-zA-Z0-9]{3,}$'),
+                                    RegexValidator(USERNAME_REGEX),
                                 ])
     password = models.TextField(validators=[
-        RegexValidator(r'.{4,}'),
+        RegexValidator(PASSWORD_REGEX),
     ])
-    status_message = models.CharField(max_length=30, default="")
+    status_message = models.CharField(max_length=MAX_STATUS_MSG_LEN,
+                                      default="",
+                                      blank=True)
     mastermind_wins = models.IntegerField(default=0)
     blackjack_wins = models.IntegerField(default=0)
     war_wins = models.IntegerField(default=0)

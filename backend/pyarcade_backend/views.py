@@ -11,9 +11,14 @@ from .models import UserModel
 # Create your views here.
 
 class SignUpView(View):
+    def get(self, request):
+        return JsonResponse({
+            "message": "success",
+        })
+
     def post(self, request):
-        # username = request.validated['username']
-        # password = request.validated['password'],
+        username = request.validated["username"]
+        password = request.validated["password"]
 
         found = True
 
@@ -31,7 +36,8 @@ class SignUpView(View):
 
         try:
             new_user.full_clean()
-        except ValidationError:
+        except ValidationError as e:
+            print(e)
             return JsonResponse({
                 "message": "Did not meet requirements."
             }, status=400)
