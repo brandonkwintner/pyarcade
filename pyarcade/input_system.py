@@ -24,6 +24,8 @@ class InputSystem:
             self.game = Connect4()
         elif game == Game.BLACKJACK:
             self.game = Blackjack()
+        elif game == Game.WAR:
+            self.game = War()
         else:
             self.game = Mastermind()
 

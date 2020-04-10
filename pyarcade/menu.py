@@ -92,6 +92,23 @@ class Menu:
 
             line_num += 2
 
+        elif name == "War":
+            game_state = "Games Won: " + info[2]
+            self.stdscr.addstr(0, 0, game_state)
+
+            line_num += 1
+            self.stdscr.addstr(line_num, self.x_start_position,
+                               "Player 1 Hand: ")
+            self.stdscr.addstr(line_num + 1, self.x_start_position, info[1][0])
+
+            line_num += 3
+            self.stdscr.addstr(line_num, self.x_start_position,
+                               "Player 2 Hand: ")
+            self.stdscr.addstr(line_num + 1, self.x_start_position,
+                               info[1][1])
+
+            line_num += 2
+
         return line_num
 
     def scroll_options(self, opts: List[str], info: List[str]) -> int:
@@ -153,6 +170,8 @@ class Menu:
                 result = self.connect_four_menu()
             elif self.option_idx == 3:
                 result = self.blackjack_menu()
+            elif self.option_idx == 4:
+                result = self.war_menu()
             elif self.option_idx == len(menu_option) - 1:
                 result = menu_option
                 self.close_curse()
@@ -224,7 +243,7 @@ class Menu:
 
                 if input_system.take_input(guess)[0]:
                     option_list = Options.CONNECT_FOUR_NEW_GAME.value
-                    
+
                     if game_info[3] == 'Player X':
                         option_list[0] = 'Player X Wins!'
                     else:
@@ -302,6 +321,36 @@ class Menu:
                 break
 
             if self.testing:
+                break
+
+        return option_list
+
+    def war_menu(self) -> List[str]:
+        input_system = InputSystem(Game.WAR)
+        games_won = 0
+        option_list = Options.WAR_OPTIONS.value
+        status = input_system.get_last_guess()
+        game_info = ["War", status, str(games_won)]
+
+        while True:
+            status = input_system.get_last_guess()
+            game_info[1] = status
+            game_info[2] = str(games_won)
+
+            self.display_options(option_list, game_info)
+            self.scroll_options(option_list, game_info)
+
+            if option_list[self.option_idx] == "Flip Card":
+                if not input_system.take_input("Flip Card"):
+                    option_list = Options.WAR_NEW_GAME.value
+
+            elif option_list[self.option_idx] == "Reset" or \
+                    option_list[self.option_idx] == "New Game":
+                input_system.take_input("reset")
+                option_list = Options.WAR_OPTIONS.value
+
+            elif self.option_idx == len(option_list) - 1:
+                self.option_idx = 1
                 break
 
         return option_list

@@ -3,7 +3,7 @@ from enum import Enum
 
 class Options(Enum):
     MAIN_MENU_OPTIONS = ['', 'Play Mastermind', 'Play Connect Four',
-                         'Play Blackjack', 'Exit']
+                         'Play Blackjack', 'Play War', 'Exit']
 
     MASTERMIND_OPTIONS = ['', 'Take Guess', 'Reset', 'Clear', 'Back']
     MASTERMIND_NEW_GAME = ['You Win!', 'New Game', 'Clear', 'Back']
