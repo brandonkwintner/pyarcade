@@ -1,4 +1,6 @@
 # PyArcade
+docker build -t pyarcade:test .
+docker run -it pyarcade:test
 
 ## Assignment 4 Approximate Work Distribution
 
