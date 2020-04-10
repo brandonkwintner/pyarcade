@@ -1,0 +1,10 @@
+version: "3"
+
+services:
+  backend:
+    build: ./backend
+    container_name: "pyarcade_backend"
+    volumes:
+      - ./backend/db.sqlite3:/backend/db.sqlite3
+    ports:
+      - "127.0.0.1:80:80"
