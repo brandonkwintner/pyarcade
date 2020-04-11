@@ -13,7 +13,9 @@ class GoFish(AbstractGame):
         self.player_one_hand = []
         self.computer_hand = []
         self.deal_out_cards()
+        self.winner = 0
         self.has_won = False
+        self.isFish = False
 
     @staticmethod
     def generate_new_deck() -> [(Ranks, Suits)]:
@@ -62,14 +64,16 @@ class GoFish(AbstractGame):
             if guessed_rank == card[0].value:
                 has.append(card)
                 found = True
+                self.isFish = False
 
         for card in has:
-            self.player_one_hand.append((card[0], card[1]))
-            self.computer_hand.remove((card[0], card[1]))
+            self.player_one_hand.append(card)
+            self.computer_hand.remove(card)
 
         if not found:
             self.go_fish(self.player_one_hand)
             self.player_two_guesses()
+            self.isFish = True
 
         player_one_wins = self.check_for_winner(self.player_one_hand)
         computer_wins = self.check_for_winner(self.computer_hand)
@@ -78,21 +82,46 @@ class GoFish(AbstractGame):
             self.has_won = True
             self.current_history.append(("Player Wins", self._hand_to_str(self.player_one_hand)))
             self.entire_history.append(("Player Wins", self._hand_to_str(self.player_one_hand)))
+            self.winner = 1
             return True
+
         elif computer_wins:
             self.has_won = True
             self.current_history.append(("Computer Wins", self._hand_to_str(self.computer_hand)))
             self.entire_history.append(("Player Wins", self._hand_to_str(self.player_one_hand)))
+            self.winner = 2
+            return True
+
         else:
+            if found:
+                self.player_two_guesses()
             return False
 
     @staticmethod
     def parse_user_guess(input_str: str):
         guess_rank = input_str.lower()
 
-        if guess_rank == "jack":
+        if guess_rank == "two":
+            guess_rank = 2
+        elif guess_rank == "three":
+            guess_rank = 3
+        elif guess_rank == "four":
+            guess_rank = 4
+        elif guess_rank == "five":
+            guess_rank = 5
+        elif guess_rank == "six":
+            guess_rank = 6
+        elif guess_rank == "seven":
+            guess_rank = 7
+        elif guess_rank == "eight":
+            guess_rank = 8
+        elif guess_rank == "nine":
+            guess_rank = 9
+        elif guess_rank == "ten":
+            guess_rank = 10
+        elif guess_rank == "jack":
             guess_rank = 10.1
-        elif guess_rank.lower() == "queen":
+        elif guess_rank == "queen":
             guess_rank = 10.2
         elif guess_rank == "king":
             guess_rank = 10.3
@@ -118,8 +147,8 @@ class GoFish(AbstractGame):
                 found = True
 
         for card in has:
-            self.computer_hand.append((card[0], card[1]))
-            self.player_one_hand.remove((card[0], card[1]))
+            self.computer_hand.append(card)
+            self.player_one_hand.remove(card)
 
         if not found:
             self.go_fish(self.computer_hand)
@@ -150,6 +179,8 @@ class GoFish(AbstractGame):
         self.shuffle_deck()
         self.current_history = []
         self.deal_out_cards()
+        self.winner = 0
+        self.isFish = False
 
     def clear_game(self):
         super().clear_game()
@@ -157,22 +188,19 @@ class GoFish(AbstractGame):
         self.reset_game()
         self.entire_history = []
 
-    def get_last_turn(self) -> Tuple[str, bool]:
+    def get_last_turn(self) -> Tuple[str, bool, int]:
         super().get_last_turn()
 
         player_cards = self._hand_to_str(self.player_one_hand)
-        # computer_str = self._hand_to_str(self.computer_hand)
 
-        return player_cards, self.has_won
+        return player_cards, self.isFish, self.winner
 
     @staticmethod
     def _hand_to_str(hand):
         hand_str = ""
         for card in hand:
-            if card[0].name == Ranks.ONE.name:
-                hand_str += "ACE, "
-            else:
-                hand_str += card[0].name + ", "
+            hand_str += card[0].name + ", "
+
         return hand_str[:-2]
 
     @staticmethod
@@ -185,4 +213,6 @@ class GoFish(AbstractGame):
         """
         AbstractGame.get_regex_pattern()
 
-        return r"^[2-10|Jack|jack|queen|Queen|king|King]$"
+        return r"^[2-9]{1}$|^10$|^ace$|^two$|^three$" \
+               r"|^four$|^five$|^six$|^seven$|^eight$" \
+               r"|^nine$|^ten$|^jack$|^queen$|^king$"

@@ -90,6 +90,15 @@ class War(AbstractGame):
         Returns:
             Recursive call to play_turn with an updated pile.
         """
+        if len(self.player_one_hand) < 3:
+            self.last_turn_winner = 2
+            self.player_one_hand = []
+            return False
+        if len(self.player_two_hand) < 3:
+            self.last_turn_winner = 1
+            self.player_two_hand = []
+            return False
+
         for count in range(0, 3):
             # Check if there is a winner.
             if len(self.player_one_hand) == 0:
@@ -113,21 +122,29 @@ class War(AbstractGame):
             Outcome of turn. (False if there is a winner)
         """
         turn_outcome = self.play_turn([])
+
         if turn_outcome:
             return True
         else:
             self.update_entire_history()
             return False
 
-    def get_last_turn(self) -> (str, str, int):
+    def get_last_turn(self) -> (str, str, int, int, bool, int):
         """
         Returns:
             A Tuple containing String representations of both player's hands and
             the player who won the last turn.
         """
-        player_one_str = War.to_str(self.player_one_hand)
-        player_two_str = War.to_str(self.player_two_hand)
-        return player_one_str, player_two_str, self.last_turn_winner
+
+        if len(self.player_one_hand) == 0 or len(self.player_two_hand) == 0:
+            return "", "", len(self.player_one_hand), \
+                   len(self.player_two_hand), True, self.last_turn_winner
+
+        player_one_str = War.to_str([self.player_one_hand[0]])
+        player_two_str = War.to_str([self.player_two_hand[0]])
+
+        return player_one_str, player_two_str, len(self.player_one_hand),\
+            len(self.player_two_hand), False, self.last_turn_winner
 
     def reset_game(self):
         self.new_game()
@@ -237,7 +254,7 @@ class War(AbstractGame):
         Returns:
             Pattern match for game.
         """
-        return r"^\s*(Flip Card)\s*$"
+        return r"^\s*(flip card)\s*$"
 
     def update_current_history(self):
         """

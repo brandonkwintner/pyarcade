@@ -4,6 +4,7 @@ from pyarcade.game_option import Game
 from pyarcade.connect4 import Connect4
 from pyarcade.blackjack import Blackjack
 from pyarcade.war import War
+from pyarcade.go_fish import GoFish
 import re
 
 
@@ -26,6 +27,8 @@ class InputSystem:
             self.game = Blackjack()
         elif game == Game.WAR:
             self.game = War()
+        elif game == Game.GO_FISH:
+            self.game = GoFish()
         else:
             self.game = Mastermind()
 
@@ -81,7 +84,7 @@ class InputSystem:
 
         """
 
-        if isinstance(self.game, Blackjack) or isinstance(self.game, War):
+        if isinstance(self.game, Blackjack) or isinstance(self.game, War) or isinstance(self.game, GoFish):
             proper_guess = cmd
         elif isinstance(self.game, Connect4):
             # board index from 0, but QOL for players start at 1
@@ -129,7 +132,7 @@ class InputSystem:
                 True if valid for current game.
         """
 
-        if re.match(self.game.get_regex_pattern(), cmd):
+        if re.match(self.game.get_regex_pattern(), cmd.lower()):
             return True
         else:
             return False
