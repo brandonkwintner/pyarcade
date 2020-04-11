@@ -1,7 +1,6 @@
 from django.http import JsonResponse
 
 import json
-from ..models import UserModel
 
 
 class UserLoginMiddleware:
