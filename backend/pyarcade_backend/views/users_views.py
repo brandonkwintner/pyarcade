@@ -4,8 +4,7 @@ from django.http import JsonResponse
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
 
-import json
-from .models import UserModel
+from ..models.user_model import UserModel
 
 
 # Create your views here.
