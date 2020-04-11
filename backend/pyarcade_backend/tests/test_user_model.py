@@ -1,9 +1,7 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 
-import os
-
-from .models import UserModel
+from ..models.user_model import UserModel
 
 # Create your tests here.
 
