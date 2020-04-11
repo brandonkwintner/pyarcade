@@ -119,6 +119,22 @@ class MenuUITestCase(unittest.TestCase):
         self.assertEqual(result, Options.BLACKJACK_OPTIONS.value)
         menu.close_curse()
 
+    def test_main_to_war(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 4
+        result = menu.main_menu()
+        self.assertEqual(result, Options.WAR_OPTIONS.value)
+        menu.close_curse()
+
+    def test_main_to_go_fish(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 5
+        result = menu.main_menu()
+        self.assertEqual(result, Options.GO_FISH_OPTIONS.value)
+        menu.close_curse()
+
     def test_new_game_menu(self):
         menu = Menu()
         menu.testing = True
@@ -166,6 +182,26 @@ class MenuUITestCase(unittest.TestCase):
         menu.testing = True
         hands = ["player", "dealer"]
         game_info = ["Blackjack", hands, str(3), "Show"]
+
+        line_num = menu.display_game_info(game_info)
+        self.assertEquals(line_num, 9)
+        menu.close_curse()
+
+    def test_display_war(self):
+        menu = Menu()
+        menu.testing = True
+        hands = ("player", "dealer", 1, 1, 1, 1)
+        game_info = ["War", hands, str(3)]
+
+        line_num = menu.display_game_info(game_info)
+        self.assertEquals(line_num, 9)
+        menu.close_curse()
+
+    def test_display_go_fish(self):
+        menu = Menu()
+        menu.testing = True
+        hands = ("player", 1)
+        game_info = ["Go Fish", hands, str(3), "a"]
 
         line_num = menu.display_game_info(game_info)
         self.assertEquals(line_num, 9)
@@ -298,10 +334,84 @@ class MenuUITestCase(unittest.TestCase):
         MenuUITestCase._move_down(menu, options, [""])
         MenuUITestCase._move_down(menu, options, [""])
         MenuUITestCase._move_down(menu, options, [""])
-        self.assertEqual(menu.option_idx, 4)
+        MenuUITestCase._move_down(menu, options, [""])
+        MenuUITestCase._move_down(menu, options, [""])
+        self.assertEqual(menu.option_idx, 6)
 
         result = menu.main_menu()
-        self.assertEqual(menu.option_idx, 4)
+        self.assertEqual(menu.option_idx, 6)
 
         self.assertEquals(result, Options.MAIN_MENU_OPTIONS.value)
+        menu.close_curse()
+
+    def test_war_flip_card(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 1
+        menu.war_menu()
+
+        self.assertEqual(menu.testing_function, "flip card")
+        menu.close_curse()
+
+    def test_war_reset(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 2
+        menu.war_menu()
+
+        self.assertEqual(menu.testing_function, "reset")
+        menu.close_curse()
+
+    def test_war_clear(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 3
+        menu.war_menu()
+
+        self.assertEqual(menu.testing_function, "clear")
+        menu.close_curse()
+
+    def test_war_back(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 4
+        menu.go_fish_menu()
+
+        self.assertEqual(menu.option_idx, 1)
+        menu.close_curse()
+
+    def test_go_fish_guess(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 1
+        menu.go_fish_menu()
+
+        self.assertEqual(menu.testing_function, "guess")
+        menu.close_curse()
+
+    def test_go_fish_reset(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 2
+        menu.go_fish_menu()
+
+        self.assertEqual(menu.testing_function, "reset")
+        menu.close_curse()
+
+    def test_go_fish_clear(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 3
+        menu.go_fish_menu()
+
+        self.assertEqual(menu.testing_function, "clear")
+        menu.close_curse()
+
+    def test_go_fish_back(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 4
+        menu.go_fish_menu()
+
+        self.assertEqual(menu.option_idx, 1)
         menu.close_curse()
