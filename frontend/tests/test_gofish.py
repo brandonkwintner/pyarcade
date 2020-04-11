@@ -25,7 +25,7 @@ class GoFishTestCase(unittest.TestCase):
         game = GoFish()
 
         game.enter_user_turn("Jack")
-        self.assertEqual(6, len(game.player_one_hand))
+        self.assertGreaterEqual(6, len(game.player_one_hand))
 
     def test_enter_user_turn_invalid(self):
         game = GoFish()
@@ -96,3 +96,68 @@ class GoFishTestCase(unittest.TestCase):
         self.assertTrue(result)
         self.assertEqual(7, len(game.player_one_hand))
         self.assertEqual(3, len(game.computer_hand))
+
+    def test_no_card_go_fish(self):
+        game = GoFish()
+
+        game.player_one_hand = [(Ranks.ACE, Suits.SPADES), (Ranks.TWO, Suits.HEARTS), (Ranks.THREE, Suits.CLUBS),
+                                (Ranks.FOUR, Suits.CLUBS), (Ranks.FIVE, Suits.DIAMONDS)]
+        game.computer_hand = [(Ranks.SIX, Suits.SPADES), (Ranks.EIGHT, Suits.HEARTS), (Ranks.NINE, Suits.CLUBS),
+                              (Ranks.SEVEN, Suits.CLUBS), (Ranks.TEN, Suits.DIAMONDS)]
+
+        result = game.enter_user_turn("3")
+
+        self.assertFalse(result)
+        self.assertEqual(6, len(game.player_one_hand))
+
+    def test_parse_user_guess(self):
+        self.assertEqual(2, GoFish.parse_user_guess("two"))
+        self.assertEqual(3, GoFish.parse_user_guess("three"))
+        self.assertEqual(4, GoFish.parse_user_guess("four"))
+        self.assertEqual(5, GoFish.parse_user_guess("five"))
+        self.assertEqual(6, GoFish.parse_user_guess("six"))
+        self.assertEqual(7, GoFish.parse_user_guess("seven"))
+        self.assertEqual(8, GoFish.parse_user_guess("eight"))
+        self.assertEqual(9, GoFish.parse_user_guess("nine"))
+        self.assertEqual(10, GoFish.parse_user_guess("ten"))
+        self.assertEqual(10.1, GoFish.parse_user_guess("jack"))
+        self.assertEqual(10.2, GoFish.parse_user_guess("Queen"))
+        self.assertEqual(10.3, GoFish.parse_user_guess("king"))
+        self.assertEqual(11, GoFish.parse_user_guess("Ace"))
+
+    def test_computer_guessing_go_fish(self):
+        game = GoFish()
+
+        game.player_one_hand = [(Ranks.ACE, Suits.SPADES), (Ranks.TWO, Suits.HEARTS), (Ranks.THREE, Suits.CLUBS),
+                                (Ranks.FOUR, Suits.CLUBS), (Ranks.FIVE, Suits.DIAMONDS)]
+        game.computer_hand = [(Ranks.SIX, Suits.SPADES), (Ranks.EIGHT, Suits.HEARTS), (Ranks.NINE, Suits.CLUBS),
+                              (Ranks.SEVEN, Suits.CLUBS), (Ranks.TEN, Suits.DIAMONDS)]
+
+        result = game.player_two_guesses()
+
+        self.assertFalse(result)
+
+    def test_computer_guessing_has_card(self):
+        game = GoFish()
+
+        game.player_one_hand = [(Ranks.ACE, Suits.SPADES), (Ranks.TWO, Suits.HEARTS), (Ranks.THREE, Suits.CLUBS),
+                                (Ranks.FOUR, Suits.CLUBS), (Ranks.SIX, Suits.DIAMONDS)]
+        game.computer_hand = [(Ranks.SIX, Suits.SPADES), (Ranks.EIGHT, Suits.HEARTS), (Ranks.NINE, Suits.CLUBS),
+                              (Ranks.SEVEN, Suits.CLUBS), (Ranks.TEN, Suits.DIAMONDS)]
+
+        result = game.player_two_guesses()
+
+        self.assertFalse(result)
+
+    def test_regex_pattern(self):
+        result = GoFish.get_regex_pattern()
+
+        self.assertIsNotNone(result)
+
+    def test_computer_wins(self):
+        game = GoFish()
+        game.computer_hand = [(Ranks.SIX, Suits.SPADES), (Ranks.SIX, Suits.HEARTS), (Ranks.SIX, Suits.CLUBS),
+                              (Ranks.SEVEN, Suits.CLUBS), (Ranks.SIX, Suits.DIAMONDS)]
+
+        result = game.enter_user_turn("seven")
+        self.assertTrue(result)
