@@ -1,5 +1,5 @@
-from frontend.pyarcade.war import War, Ranks
-from frontend.pyarcade.cards import Suits
+from pyarcade.war import War, Ranks
+from pyarcade.cards import Suits
 
 import unittest
 import re

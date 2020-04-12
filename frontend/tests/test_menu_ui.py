@@ -135,6 +135,14 @@ class MenuUITestCase(unittest.TestCase):
         self.assertEqual(result, Options.GO_FISH_OPTIONS.value)
         menu.close_curse()
 
+    def test_main_to_options(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 6
+        result = menu.main_menu()
+        self.assertEqual(result, Options.FEATURE_OPTIONS.value)
+        menu.close_curse()
+
     def test_new_game_menu(self):
         menu = Menu()
         menu.testing = True
@@ -336,10 +344,11 @@ class MenuUITestCase(unittest.TestCase):
         MenuUITestCase._move_down(menu, options, [""])
         MenuUITestCase._move_down(menu, options, [""])
         MenuUITestCase._move_down(menu, options, [""])
-        self.assertEqual(menu.option_idx, 6)
+        MenuUITestCase._move_down(menu, options, [""])
+        self.assertEqual(menu.option_idx, 7)
 
         result = menu.main_menu()
-        self.assertEqual(menu.option_idx, 6)
+        self.assertEqual(menu.option_idx, 7)
 
         self.assertEquals(result, Options.MAIN_MENU_OPTIONS.value)
         menu.close_curse()
@@ -412,6 +421,15 @@ class MenuUITestCase(unittest.TestCase):
         menu.testing = True
         menu.option_idx = 4
         menu.go_fish_menu()
+
+        self.assertEqual(menu.option_idx, 1)
+        menu.close_curse()
+
+    def test_go_options_back(self):
+        menu = Menu()
+        menu.testing = True
+        menu.option_idx = 2
+        menu.options_menu()
 
         self.assertEqual(menu.option_idx, 1)
         menu.close_curse()
