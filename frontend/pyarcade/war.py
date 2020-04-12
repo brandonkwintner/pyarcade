@@ -1,7 +1,7 @@
 import random
 from enum import Enum
-from frontend.pyarcade.cards import Suits
-from frontend.pyarcade.abstract_game import AbstractGame
+from pyarcade.cards import Suits
+from pyarcade.abstract_game import AbstractGame
 
 
 class Ranks(Enum):
