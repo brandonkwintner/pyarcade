@@ -1,5 +1,5 @@
-from pyarcade.war import War, Ranks
-from pyarcade.cards import Suits
+from frontend.pyarcade.war import War, Ranks
+from frontend.pyarcade.cards import Suits
 
 import unittest
 import re
@@ -161,15 +161,24 @@ class WarTestCase(unittest.TestCase):
                                 (Ranks.THREE, Suits.DIAMONDS)]
         game.player_two_hand = [(Ranks.THREE, Suits.DIAMONDS),
                                 (Ranks.FOUR, Suits.DIAMONDS)]
-        player_one, player_two, last_turn_winner = game.get_last_turn()
-        self.assertEqual("TWO, THREE", player_one)
-        self.assertEqual("THREE, FOUR", player_two)
-        self.assertEqual(0, last_turn_winner)
+        results = game.get_last_turn()
+        player_one_card = results[0]
+        player_two_card = results[1]
+        player_one_card_count = results[2]
+        player_two_card_count = results[3]
+        game_over = results[4]
+        last_turn_winner = results[5]
+        self.assertEqual("TWO", player_one_card)
+        self.assertEqual("THREE", player_two_card)
+        self.assertEqual(2, player_one_card_count)
+        self.assertEqual(2, player_two_card_count)
+        self.assertFalse(game_over)
+        self.assertEqual(0, last_turn_winner) # Since no turn was played yet.
 
     def test_regex_pattern(self):
         pattern = War.get_regex_pattern()
         regex = re.compile(pattern)
-        self.assertTrue(regex.match("Flip Card"))
+        self.assertTrue(regex.match("flip card"))
         self.assertFalse(regex.match("Hello"))
 
 
