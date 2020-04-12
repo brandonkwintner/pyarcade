@@ -1,7 +1,7 @@
 import random
 from enum import Enum
-from pyarcade.cards import Suits
-from pyarcade.abstract_game import AbstractGame
+from frontend.pyarcade.cards import Suits
+from frontend.pyarcade.abstract_game import AbstractGame
 
 
 class Ranks(Enum):
@@ -132,18 +132,23 @@ class War(AbstractGame):
     def get_last_turn(self) -> (str, str, int, int, bool, int):
         """
         Returns:
-            A Tuple containing String representations of both player's hands and
-            the player who won the last turn.
+            A Tuple containing:
+            str: Player One's card.
+            str: Player Two's card.
+            int: Number of cards Player One has.
+            int: Number of cards Player Two has.
+            bool: Returns True if there is a winner, False otherwise.
+            int: 1 or 2 depending on who won last turn.
         """
 
         if len(self.player_one_hand) == 0 or len(self.player_two_hand) == 0:
             return "", "", len(self.player_one_hand), \
                    len(self.player_two_hand), True, self.last_turn_winner
 
-        player_one_str = War.to_str([self.player_one_hand[0]])
-        player_two_str = War.to_str([self.player_two_hand[0]])
+        player_one_card = War.to_str([self.player_one_hand[0]])
+        player_two_card = War.to_str([self.player_two_hand[0]])
 
-        return player_one_str, player_two_str, len(self.player_one_hand),\
+        return player_one_card, player_two_card, len(self.player_one_hand),\
             len(self.player_two_hand), False, self.last_turn_winner
 
     def reset_game(self):
