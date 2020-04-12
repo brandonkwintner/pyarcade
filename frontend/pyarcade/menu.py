@@ -442,11 +442,11 @@ class Menu:
                 break
 
             if option_list[self.option_idx] == "Take Guess":
-                message = "Please enter desired Card Rank (Full Name or Number)"
+                message = "Please enter Card Rank (Full Name or Number)"
                 guess = self.user_input_window(message, "")
 
                 if not guess == "":
-                    input_result = input_system.take_input(guess.split()[0])
+                    input_result = input_system.take_input(guess.strip())
 
                     if not input_result[1]:
                         game_info[3] = "Invalid input: Try Again"
@@ -505,7 +505,8 @@ class Menu:
 
             if self.option_idx == 1:
                 username, password = self.create_account()
-                status = Connections.sign_up_account(username, password)
+                status = Connections.sign_up_account(username.strip(),
+                                                     password.strip())
 
                 if status["code"] == 200:
                     self.user = "Hello " + username
@@ -534,7 +535,7 @@ class Menu:
         rectangle(self.stdscr, 9, self.x_start_position, 11,
                   self.x_start_position + 27)
 
-        exit_message = "Enter Info, press the ENTER KEY to continue"
+        exit_message = "Press the 'ENTER KEY' to confirm input"
         self.stdscr.addstr(12, self.x_start_position, exit_message)
         self.stdscr.refresh()
 
@@ -545,7 +546,6 @@ class Menu:
         password = textpad.Textbox(pass_win, insert_mode=True).edit()
 
         return username, password
-
 
     @staticmethod
     def run():
