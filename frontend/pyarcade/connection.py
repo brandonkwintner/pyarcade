@@ -3,7 +3,7 @@ from enum import Enum
 
 
 class ConnectRequest(Enum):
-    _server_address = "http://0.0.0.0"
+    _server_address = "http://pyarcade_proxy"
     SIGNUP = _server_address + "/users/signup/"
 
 
