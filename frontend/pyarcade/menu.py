@@ -1,9 +1,11 @@
 from pyarcade.input_system import InputSystem
 from pyarcade.game_option import Game
 from pyarcade.menu_options import Options
+from pyarcade.connection import Connections
 from curses.textpad import rectangle, Textbox
 from typing import List
 import curses
+import curses.textpad as textpad
 
 
 class Menu:
@@ -21,6 +23,7 @@ class Menu:
         self.x_start_position = self.width // 2 - self.width // 6
         self.testing = False
         self.testing_function = ""
+        self.user = ""
 
         curses.curs_set(0)
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
@@ -33,6 +36,7 @@ class Menu:
 
     def display_options(self, opts: List[str], info: List[str]) -> List[str]:
         self.stdscr.clear()
+        self.stdscr.addstr(0, self.x_start_position, self.user)
         line_num = self.display_game_info(info) + 2
 
         for idx, text in enumerate(opts):
@@ -124,6 +128,10 @@ class Menu:
 
             line_num += 2
 
+        elif name == "Options":
+            line_num += 2
+            self.stdscr.addstr(line_num, self.x_start_position, info[1])
+
         return line_num
 
     def scroll_options(self, opts: List[str], info: List[str]) -> int:
@@ -154,7 +162,8 @@ class Menu:
         if user_input == "":
             edit_begin_y = self.height // 4
             edit_begin_x = self.width // 2 - self.rect_width // 2
-            edit_window = curses.newwin(1, 13, edit_begin_y, edit_begin_x)
+            edit_window = curses.newwin(1, self.rect_width, edit_begin_y,
+                                        edit_begin_x)
 
             rectangle(self.stdscr, edit_begin_y - 1, edit_begin_x - 2,
                       edit_begin_y + self.rect_length,
@@ -189,6 +198,8 @@ class Menu:
                 result = self.war_menu()
             elif self.option_idx == 5:
                 result = self.go_fish_menu()
+            elif self.option_idx == 6:
+                result = self.options_menu()
             elif self.option_idx == len(menu_option) - 1:
                 result = menu_option
                 self.close_curse()
@@ -479,6 +490,62 @@ class Menu:
                 break
 
         return option_list
+
+    def options_menu(self) -> List[str]:
+        option_list = Options.FEATURE_OPTIONS.value
+        display_list = ['Options', '']
+
+        if not self.testing:
+            self.option_idx = 1
+
+        while True:
+            if not self.testing:
+                self.display_options(option_list, display_list)
+                self.scroll_options(option_list, display_list)
+
+            if self.option_idx == 1:
+                username, password = self.create_account()
+                status = Connections.sign_up_account(username, password)
+
+                if status["code"] == 200:
+                    self.user = "Hello " + username
+                    break
+                else:
+                    display_list[1] = "Failed to Create Account"
+
+            elif self.option_idx == len(option_list) - 1:
+                self.option_idx = 1
+                break
+
+            if self.testing:
+                break
+
+        return option_list
+
+    def create_account(self) -> (str, str):
+        self.stdscr.clear()
+        self.stdscr.addstr(2, self.x_start_position, "Create Account")
+
+        self.stdscr.addstr(4, self.x_start_position, "Username")
+        rectangle(self.stdscr, 5, self.x_start_position, 7,
+                  self.x_start_position + 27)
+
+        self.stdscr.addstr(8, self.x_start_position, "Password")
+        rectangle(self.stdscr, 9, self.x_start_position, 11,
+                  self.x_start_position + 27)
+
+        exit_message = "Enter Info, press the ENTER KEY to continue"
+        self.stdscr.addstr(12, self.x_start_position, exit_message)
+        self.stdscr.refresh()
+
+        user_win = curses.newwin(1, 26, 6, self.x_start_position + 1)
+        username = textpad.Textbox(user_win, insert_mode=True).edit()
+
+        pass_win = curses.newwin(1, 26, 10, self.x_start_position + 1)
+        password = textpad.Textbox(pass_win, insert_mode=True).edit()
+
+        return username, password
+
 
     @staticmethod
     def run():
