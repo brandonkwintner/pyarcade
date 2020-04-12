@@ -17,7 +17,7 @@ class UserLoginMiddleware:
             return self.get_response(request)
 
         try:
-            body = json.loads(request.body)
+            body = request.POST.dict()
 
             # POST missing needed body keys
             if "username" not in body or "password" not in body:
