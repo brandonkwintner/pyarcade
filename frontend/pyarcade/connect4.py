@@ -89,7 +89,7 @@ class Connect4(AbstractGame):
         self.current_history[row][col] = current_turn
         self.turn += 1
 
-        if self.check_win():
+        if self.is_full_board() or self.check_win():
             self.player_won(current_turn)
             return True
 
@@ -111,7 +111,7 @@ class Connect4(AbstractGame):
                 return True
 
         # max amount of moves reached, tie game
-        if self.turn > 41:
+        if self.is_full_board():
             self.player_won(current_turn)
             return True
 
@@ -292,6 +292,9 @@ class Connect4(AbstractGame):
 
         self.entire_history.append((self.current_history, player))
         self.turn = 0
+
+    def is_full_board(self):
+        return self.turn >= Connect4.MAX_COLS * Connect4.MAX_ROWS
 
     @staticmethod
     def get_regex_pattern() -> str:
