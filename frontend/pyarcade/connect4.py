@@ -1,6 +1,7 @@
 from pyarcade.connect4_states import C4State
 from pyarcade.abstract_game import AbstractGame
 from typing import List, Mapping
+from random import randint
 
 
 class Connect4(AbstractGame):
@@ -10,11 +11,12 @@ class Connect4(AbstractGame):
     MAX_ROWS = 6
     MAX_COLS = 7
 
-    def __init__(self):
+    def __init__(self, use_ai=False):
         AbstractGame.__init__(self)
         # current 6x7 board
         self.current_history = Connect4.setup_board()
         self.turn = 0
+        self.use_ai = use_ai
 
     @staticmethod
     def setup_board() -> List[List[C4State]]:
@@ -40,6 +42,7 @@ class Connect4(AbstractGame):
 
         super().reset_game()
 
+        self.turn = 0
         self.current_history = Connect4.setup_board()
 
     def clear_game(self):
@@ -48,6 +51,7 @@ class Connect4(AbstractGame):
 
         super().clear_game()
 
+        self.turn = 0
         self.entire_history = []
         self.current_history = Connect4.setup_board()
 
@@ -85,11 +89,33 @@ class Connect4(AbstractGame):
         self.current_history[row][col] = current_turn
         self.turn += 1
 
-        if self.check_win():
+        if self.is_full_board() or self.check_win():
             self.player_won(current_turn)
             return True
-        else:
-            return False
+
+        if self.use_ai:
+            ai_row = -1
+            ai_col = -1
+
+            while ai_row == -1:
+                ai_col = randint(0, Connect4.MAX_COLS)
+                ai_row = self.get_free_row(ai_col)
+
+            current_turn = self.get_turn()
+
+            self.current_history[ai_row][ai_col] = current_turn
+            self.turn += 1
+
+            if self.check_win():
+                self.player_won(current_turn)
+                return True
+
+        # max amount of moves reached, tie game
+        if self.is_full_board():
+            self.player_won(current_turn)
+            return True
+
+        return False
 
     def get_free_row(self, col: int) -> int:
         """ Gets a free row given a column.
@@ -266,6 +292,9 @@ class Connect4(AbstractGame):
 
         self.entire_history.append((self.current_history, player))
         self.turn = 0
+
+    def is_full_board(self):
+        return self.turn >= Connect4.MAX_COLS * Connect4.MAX_ROWS
 
     @staticmethod
     def get_regex_pattern() -> str:

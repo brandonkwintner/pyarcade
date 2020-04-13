@@ -1,50 +1,42 @@
-# PyArcade
+# Running the Program
+## Build Instructions
+1. ```$ .../group_01/```
+1. ```docker-compose build```
+1. ```docker-compose up -d```
 
-## Assignment 4 Approximate Work Distribution
+## Running the UI
+1. ```docker run -it --network=group_01_default pyarcade_frontend```
 
-1. Andy Zhang: 50%
-    1. Made main menu and game-specific menus.
-    2. Assisted with game integration.
-    3. Made and refactored existing tests for UI and other games.
-    
-2. Nam Quach: 50%
-    1. Applied use of abstract factory design pattern.
-    2. Integration with Andy's blackjack game.
-    3. Assisted with game design.
+## Stopping
+1. ```docker-compose down```
 
-## Design Pattern
-The **Abstract Factory** design pattern was chosen because it felt like a natural extension of pyarcade.
-To elaborate, our idea for pyarcade is that it is essentially made up of general "games".
-Of course each game will have its own functionality but most pyarcade games definitely share common functionality.
-For instance, starting a new game, resetting and clearing history, taking a user's input, getting the state of the game, etc.
-Using this fact, making the specific games (i.e., mastermind, connect4, blackjack) conform/follow the abstract game class made it much easier to use the game code elsewhere.
-For example, in the input system, after creating a desired game, since the methods were the same, there was no need to differentiate calling conventions (e.g., method names).
-In our opinion, this made the code more merge-able, maintainable, and manageable.
-Firstly, since we both had similar ideas of how the games worked (e.g., taking input), all we needed to do was made sure the game to be merged inherited from the abstract class and then refactored and rename its method to match the abstract base class' method name.
-If there were any bugs to fix, it would likely happen at the specific game level rather than the caller of the method (i.e., input system) as we are only using the abstract methods rather than calling specific methods relating to the game in almost all cases.
-Also, if we were to add another game, all that the new game needs to do is to adhere to the abstract class and along with very minor changes to the input system, it would be up and running in our pyarcade within a few lines of extra code.
+## Run Tests
+### Frontend
+1. ```$ .../group_01/frontend/```
+2. ```python setup.py test```
+3. ```coverage run setup.py test```
+4. ```coverage report -m```
 
-You can see the definition of the class in **pyarcade/abstract_game.py**
+### Backend
+(**```pip install django``` may be need**)
+1. ```$ .../group_01/backend/```
+2. ```python manage.py test pyarcade_backend```
 
-Minified example for future game implementation:
+# Work
+- Andy - 25%
+    - War and Go Fish UI
+    - Added new UI test
+    - UI signup and connection
 
-```Python
-class AbstractGame(metaclass=ABCMeta):
-     @abstractmethod
-    def enter_user_turn(self, guess) -> bool:
-        pass
+- Brandon - 25%
+    - Refactored and integrated War
+    - Refactored War tests
 
-class OurGame(AbstractGame):
-    def enter_user_turn(self, col: int) -> bool:
-        # ... code omitted
-        return win_move
+- Nam - 25%
+    - django, nginx setup
+    - Refactored Connect4 and corresponding tests
+    - Docker setup
 
-class SomeNewGame(AbstractGame):
-    def custom_input_stuff(self, in: str, misc_opts: List[str]) -> bool:
-        # ... code omitted
-        return win_move
-
-    def enter_user_turn(self, in: str) -> bool:
-        # quick conformance by wrapping needed method with custom one
-        return self.custom_input_stuff(in, ["a", "b", "c"])
-```
+- Ryan - 25%
+    - Refactored and integrated Go Fish
+    - Refactored Go Fish tests

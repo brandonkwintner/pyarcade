@@ -1,9 +1,11 @@
 from pyarcade.input_system import InputSystem
 from pyarcade.game_option import Game
 from pyarcade.menu_options import Options
+from pyarcade.connection import Connections
 from curses.textpad import rectangle, Textbox
 from typing import List
 import curses
+import curses.textpad as textpad
 
 
 class Menu:
@@ -21,6 +23,7 @@ class Menu:
         self.x_start_position = self.width // 2 - self.width // 6
         self.testing = False
         self.testing_function = ""
+        self.user = ""
 
         curses.curs_set(0)
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
@@ -33,6 +36,7 @@ class Menu:
 
     def display_options(self, opts: List[str], info: List[str]) -> List[str]:
         self.stdscr.clear()
+        self.stdscr.addstr(0, self.x_start_position, self.user)
         line_num = self.display_game_info(info) + 2
 
         for idx, text in enumerate(opts):
@@ -92,6 +96,42 @@ class Menu:
 
             line_num += 2
 
+        elif name == "War":
+            game_state = "Games Won: " + info[2]
+            self.stdscr.addstr(0, 0, game_state)
+
+            line_num += 1
+            self.stdscr.addstr(line_num, self.x_start_position,
+                               "Player 1 Card Count: " + str(info[1][2]))
+            self.stdscr.addstr(line_num + 1, self.x_start_position, info[1][0])
+
+            line_num += 3
+            self.stdscr.addstr(line_num, self.x_start_position,
+                               "Player 2 Card Count: " + str(info[1][3]))
+            self.stdscr.addstr(line_num + 1, self.x_start_position,
+                               info[1][1])
+
+            line_num += 2
+
+        elif name == "Go Fish":
+            game_state = "Games Won: " + info[2]
+            self.stdscr.addstr(0, 0, game_state)
+
+            line_num += 1
+            self.stdscr.addstr(line_num, self.x_start_position,
+                               "Player hand: ")
+            self.stdscr.addstr(line_num + 1, self.x_start_position, info[1][0])
+
+            line_num += 3
+
+            self.stdscr.addstr(line_num + 2, self.x_start_position, info[3])
+
+            line_num += 2
+
+        elif name == "Options":
+            line_num += 2
+            self.stdscr.addstr(line_num, self.x_start_position, info[1])
+
         return line_num
 
     def scroll_options(self, opts: List[str], info: List[str]) -> int:
@@ -122,7 +162,8 @@ class Menu:
         if user_input == "":
             edit_begin_y = self.height // 4
             edit_begin_x = self.width // 2 - self.rect_width // 2
-            edit_window = curses.newwin(1, 13, edit_begin_y, edit_begin_x)
+            edit_window = curses.newwin(1, self.rect_width, edit_begin_y,
+                                        edit_begin_x)
 
             rectangle(self.stdscr, edit_begin_y - 1, edit_begin_x - 2,
                       edit_begin_y + self.rect_length,
@@ -153,8 +194,15 @@ class Menu:
                 result = self.connect_four_menu()
             elif self.option_idx == 3:
                 result = self.blackjack_menu()
+            elif self.option_idx == 4:
+                result = self.war_menu()
+            elif self.option_idx == 5:
+                result = self.go_fish_menu()
+            elif self.option_idx == 6:
+                result = self.options_menu()
             elif self.option_idx == len(menu_option) - 1:
                 result = menu_option
+                self.close_curse()
                 break
 
             if self.testing:
@@ -165,6 +213,9 @@ class Menu:
     def mastermind_menu(self) -> List[str]:
         input_system = InputSystem(Game.MASTERMIND)
         option_list = Options.MASTERMIND_OPTIONS.value
+
+        if not self.testing:
+            self.option_idx = 1
 
         while True:
             game = input_system.game_num
@@ -181,6 +232,7 @@ class Menu:
 
                 if input_system.take_input(" ".join(guess))[0]:
                     option_list = Options.MASTERMIND_NEW_GAME.value
+
                 self.testing_function = "guess"
 
             elif option_list[self.option_idx] == "Reset" or \
@@ -207,6 +259,9 @@ class Menu:
         option_list = Options.CONNECT_FOUR_OPTIONS.value
         input_system = InputSystem(Game.CONNECT4)
 
+        if not self.testing:
+            self.option_idx = 1
+
         while True:
             status = input_system.get_last_guess()
             game = input_system.game_num
@@ -223,7 +278,7 @@ class Menu:
 
                 if input_system.take_input(guess)[0]:
                     option_list = Options.CONNECT_FOUR_NEW_GAME.value
-                    
+
                     if game_info[3] == 'Player X':
                         option_list[0] = 'Player X Wins!'
                     else:
@@ -256,6 +311,9 @@ class Menu:
         option_list = Options.BLACKJACK_OPTIONS.value
         status = input_system.get_last_guess()
         game_info = ["Blackjack", status[0], str(games_won), ""]
+
+        if not self.testing:
+            self.option_idx = 1
 
         while True:
             status = input_system.get_last_guess()
@@ -304,6 +362,190 @@ class Menu:
                 break
 
         return option_list
+
+    def war_menu(self) -> List[str]:
+        input_system = InputSystem(Game.WAR)
+        games_won = 0
+        option_list = Options.WAR_OPTIONS.value
+        status = input_system.get_last_guess()
+        game_info = ["War", status, str(games_won)]
+
+        if not self.testing:
+            self.option_idx = 1
+
+        while True:
+            status = input_system.get_last_guess()
+            game_info[1] = status
+            game_info[2] = str(games_won)
+
+            if not self.testing:
+                self.display_options(option_list, game_info)
+                self.scroll_options(option_list, game_info)
+
+            if option_list[self.option_idx] == "Flip Card":
+                input_system.take_input("flip card")
+                info = input_system.get_last_guess()
+
+                if info[4]:
+                    option_list = Options.WAR_NEW_GAME.value
+
+                    if info[5] == 2:
+                        option_list[0] = "You Lose!"
+                    else:
+                        option_list[0] = "You Win!"
+                        games_won += 1
+
+                self.testing_function = "flip card"
+
+            elif option_list[self.option_idx] == "Reset" or \
+                    option_list[self.option_idx] == "New Game":
+                input_system.take_input("reset")
+                option_list = Options.WAR_OPTIONS.value
+
+                self.testing_function = "reset"
+
+            elif option_list[self.option_idx] == "Clear":
+                option_list = Options.WAR_OPTIONS.value
+                input_system.take_input("clear")
+                self.testing_function = "clear"
+                games_won = 0
+
+            elif self.option_idx == len(option_list) - 1:
+                self.option_idx = 1
+                break
+
+            if self.testing:
+                break
+
+        return option_list
+
+    def go_fish_menu(self) -> List[str]:
+        input_system = InputSystem(Game.GO_FISH)
+        games_won = 0
+        option_list = Options.GO_FISH_OPTIONS.value
+        status = input_system.get_last_guess()
+        game_info = ["Go Fish", status, str(games_won), ""]
+
+        if not self.testing:
+            self.option_idx = 1
+
+        while True:
+            status = input_system.get_last_guess()
+            game_info[1] = status
+            game_info[2] = str(games_won)
+
+            if not self.testing:
+                self.display_options(option_list, game_info)
+                self.scroll_options(option_list, game_info)
+
+            if self.option_idx > len(option_list) - 1:
+                break
+
+            if option_list[self.option_idx] == "Take Guess":
+                message = "Please enter Card Rank (Full Name or Number)"
+                guess = self.user_input_window(message, "")
+
+                if not guess == "":
+                    input_result = input_system.take_input(guess.strip())
+
+                    if not input_result[1]:
+                        game_info[3] = "Invalid input: Try Again"
+                    else:
+                        info = input_system.get_last_guess()
+
+                        if input_result[0]:
+                            option_list = Options.GO_FISH_NEW_GAME.value
+                            game_info[3] = ""
+
+                            if info[2] == 1:
+                                option_list[0] = "You Win!"
+                                games_won += 1
+                            else:
+                                option_list[0] = "You Lose!"
+                        else:
+                            if info[1]:
+                                game_info[3] = "Go Fish"
+                            else:
+                                game_info[3] = "Correct Guess"
+
+                self.testing_function = "guess"
+
+            elif option_list[self.option_idx] == "Reset" or \
+                    option_list[self.option_idx] == "New Game":
+                input_system.take_input("reset")
+                option_list = Options.GO_FISH_OPTIONS.value
+                self.testing_function = "reset"
+
+            elif option_list[self.option_idx] == "Clear":
+                option_list = Options.GO_FISH_OPTIONS.value
+                input_system.take_input("clear")
+                self.testing_function = "clear"
+                games_won = 0
+
+            elif self.option_idx == len(option_list) - 1:
+                self.option_idx = 1
+                break
+
+            if self.testing:
+                break
+
+        return option_list
+
+    def options_menu(self) -> List[str]:
+        option_list = Options.FEATURE_OPTIONS.value
+        display_list = ['Options', '']
+
+        if not self.testing:
+            self.option_idx = 1
+
+        while True:
+            if not self.testing:
+                self.display_options(option_list, display_list)
+                self.scroll_options(option_list, display_list)
+
+            if self.option_idx == 1:
+                username, password = self.create_account()
+                status = Connections.sign_up_account(username.strip(),
+                                                     password.strip())
+
+                if status["code"] == 200:
+                    self.user = "Hello " + username
+                    break
+                else:
+                    display_list[1] = "Failed to Create Account"
+
+            elif self.option_idx == len(option_list) - 1:
+                self.option_idx = 1
+                break
+
+            if self.testing:
+                break
+
+        return option_list
+
+    def create_account(self) -> (str, str):
+        self.stdscr.clear()
+        self.stdscr.addstr(2, self.x_start_position, "Create Account")
+
+        self.stdscr.addstr(4, self.x_start_position, "Username")
+        rectangle(self.stdscr, 5, self.x_start_position, 7,
+                  self.x_start_position + 27)
+
+        self.stdscr.addstr(8, self.x_start_position, "Password")
+        rectangle(self.stdscr, 9, self.x_start_position, 11,
+                  self.x_start_position + 27)
+
+        exit_message = "Press the 'ENTER KEY' to confirm input"
+        self.stdscr.addstr(12, self.x_start_position, exit_message)
+        self.stdscr.refresh()
+
+        user_win = curses.newwin(1, 26, 6, self.x_start_position + 1)
+        username = textpad.Textbox(user_win, insert_mode=True).edit()
+
+        pass_win = curses.newwin(1, 26, 10, self.x_start_position + 1)
+        password = textpad.Textbox(pass_win, insert_mode=True).edit()
+
+        return username, password
 
     @staticmethod
     def run():
