@@ -12,12 +12,16 @@ class UserModelTestCase(TestCase):
     def test_create_simple_user(self):
         user = UserModel(username="bob", password="test")
 
-        user.clean()
-        # assert true since user is valid
-        self.assertTrue(True)
+        # should go to else
+        try:
+            user.full_clean()
+        except ValidationError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
 
     def test_create_bad_username(self):
-        user = UserModel(username="x", password="test")
+        user = UserModel(username="!x", password="test")
 
         try:
             user.full_clean()
