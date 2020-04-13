@@ -398,6 +398,12 @@ class Connect4TestCase(unittest.TestCase):
         # AI takes "O" so turn should be back to player
         self.assertEqual(game.get_turn(), C4State.X)
 
+    def test_stalemate(self):
+        game = Connect4(use_ai=True)
+
+        game.turn = Connect4.MAX_ROWS * Connect4.MAX_COLS
+        self.assertTrue(game.enter_user_turn(1))
+
 
 if __name__ == "__main__":
     unittest.main()
