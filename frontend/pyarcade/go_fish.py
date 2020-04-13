@@ -88,7 +88,7 @@ class GoFish(AbstractGame):
         elif computer_wins:
             self.has_won = True
             self.current_history.append(("Computer Wins", self._hand_to_str(self.computer_hand)))
-            self.entire_history.append(("Player Wins", self._hand_to_str(self.player_one_hand)))
+            self.entire_history.append(("Computer Wins", self._hand_to_str(self.player_one_hand)))
             self.winner = 2
             return True
 

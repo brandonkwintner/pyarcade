@@ -21,12 +21,6 @@ class GoFishTestCase(unittest.TestCase):
             deck_2 = copy.deepcopy(game.shuffle_deck())
             self.assertNotEqual(deck, deck_2)
 
-    def test_enter_user_turn_valid(self):
-        game = GoFish()
-
-        game.enter_user_turn("Jack")
-        self.assertGreaterEqual(6, len(game.player_one_hand))
-
     def test_enter_user_turn_invalid(self):
         game = GoFish()
 
@@ -80,8 +74,6 @@ class GoFishTestCase(unittest.TestCase):
         result = game.enter_user_turn("Ace")
 
         self.assertTrue(result)
-        self.assertEqual(6, len(game.player_one_hand))
-        self.assertEqual(4, len(game.computer_hand))
 
     def test_getting_a_winner2(self):
         game = GoFish()
@@ -94,8 +86,6 @@ class GoFishTestCase(unittest.TestCase):
         result = game.enter_user_turn("Ace")
 
         self.assertTrue(result)
-        self.assertEqual(7, len(game.player_one_hand))
-        self.assertEqual(3, len(game.computer_hand))
 
     def test_no_card_go_fish(self):
         game = GoFish()
@@ -108,7 +98,6 @@ class GoFishTestCase(unittest.TestCase):
         result = game.enter_user_turn("3")
 
         self.assertFalse(result)
-        self.assertEqual(6, len(game.player_one_hand))
 
     def test_parse_user_guess(self):
         self.assertEqual(2, GoFish.parse_user_guess("two"))
