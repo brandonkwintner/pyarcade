@@ -1,23 +1,38 @@
 from typing import Optional, List, Tuple
-from pyarcade.eval_input import Evaluation
-from pyarcade.abstract_game import AbstractGame
+from frontend.pyarcade.eval_input import Evaluation
+from frontend.pyarcade.abstract_game import AbstractGame
+from frontend.pyarcade.difficulties import Difficulty
 import random
 
 
 class Mastermind(AbstractGame):
     """ A class representing a Mastermind game session
 
+        Game modes:
+        Easy - Guess 2 numbers
+        Normal (default) - Guess 4 numbers
+        Hard - Guess 6 numbers
+
         Args:
+            difficulty: (Difficulty) The difficulty of the new game to be played
+
             width: (int) The number of random digits to generate
 
             max_range: (int) The range that a single digit can vary
-
     """
-    def __init__(self, width: Optional[int] = 4, max_range: Optional[int] = 9):
+    def __init__(self, difficulty: Optional[Difficulty] = Difficulty.NORMAL,
+                 width: Optional[int] = 4, max_range: Optional[int] = 9):
         AbstractGame.__init__(self)
 
-        self.width = width
+        if difficulty == Difficulty.EASY:
+            self.width = 2
+        elif difficulty == Difficulty.NORMAL:
+            self.width = width
+        else:
+            self.width = 6
+
         self.max_range = max_range
+        self.difficulty = difficulty
 
         # generated sequence
         self.gen_sequence = self.generate_hidden_sequence()
@@ -30,8 +45,7 @@ class Mastermind(AbstractGame):
 
         """
 
-        return \
-            [random.randint(0, self.max_range) for _ in range(self.width)]
+        return [random.randint(0, self.max_range) for _ in range(self.width)]
 
     def enter_user_turn(self, guess: List[int]) -> bool:
         """ Checks if guess matches the hidden sequence.

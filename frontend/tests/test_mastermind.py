@@ -1,5 +1,6 @@
-from pyarcade.mastermind import Mastermind
-from pyarcade.eval_input import Evaluation
+from frontend.pyarcade.mastermind import Mastermind
+from frontend.pyarcade.eval_input import Evaluation
+from frontend.pyarcade.difficulties import Difficulty
 import unittest
 
 
@@ -22,6 +23,16 @@ class MastermindTestCase(unittest.TestCase):
 
         self.assertEqual(len(game.current_history), 0)
         self.assertEqual(len(game.entire_history), 0)
+
+    def test_easy_init(self):
+        game = Mastermind(Difficulty.EASY)
+        self.assertEqual(Difficulty.EASY, game.difficulty)
+        self.assertEqual(2, len(game.gen_sequence))
+
+    def test_hard_init(self):
+        game = Mastermind(Difficulty.HARD)
+        self.assertEqual(Difficulty.HARD, game.difficulty)
+        self.assertEqual(6, len(game.gen_sequence))
 
     def test_all_incorrect_guess(self):
         game = Mastermind()
