@@ -4,8 +4,6 @@ from django.contrib.auth.hashers import make_password, check_password
 from django.core.exceptions import ValidationError
 
 from rest_framework.views import APIView
-from rest_framework.decorators import permission_classes
-from rest_framework.permissions import IsAuthenticated
 
 from ..models.user_model import UserModel
 from ..utilities.tokens import Token
@@ -56,18 +54,36 @@ class SignUpView(APIView):
         token = Token.get_tokens_for_user(new_user)
 
         return JsonResponse({
-            "access": f"Bearer {token['access']}",
-            "refresh": token["refresh"],
+            "access": token['access'],
+            "refresh": token['refresh'],
         })
 
 
 class LogInView(APIView):
-    permission_classes = [IsAuthenticated,]
-
-    def get(self, request):
-        # must be authenticated to access
-        return JsonResponse({"message": "success"})
-
     def post(self, request):
-        return JsonResponse({"message": "success"})
+        try:
+            username = request.validated["username"]
+            password = request.validated["password"]
+        except AttributeError:
+            return JsonResponse({
+                "message": "Did not meet requirements."
+            }, status=400)
 
+        try:
+            user_found = UserModel.objects.get(username__iexact=username)
+
+            if not check_password(password, user_found.password):
+                raise UserModel.DoesNotExist
+
+        except UserModel.DoesNotExist:
+            return JsonResponse({
+                "message": "Did not match credentials."
+            }, status=400)
+
+
+        token = Token.get_tokens_for_user(user_found)
+
+        return JsonResponse({
+            "access": token['access'],
+            "refresh": token["refresh"],
+        })
