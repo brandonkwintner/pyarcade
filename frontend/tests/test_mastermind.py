@@ -1,6 +1,6 @@
-from frontend.pyarcade.mastermind import Mastermind
-from frontend.pyarcade.eval_input import Evaluation
-from frontend.pyarcade.difficulties import Difficulty
+from pyarcade.mastermind import Mastermind
+from pyarcade.eval_input import Evaluation
+from pyarcade.difficulties import Difficulty
 import unittest
 
 

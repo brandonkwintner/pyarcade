@@ -3,7 +3,7 @@ from enum import Enum
 
 
 class ConnectRequest(Enum):
-    _server_address = "http://pyarcade_proxy"
+    _server_address = "http://pyarcade_proxy/api"
     SIGNUP = _server_address + "/users/signup/"
 
 
@@ -22,8 +22,7 @@ class Connections:
         if status_code == 200:
             return {
                 "code": status_code,
-                "message": response_body["message"],
-                "token": response_body["token"]
+                "access": response_body["access"]
             }
 
         return {
