@@ -17,6 +17,7 @@ class Connect4(AbstractGame):
         self.current_history = Connect4.setup_board()
         self.turn = 0
         self.use_ai = use_ai
+        self.winner = ""
 
     @staticmethod
     def setup_board() -> List[List[C4State]]:
@@ -91,6 +92,7 @@ class Connect4(AbstractGame):
 
         if self.is_full_board() or self.check_win():
             self.player_won(current_turn)
+            self.winner = "Player"
             return True
 
         if self.use_ai:
@@ -108,6 +110,7 @@ class Connect4(AbstractGame):
 
             if self.check_win():
                 self.player_won(current_turn)
+                self.winner = "NPC"
                 return True
 
         # max amount of moves reached, tie game
@@ -239,7 +242,7 @@ class Connect4(AbstractGame):
 
         return False
 
-    def get_last_turn(self) -> str:
+    def get_last_turn(self) -> (str, str):
         """ Gets the latest board state.
 
             Returns (List[List[str]]):
@@ -257,7 +260,7 @@ class Connect4(AbstractGame):
                 result += element.value + " "
             result += "\n"
 
-        return result
+        return result, self.winner
 
     def get_wins(self) -> Mapping[str, int]:
         """ Gets the wins of each player throughout the game.
@@ -292,6 +295,7 @@ class Connect4(AbstractGame):
 
         self.entire_history.append((self.current_history, player))
         self.turn = 0
+        self.winner = ""
 
     def is_full_board(self):
         return self.turn >= Connect4.MAX_COLS * Connect4.MAX_ROWS
