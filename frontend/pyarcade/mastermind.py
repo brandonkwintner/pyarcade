@@ -1,7 +1,7 @@
 from typing import Optional, List, Tuple
-from frontend.pyarcade.eval_input import Evaluation
-from frontend.pyarcade.abstract_game import AbstractGame
-from frontend.pyarcade.difficulties import Difficulty
+from pyarcade.eval_input import Evaluation
+from pyarcade.abstract_game import AbstractGame
+from pyarcade.difficulties import Difficulty
 import random
 
 
