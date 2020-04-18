@@ -2,4 +2,4 @@
 .coverage 
 __pycache__
 *.egg-info
-cov.txt
+cov.txt*
