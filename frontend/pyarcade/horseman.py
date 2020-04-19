@@ -1,10 +1,18 @@
 from pyarcade.abstract_game import AbstractGame
+from pyarcade.difficulties import Difficulty
 from typing import Optional
 
 
 class Horseman(AbstractGame):
-    def __init__(self):
-        pass
+    def __init__(self, difficulty: Optional[Difficulty] = Difficulty.NORMAL):
+        if difficulty == Difficulty.EASY:
+            self.word_length = 4
+        elif difficulty == Difficulty.NORMAL:
+            self.word_length = 6
+        else:
+            self.word_length = 8
+
+        self.num_guesses = 0
 
     def enter_user_turn(self, guess) -> bool:
         """ Checks if guess is correct in some way according
