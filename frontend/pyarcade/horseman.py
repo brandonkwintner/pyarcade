@@ -13,6 +13,12 @@ class Horseman(AbstractGame):
             self.word_length = 8
 
         self.num_guesses = 0
+        self.difficulty = difficulty
+        self.word = self.pick_word()
+
+    @staticmethod
+    def pick_word():
+        return ""
 
     def enter_user_turn(self, guess) -> bool:
         """ Checks if guess is correct in some way according
@@ -25,17 +31,26 @@ class Horseman(AbstractGame):
             result (bool): True if correct, false otherwise.
 
         """
-        pass
+        super().enter_user_turn(guess)
+
+
 
     def reset_game(self):
         """ Reset single game. (input reset)
         """
-        pass
+        super.reset_game()
+
+        self.current_history = []
+        self.word = self.pick_word()
 
     def clear_game(self):
         """ Clears entire game. (input clear)
         """
-        pass
+        super.clear_game()
+
+        self.current_history = []
+        self.entire_history = []
+        self.word = self.pick_word()
 
     def get_last_turn(self):
         """ Gets the last turn/state of game.
@@ -52,4 +67,6 @@ class Horseman(AbstractGame):
         Returns:
             Regex string.
         """
-        pass
+        AbstractGame.get_regex_pattern()
+
+        return r"^[a-zA-Zz]$"
