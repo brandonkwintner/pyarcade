@@ -1,5 +1,5 @@
-from pyarcade.menu import Menu
-from pyarcade.menu_options import Options
+from game_ui.menu import Menu
+from game_ui.menu_options import Options
 import curses
 import unittest
 
@@ -18,7 +18,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_user_key_press_enter(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         options = Options.MAIN_MENU_OPTIONS.value
 
         curses.ungetch(curses.KEY_ENTER)
@@ -30,51 +30,51 @@ class MenuUITestCase(unittest.TestCase):
     def test_user_key_press_down(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 1
+        menu.scroll_idx = 1
         options = Options.MAIN_MENU_OPTIONS.value
         MenuUITestCase._move_down(menu, options, [""])
-        self.assertEqual(menu.option_idx, 2)
+        self.assertEqual(menu.scroll_idx, 2)
 
         MenuUITestCase._move_up(menu, options, [""])
-        self.assertEqual(menu.option_idx, 1)
+        self.assertEqual(menu.scroll_idx, 1)
         menu.close_curse()
 
     def test_user_key_press_down_limit(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 1
+        menu.scroll_idx = 1
         options = ['', 'mastermind', 'exit']
 
         MenuUITestCase._move_down(menu, options, [""])
-        self.assertEqual(menu.option_idx, 2)
+        self.assertEqual(menu.scroll_idx, 2)
 
         MenuUITestCase._move_down(menu, options, [""])
-        self.assertEqual(menu.option_idx, 2)
+        self.assertEqual(menu.scroll_idx, 2)
 
         menu.close_curse()
 
     def test_user_key_press_up(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 3
+        menu.scroll_idx = 3
         options = Options.MAIN_MENU_OPTIONS.value
 
         MenuUITestCase._move_up(menu, options, [""])
-        self.assertEqual(menu.option_idx, 2)
+        self.assertEqual(menu.scroll_idx, 2)
 
         menu.close_curse()
 
     def test_user_key_press_up_limit(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         options = ['', 'mastermind', 'exit']
 
         MenuUITestCase._move_up(menu, options, [""])
-        self.assertEqual(menu.option_idx, 1)
+        self.assertEqual(menu.scroll_idx, 1)
 
         MenuUITestCase._move_up(menu, options, [""])
-        self.assertEqual(menu.option_idx, 1)
+        self.assertEqual(menu.scroll_idx, 1)
 
         menu.close_curse()
 
@@ -98,7 +98,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_main_to_mastermind(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 1
+        menu.scroll_idx = 1
         result = menu.main_menu()
         self.assertEqual(result, Options.MASTERMIND_OPTIONS.value)
         menu.close_curse()
@@ -106,7 +106,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_main_to_connect_four(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         result = menu.main_menu()
         self.assertEqual(result, Options.CONNECT_FOUR_OPTIONS.value)
         menu.close_curse()
@@ -114,7 +114,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_main_to_blackjack(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 3
+        menu.scroll_idx = 3
         result = menu.main_menu()
         self.assertEqual(result, Options.BLACKJACK_OPTIONS.value)
         menu.close_curse()
@@ -122,7 +122,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_main_to_war(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 4
+        menu.scroll_idx = 4
         result = menu.main_menu()
         self.assertEqual(result, Options.WAR_OPTIONS.value)
         menu.close_curse()
@@ -130,7 +130,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_main_to_go_fish(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 5
+        menu.scroll_idx = 5
         result = menu.main_menu()
         self.assertEqual(result, Options.GO_FISH_OPTIONS.value)
         menu.close_curse()
@@ -138,7 +138,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_main_to_options(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 6
+        menu.scroll_idx = 6
         result = menu.main_menu()
         self.assertEqual(result, Options.FEATURE_OPTIONS.value)
         menu.close_curse()
@@ -146,11 +146,11 @@ class MenuUITestCase(unittest.TestCase):
     def test_new_game_menu(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 1
+        menu.scroll_idx = 1
         result = menu.blackjack_menu()
         self.assertEqual(result, Options.BLACKJACK_OPTIONS.value)
 
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         result = menu.blackjack_menu()
         self.assertEqual(result, Options.BLACKJACK_NEW_GAME.value)
         menu.close_curse()
@@ -218,7 +218,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_mastermind_guess(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 1
+        menu.scroll_idx = 1
         menu.mastermind_menu()
 
         self.assertEqual(menu.testing_function, "guess")
@@ -227,7 +227,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_mastermind_reset(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         menu.mastermind_menu()
 
         self.assertEqual(menu.testing_function, "reset")
@@ -236,7 +236,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_mastermind_clear(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 3
+        menu.scroll_idx = 3
         menu.mastermind_menu()
 
         self.assertEqual(menu.testing_function, "clear")
@@ -245,16 +245,16 @@ class MenuUITestCase(unittest.TestCase):
     def test_mastermind_back(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 4
+        menu.scroll_idx = 4
         menu.mastermind_menu()
 
-        self.assertEqual(menu.option_idx, 1)
+        self.assertEqual(menu.scroll_idx, 1)
         menu.close_curse()
 
     def test_connect4_choose(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 1
+        menu.scroll_idx = 1
         menu.connect_four_menu()
 
         self.assertEqual(menu.testing_function, "column")
@@ -263,7 +263,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_connect4_reset(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         menu.connect_four_menu()
 
         self.assertEqual(menu.testing_function, "reset")
@@ -272,7 +272,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_connect4_clear(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 3
+        menu.scroll_idx = 3
         menu.connect_four_menu()
 
         self.assertEqual(menu.testing_function, "clear")
@@ -281,16 +281,16 @@ class MenuUITestCase(unittest.TestCase):
     def test_connect4_back(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 4
+        menu.scroll_idx = 4
         menu.connect_four_menu()
 
-        self.assertEqual(menu.option_idx, 1)
+        self.assertEqual(menu.scroll_idx, 1)
         menu.close_curse()
 
     def test_blackjack_hit(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 1
+        menu.scroll_idx = 1
         menu.blackjack_menu()
 
         self.assertEqual(menu.testing_function, "hit")
@@ -299,7 +299,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_blackjack_stand(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         menu.blackjack_menu()
 
         self.assertEqual(menu.testing_function, "stand")
@@ -308,7 +308,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_blackjack_reset(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 3
+        menu.scroll_idx = 3
         menu.blackjack_menu()
 
         self.assertEqual(menu.testing_function, "reset")
@@ -317,7 +317,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_blackjack_clear(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 4
+        menu.scroll_idx = 4
         menu.blackjack_menu()
 
         self.assertEqual(menu.testing_function, "clear")
@@ -326,10 +326,10 @@ class MenuUITestCase(unittest.TestCase):
     def test_blackjack_back(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 5
+        menu.scroll_idx = 5
         menu.blackjack_menu()
 
-        self.assertEqual(menu.option_idx, 1)
+        self.assertEqual(menu.scroll_idx, 1)
         menu.close_curse()
 
     def test_main_menu_exit(self):
@@ -345,10 +345,10 @@ class MenuUITestCase(unittest.TestCase):
         MenuUITestCase._move_down(menu, options, [""])
         MenuUITestCase._move_down(menu, options, [""])
         MenuUITestCase._move_down(menu, options, [""])
-        self.assertEqual(menu.option_idx, 7)
+        self.assertEqual(menu.scroll_idx, 7)
 
         result = menu.main_menu()
-        self.assertEqual(menu.option_idx, 7)
+        self.assertEqual(menu.scroll_idx, 7)
 
         self.assertEquals(result, Options.MAIN_MENU_OPTIONS.value)
         menu.close_curse()
@@ -356,7 +356,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_war_flip_card(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 1
+        menu.scroll_idx = 1
         menu.war_menu()
 
         self.assertEqual(menu.testing_function, "flip card")
@@ -365,7 +365,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_war_reset(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         menu.war_menu()
 
         self.assertEqual(menu.testing_function, "reset")
@@ -374,7 +374,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_war_clear(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 3
+        menu.scroll_idx = 3
         menu.war_menu()
 
         self.assertEqual(menu.testing_function, "clear")
@@ -383,16 +383,16 @@ class MenuUITestCase(unittest.TestCase):
     def test_war_back(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 4
+        menu.scroll_idx = 4
         menu.go_fish_menu()
 
-        self.assertEqual(menu.option_idx, 1)
+        self.assertEqual(menu.scroll_idx, 1)
         menu.close_curse()
 
     def test_go_fish_guess(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 1
+        menu.scroll_idx = 1
         menu.go_fish_menu()
 
         self.assertEqual(menu.testing_function, "guess")
@@ -401,7 +401,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_go_fish_reset(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         menu.go_fish_menu()
 
         self.assertEqual(menu.testing_function, "reset")
@@ -410,7 +410,7 @@ class MenuUITestCase(unittest.TestCase):
     def test_go_fish_clear(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 3
+        menu.scroll_idx = 3
         menu.go_fish_menu()
 
         self.assertEqual(menu.testing_function, "clear")
@@ -419,17 +419,17 @@ class MenuUITestCase(unittest.TestCase):
     def test_go_fish_back(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 4
+        menu.scroll_idx = 4
         menu.go_fish_menu()
 
-        self.assertEqual(menu.option_idx, 1)
+        self.assertEqual(menu.scroll_idx, 1)
         menu.close_curse()
 
     def test_go_options_back(self):
         menu = Menu()
         menu.testing = True
-        menu.option_idx = 2
+        menu.scroll_idx = 2
         menu.options_menu()
 
-        self.assertEqual(menu.option_idx, 1)
+        self.assertEqual(menu.scroll_idx, 1)
         menu.close_curse()

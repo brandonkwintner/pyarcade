@@ -1,4 +1,4 @@
-from pyarcade.menu import Menu
+from game_ui.menu import Menu
 
 
 def run_pyarcade():

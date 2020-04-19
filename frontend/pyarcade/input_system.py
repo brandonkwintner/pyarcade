@@ -22,7 +22,7 @@ class InputSystem:
         """
         # other parameters starts mastermind game by default
         if game == Game.CONNECT4:
-            self.game = Connect4()
+            self.game = Connect4(True)
         elif game == Game.BLACKJACK:
             self.game = Blackjack()
         elif game == Game.WAR:
