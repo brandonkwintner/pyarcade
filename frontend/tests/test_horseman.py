@@ -1,5 +1,6 @@
 from pyarcade.horseman import Horseman
 import unittest
+import re
 
 
 class HorsemanTestCase(unittest.TestCase):
@@ -102,3 +103,9 @@ class HorsemanTestCase(unittest.TestCase):
 
         self.assertEqual(0, len(game.current_history))
         self.assertNotEqual(initial_word, game.word)
+
+    def test_get_regex_pattern(self):
+        pattern = Horseman.get_regex_pattern()
+        regex = re.compile(pattern)
+        self.assertTrue(regex.match("h"))
+        self.assertFalse(regex.match("1"))
