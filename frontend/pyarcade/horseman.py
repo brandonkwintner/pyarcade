@@ -5,6 +5,8 @@ from typing import Optional, List
 
 class Horseman(AbstractGame):
     def __init__(self, difficulty: Optional[Difficulty] = Difficulty.NORMAL):
+        AbstractGame.__init__(self)
+
         if difficulty == Difficulty.EASY:
             self.word_length = 4
         elif difficulty == Difficulty.NORMAL:
@@ -20,7 +22,7 @@ class Horseman(AbstractGame):
 
     @staticmethod
     def pick_word() -> List[str]:
-        return ""
+        return [""]
 
     def enter_user_turn(self, guess) -> bool:
         """ Checks if letter is in the word.
@@ -37,12 +39,12 @@ class Horseman(AbstractGame):
         result = self.check_letter(guess)
 
         if self.game_over and result:
-            self.entire_history.append("Player won", self.current_word)
-            self.current_history.append("Player won", self.current_word)
+            self.entire_history.append(("Player won", self.current_word))
+            self.current_history.append(("Player won", self.current_word))
             return True
         elif self.game_over and not result:
-            self.entire_history.append("Player lost", self.word)
-            self.current_history.append("Player lost", self.word)
+            self.entire_history.append(("Player lost", self.word))
+            self.current_history.append(("Player lost", self.word))
             return True
         else:
             return False
@@ -50,10 +52,10 @@ class Horseman(AbstractGame):
     def check_letter(self, guessed_letter: str) -> bool:
         letter_found = False
 
-        for letter in self.word:
-            if guessed_letter == letter:
+        for index in range(len(self.word)):
+            if guessed_letter == self.word[index]:
                 letter_found = True
-                self.current_word[self.word.index(letter)] = letter
+                self.current_word[index] = self.word[index]
 
         if letter_found is False:
             self.num_guesses_left -= 1
@@ -78,7 +80,7 @@ class Horseman(AbstractGame):
     def reset_game(self):
         """ Reset single game. (input reset)
         """
-        super.reset_game()
+        super().reset_game()
 
         self.current_history = []
         self.word = self.pick_word()
@@ -86,7 +88,7 @@ class Horseman(AbstractGame):
     def clear_game(self):
         """ Clears entire game. (input clear)
         """
-        super.clear_game()
+        super().clear_game()
 
         self.current_history = []
         self.entire_history = []
@@ -98,7 +100,7 @@ class Horseman(AbstractGame):
         Returns:
             Meaningful state of the current game.
         """
-        super.get_last_turn()
+        super().get_last_turn()
 
         return ''.join(self.current_word), self.game_over
 
