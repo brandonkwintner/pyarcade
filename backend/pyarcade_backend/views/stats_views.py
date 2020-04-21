@@ -4,6 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from ..models.user_model import UserModel
+from ..models.game_model import GameModel
+from ..models.game_model import Game
+
 from ..utilities.tokens import Token
 
 
@@ -21,6 +24,13 @@ class UserStatsView(APIView):
                 "message": "Invalid credentials."
             }, status=400)
 
+
+        # create and save game object
+        # game = GameModel(player=user, game_played=Game.MASTERMIND)
+        # game.save()
+
+        # retrieves all games by a user id
+        # games = GameModel.objects.filter(player=user_id)
 
         msg = f"hello, {user.username}"
 
