@@ -25,15 +25,16 @@ class Game(Enum):
             Game enum
         """
 
-        if game_str in ("mastermind",):
+        if game_str in ("mastermind", "Game.MASTERMIND",):
             return cls.MASTERMIND
-        elif game_str in ("connect4", "connect 4", "connect four",):
+        elif game_str in ("connect4", "connect 4", "connect four",
+                          "Game.CONNECT4",):
             return cls.CONNECT4
-        elif game_str in ("blackjack",):
+        elif game_str in ("blackjack", "Game.BLACKJACK",):
             return cls.BLACKJACK
-        elif game_str in ("war",):
+        elif game_str in ("war", "Game.WAR",):
             return cls.WAR
-        elif game_str in ("go_fish", "go fish",):
+        elif game_str in ("go_fish", "go fish", "Game.GO_FISH",):
             return cls.GO_FISH
 
 
