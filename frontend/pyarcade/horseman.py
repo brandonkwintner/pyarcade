@@ -1,18 +1,22 @@
-from pyarcade.abstract_game import AbstractGame
-from pyarcade.difficulties import Difficulty
+from frontend.pyarcade.abstract_game import AbstractGame
+from frontend.pyarcade.difficulties import Difficulty
 from typing import Optional, List
+import random
 
 
 class Horseman(AbstractGame):
+    four_letter_words = '''four beer baby ball dark data deck edge firm food hear hate 
+                           huge idea main mass moon rice rich rule said sees send snow
+                           shot sick tape then than unit user view'''
+    six_letter_words = '''accept access across button buyers butter camera charge cheese
+                          dining direct doctor earned eating energy fabric failed finger
+                          health handle humans laptop leaves layout muscle nation normal'''
+    eight_letter_words = '''accident accepted assigned bacteria campaign chemical criminal
+                            congress fighting findings graphics greatest hardware graduate
+                            honestly language lifetime millions painting personal terrible template'''
+
     def __init__(self, difficulty: Optional[Difficulty] = Difficulty.NORMAL):
         AbstractGame.__init__(self)
-
-        if difficulty == Difficulty.EASY:
-            self.word_length = 4
-        elif difficulty == Difficulty.NORMAL:
-            self.word_length = 6
-        else:
-            self.word_length = 8
 
         self.num_guesses_left = 6
         self.difficulty = difficulty
@@ -20,9 +24,13 @@ class Horseman(AbstractGame):
         self.current_word = ["_" for i in range(len(self.word))]
         self.game_over = False
 
-    @staticmethod
-    def pick_word() -> List[str]:
-        return [""]
+    def pick_word(self) -> List[str]:
+        if self.difficulty == Difficulty.EASY:
+            return list(random.choice(Horseman.four_letter_words.split(' ')))
+        elif self.difficulty == Difficulty.NORMAL:
+            return list(random.choice(Horseman.six_letter_words.split(' ')))
+        else:
+            return list(random.choice(Horseman.eight_letter_words.split(' ')))
 
     def enter_user_turn(self, guess) -> bool:
         """ Checks if letter is in the word.
