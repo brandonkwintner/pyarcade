@@ -6,13 +6,13 @@ class Token:
     @staticmethod
     def get_tokens_for_user(user) -> dict:
         """
+        Generates access and refresh tokens given a user model object.
 
         Args:
             user: A user model object.
 
         Returns:
             Dictionary containing the access and refresh tokens.
-
         """
 
         refresh = RefreshToken.for_user(user)
