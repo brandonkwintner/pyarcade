@@ -5,6 +5,10 @@ from django.core.validators import RegexValidator
 
 
 class UserModel(models.Model):
+    """
+    Represents a user entity in the database.
+    """
+
     MIN_PASSWORD_LEN = 4
     MIN_USERNAME_LEN = 3
     MAX_USERNAME_LEN = 30
@@ -23,8 +27,3 @@ class UserModel(models.Model):
     status_message = models.CharField(max_length=MAX_STATUS_MSG_LEN,
                                       default="",
                                       blank=True)
-    mastermind_wins = models.IntegerField(default=0)
-    blackjack_wins = models.IntegerField(default=0)
-    war_wins = models.IntegerField(default=0)
-    go_fish_wins = models.IntegerField(default=0)
-    connect_wins = models.IntegerField(default=0)

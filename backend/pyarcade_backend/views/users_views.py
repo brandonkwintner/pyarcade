@@ -18,6 +18,25 @@ class SignUpView(APIView):
         })
 
     def post(self, request):
+        """
+        Signs up a new user.
+
+        Args:
+            request: {
+                "username": "username",
+                "password": "password",
+            }
+
+        Returns:
+            HTTP 400 if an error occurred.
+            HTTP 200 if successful and JSON response:
+            {
+                "access": "access token",
+                "refresh": "refresh token",
+            }
+
+        """
+
         try:
             username = request.validated["username"]
             password = request.validated["password"]
@@ -61,6 +80,24 @@ class SignUpView(APIView):
 
 class LogInView(APIView):
     def post(self, request):
+        """
+        Logs a user in.
+
+        Args:
+            request: {
+                "username": "username",
+                "password": "password",
+            }
+
+        Returns:
+            HTTP 400 if an error occurred.
+            HTTP 200 if successful and JSON response:
+            {
+                "access": "access token",
+                "refresh": "refresh token",
+            }
+        """
+
         try:
             username = request.validated["username"]
             password = request.validated["password"]
