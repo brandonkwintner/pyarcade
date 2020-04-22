@@ -22,3 +22,5 @@ services:
     build: ./frontend
     image: pyarcade_frontend
     container_name: "pyarcade_frontend"
+    tty: true
+    stdin_open: true
