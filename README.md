@@ -5,7 +5,7 @@
 1. ```docker-compose up -d```
 
 ## Running the UI
-1. ```docker run -it pyarcade_frontend python pyarcade/start.py```
+1. ```docker exec -it pyarcade_frontend python pyarcade/start.py```
 
 ## Stopping
 1. ```docker-compose down```
@@ -13,9 +13,8 @@
 ## Run Tests
 ### Frontend
 1. ```$ .../group_01/frontend/```
-2. ```python setup.py test```
-3. ```coverage run setup.py test```
-4. ```coverage report -m```
+2. ```coverage run setup.py test```
+3. ```coverage report -m```
 
 ### Backend
 (**```pip install django``` may be need**)
