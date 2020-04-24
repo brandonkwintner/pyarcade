@@ -44,7 +44,8 @@ class GameModel(models.Model):
     """
 
     player = models.ForeignKey(UserModel, on_delete=models.CASCADE)
-    game_played = models.CharField(max_length=20)
+    game_played = models.CharField(max_length=20,
+                        choices=[(game.name, game.value) for game in Game])
     did_win = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     meta = models.TextField(blank=True)
