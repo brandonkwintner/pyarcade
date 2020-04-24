@@ -13,6 +13,7 @@ class Game(Enum):
     BLACKJACK = "blackJack"
     WAR = "war"
     GO_FISH = "go_fish"
+    HORSEMAN = "horseman"
 
     @classmethod
     def value_of(cls, game_str: str) -> Enum:
@@ -36,6 +37,8 @@ class Game(Enum):
             return cls.WAR
         elif game_str in ("go_fish", "go fish", "Game.GO_FISH",):
             return cls.GO_FISH
+        elif game_str in ("horseman", "Game.HORSEMAN"):
+            return cls.HORSEMAN
 
 
 class GameModel(models.Model):
