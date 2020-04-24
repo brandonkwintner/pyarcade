@@ -9,4 +9,5 @@ class Game(Enum):
     CONNECT4 = "Connect4"
     BLACKJACK = "BlackJack"
     WAR = "War"
-    GO_FISH = "GO FISH"
+    GO_FISH = "Go Fish"
+    HORSEMAN = "Horseman"
