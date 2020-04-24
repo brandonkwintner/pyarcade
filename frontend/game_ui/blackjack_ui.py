@@ -24,9 +24,6 @@ class BlackjackUI:
             if menu[self.scroll_idx] == "New Game":
                 result = self.play_blackjack()
 
-            elif menu[self.scroll_idx] == "Instructions":
-                result = []
-
             elif self.scroll_idx == len(menu) - 1:
                 break
 

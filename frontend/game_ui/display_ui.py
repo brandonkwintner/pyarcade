@@ -45,6 +45,9 @@ class Display:
                 line_num += 1
                 self.window.addstr(line_num, self.x_start_position, row)
 
+            line_num += 1
+            self.window.addstr(line_num, self.x_start_position, info[3])
+
         elif name == "Connect Four":
             game_state = "Game #" + info[2]
             self.window.addstr(0, 0, game_state)
@@ -106,6 +109,24 @@ class Display:
 
             line_num += 2
 
+        elif name == "Horseman":
+            game_state = "Games Won: " + info[2]
+            self.window.addstr(0, 0, game_state)
+
+            line_num += 1
+            self.window.addstr(line_num, self.x_start_position, info[3])
+
+            line_num += 2
+            self.window.addstr(line_num, self.x_start_position,
+                               "Word: ")
+            self.window.addstr(line_num, self.x_start_position + 7,
+                               " ".join(info[1]), curses.A_BOLD)
+            line_num += 2
+            self.window.addstr(line_num, self.x_start_position,
+                               "Letters used: " + info[5])
+            line_num += 3
+            self.window.addstr(line_num, self.x_start_position, info[4])
+
         elif name == "Options":
             line_num += 2
             self.window.addstr(line_num, self.x_start_position, info[1])
@@ -127,12 +148,12 @@ class Display:
             self.window.refresh()
 
     def user_input_window(self, message: str, user_input: str) -> str:
-        rect = 10
+        rect = 13
         self.window.clear()
         self.window.addstr(0, self.x_start_position, message)
 
         exit_message = "Press ENTER to submit"
-        self.window.addstr(2, self.x_start_position, exit_message)
+        self.window.addstr(14, self.x_start_position, exit_message)
 
         if user_input == "":
             user_win = curses.newwin(1, rect, 10,
@@ -184,10 +205,14 @@ class Display:
         self.window.clear()
 
         self.window.addstr(2, self.x_start_position, "Created by:")
-        self.window.addstr(6, self.x_start_position, "Brandon Kwintner")
-        self.window.addstr(8, self.x_start_position, "Ryan Ziemski")
-        self.window.addstr(10, self.x_start_position, "Nam Quach")
-        self.window.addstr(12, self.x_start_position, "Andy Zhang")
+        self.window.addstr(6, self.x_start_position, "Brandon Kwintner",
+                           curses.color_pair(2) | curses.A_BOLD)
+        self.window.addstr(8, self.x_start_position, "Ryan Ziemski",
+                           curses.color_pair(3) | curses.A_BOLD)
+        self.window.addstr(10, self.x_start_position, "Nam Quach",
+                           curses.color_pair(4) | curses.A_BOLD)
+        self.window.addstr(12, self.x_start_position, "Andy Zhang",
+                           curses.color_pair(5) | curses.A_BOLD)
         self.window.getch()
 
         self.window.refresh()

@@ -24,9 +24,6 @@ class GoFishUI:
             if menu[self.scroll_idx] == "New Game":
                 result = self.play_go_fish()
 
-            elif menu[self.scroll_idx] == "Instructions":
-                result = []
-
             elif self.scroll_idx == len(menu) - 1:
                 break
 
@@ -49,9 +46,6 @@ class GoFishUI:
             self.display.display_options(option_list, game_info)
             self.scroll_idx = self.display.scroll_options(option_list,
                                                           game_info)
-
-            if self.scroll_idx > len(option_list) - 1:
-                break
 
             if option_list[self.scroll_idx] == "Take Guess":
                 message = "Please enter Card Rank (Full Name or Number)"
