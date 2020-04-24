@@ -7,21 +7,25 @@ import random
 
 class Mastermind(AbstractGame):
     """ A class representing a Mastermind game session
-
-        Game modes:
-        Easy - Guess 2 numbers
-        Normal (default) - Guess 4 numbers
-        Hard - Guess 6 numbers
-
-        Args:
-            difficulty: (Difficulty) The difficulty of the new game to be played
-
-            width: (int) The number of random digits to generate
-
-            max_range: (int) The range that a single digit can vary
     """
+
     def __init__(self, difficulty: Optional[Difficulty] = Difficulty.NORMAL,
                  width: Optional[int] = 4, max_range: Optional[int] = 9):
+        """ A Mastermind game session
+
+            Game modes:
+            Easy - Guess 2 numbers
+            Normal (default) - Guess 4 numbers
+            Hard - Guess 6 numbers
+
+            Args:
+                difficulty: (Difficulty) The difficulty of the new game to be
+                            played
+
+                width: (int) The number of random digits to generate
+
+                max_range: (int) The range that a single digit can vary
+        """
         AbstractGame.__init__(self)
 
         if difficulty == Difficulty.EASY:
@@ -170,7 +174,7 @@ class Mastermind(AbstractGame):
         return result
 
     @staticmethod
-    def get_regex_pattern() -> str:
+    def get_regex_pattern(mode=Difficulty.NORMAL) -> str:
         """ Gets pattern for mastermind.
 
         Returns:
@@ -179,4 +183,6 @@ class Mastermind(AbstractGame):
         """
         AbstractGame.get_regex_pattern()
 
-        return r"^\s*[0-9]\s+[0-9]\s+[0-9]\s+[0-9]\s*$"
+        return r"^\s*\d\s+\d\s*$|^\s*\d\s+\d\s+\d\s+\d\s+\d\s+\d\s*$|" \
+               r"^\s*\d\s+\d\s+\d\s+\d\s*$"
+

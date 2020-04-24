@@ -3,8 +3,10 @@ from pyarcade.mastermind import Mastermind
 from pyarcade.game_option import Game
 from pyarcade.connect4 import Connect4
 from pyarcade.blackjack import Blackjack
+from pyarcade.horseman import Horseman
 from pyarcade.war import War
 from pyarcade.go_fish import GoFish
+from pyarcade.difficulties import Difficulty
 import re
 
 
@@ -13,7 +15,7 @@ class InputSystem:
         And executes commands on user input.
 
     """
-    def __init__(self, game: Game = Game.MASTERMIND):
+    def __init__(self, game: Game = Game.MASTERMIND, difficulty=Difficulty.NORMAL):
         """ Input System session.
 
             Args:
@@ -29,11 +31,14 @@ class InputSystem:
             self.game = War()
         elif game == Game.GO_FISH:
             self.game = GoFish()
+        elif game == Game.HORSEMAN:
+            self.game = Horseman(difficulty)
         else:
-            self.game = Mastermind()
+            self.game = Mastermind(difficulty)
 
         self.round = 1
         self.game_num = 1
+        self.mode = difficulty
 
     def take_input(self, cmd: str) -> Tuple[bool, bool]:
         """ Takes in a user's input and interacts with mastermind
@@ -84,11 +89,15 @@ class InputSystem:
 
         """
 
-        if isinstance(self.game, Blackjack) or isinstance(self.game, War) or isinstance(self.game, GoFish):
+        if isinstance(self.game, Blackjack) or isinstance(self.game, War) \
+                or isinstance(self.game, GoFish) \
+                or isinstance(self.game, Horseman):
             proper_guess = cmd
+
         elif isinstance(self.game, Connect4):
             # board index from 0, but QOL for players start at 1
             proper_guess = int(cmd) - 1
+
         else:
             # turns the string guess into an int list
             guess = [int(num) for num in cmd.split()]

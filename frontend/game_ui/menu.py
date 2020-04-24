@@ -5,6 +5,7 @@ from game_ui.connect4_ui import Connect4UI
 from game_ui.blackjack_ui import BlackjackUI
 from game_ui.war_ui import WarUI
 from game_ui.go_fish_ui import GoFishUI
+from game_ui.horseman_ui import HorsemanUI
 from game_ui.display_ui import Display
 from typing import List
 import curses
@@ -24,6 +25,10 @@ class Menu:
 
         curses.curs_set(0)
         curses.init_pair(1, curses.COLOR_BLACK, curses.COLOR_WHITE)
+        curses.init_pair(2, curses.COLOR_RED, curses.COLOR_BLACK)
+        curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
+        curses.init_pair(4, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
+        curses.init_pair(5, curses.COLOR_CYAN, curses.COLOR_BLACK)
 
         self.display = Display(self.window, self.scroll_idx, self.user)
 
@@ -82,6 +87,10 @@ class Menu:
             elif games[self.scroll_idx] == "Play Go Fish":
                 result = GoFishUI(self.window, self.scroll_idx,
                                   self.user).go_fish_menu()
+
+            elif games[self.scroll_idx] == "Play Horseman":
+                result = HorsemanUI(self.window, self.scroll_idx,
+                                  self.user).horseman_menu()
 
             elif self.scroll_idx == len(games) - 1:
                 result = games
