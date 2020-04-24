@@ -12,14 +12,14 @@ class MastermindUI:
         self.display = Display(self.window, self.scroll_idx, user)
 
     def mastermind_menu(self) -> List[str]:
-        menu = Options.GAME_STARTUP.value
+        menu = Options.GAME_STARTUP_DIFFICULT.value
         result = []
 
         while True:
             self.display.display_options(menu, ["Mastermind Menu"])
             self.scroll_idx = self.display.scroll_options(menu, ["Mastermind Menu"])
 
-            if menu[self.scroll_idx] == "New Game":
+            if menu[self.scroll_idx] == "Easy Mode":
                 result = self.play_mastermind()
 
             elif menu[self.scroll_idx] == "Instructions":
