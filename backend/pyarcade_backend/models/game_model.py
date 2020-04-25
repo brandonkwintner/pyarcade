@@ -14,6 +14,7 @@ class Game(Enum):
     WAR = "war"
     GO_FISH = "go_fish"
     HORSEMAN = "horseman"
+    INVALID_GAME = "invalidGame"
 
     @classmethod
     def value_of(cls, game_str: str) -> Enum:
@@ -39,6 +40,8 @@ class Game(Enum):
             return cls.GO_FISH
         elif game_str in ("horseman", "Game.HORSEMAN"):
             return cls.HORSEMAN
+        else:
+            return cls.INVALID_GAME
 
 
 class GameModel(models.Model):
@@ -48,7 +51,8 @@ class GameModel(models.Model):
 
     player = models.ForeignKey(UserModel, on_delete=models.CASCADE)
     game_played = models.CharField(max_length=20,
-                        choices=[(game.name, game.value) for game in Game])
+                                   choices=[(game.name, game.value) for game in
+                                            Game])
     did_win = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
     meta = models.TextField(blank=True)
