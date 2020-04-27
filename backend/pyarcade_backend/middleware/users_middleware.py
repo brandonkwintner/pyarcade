@@ -1,11 +1,10 @@
 from django.http import JsonResponse
 
-import json
-
 
 class UserLoginMiddleware:
     ALLOWED_PATHS = {
-        "/users/signup/",
+        "/api/users/signup/",
+        "/api/users/login/",
     }
 
     def __init__(self, get_response):
