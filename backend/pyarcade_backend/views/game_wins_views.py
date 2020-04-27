@@ -29,10 +29,10 @@ class GameWinsView(APIView):
             game = "All Games"
             total_games_won = len(GameModel.objects.filter(player__exact=user, did_win__exact=True))
         elif len(queries) == 1:
-            game = queries['game'].lower()
-            if Game.value_of(game) == Game.INVALID_GAME:
+            game = Game.value_of(queries['game'].lower())
+            if game is None:
                 return JsonResponse({
-                    "message": "Invalid game."
+                    "message": "Invalid request."
                 }, status=400)
             else:
                 total_games_won = len(GameModel.objects.filter(player__exact=user, did_win__exact=True,
@@ -62,12 +62,7 @@ class GameWinsView(APIView):
         user = GameWinsView.validate_user(user_id)
 
         queries = request.POST.dict()
-        game = queries['game'].lower()
-
-        if Game.value_of(game) == Game.INVALID_GAME:
-            return JsonResponse({
-                "message": "Invalid game."
-            }, status=400)
+        game = Game.valueOf(queries['game'].lower())
 
         if game is None:
             return JsonResponse({
@@ -75,7 +70,7 @@ class GameWinsView(APIView):
             }, status=400)
 
         # creating game and adding it to the database
-        new_game = GameModel(player=user, game_played=game.game_played, did_win=True)
+        new_game = GameModel(player=user, game_played=game, did_win=True)
         new_game.save()
 
         token = Token.get_tokens_for_user(user)
