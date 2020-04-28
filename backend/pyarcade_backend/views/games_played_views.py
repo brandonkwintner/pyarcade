@@ -30,11 +30,16 @@ class GamesPlayedView(APIView):
             game = "ALL"
             games_played = len(GameModel.objects.filter(player__exact=user))
         elif len(queries) == 1:
-            game = GamesPlayedView.validate_game(queries['game'].lower())
-            games_played = len(GameModel.objects.filter(player__exact=user,
-                                                        game_played__exact=game)
-                               )
-            game = game.name
+            game = Game.value_of(queries['game'].lower())
+            if game is None:
+                return JsonResponse({
+                    "message": "Invalid request."
+                }, status=400)
+            else:
+                games_played = len(GameModel.objects.filter(player__exact=user,
+                                                            game_played__exact=
+                                                            game))
+                game = game.name
         else:
             return JsonResponse({
                 "message": "Invalid URL."
@@ -51,7 +56,7 @@ class GamesPlayedView(APIView):
         })
 
     @staticmethod
-    def validate_user(user_id) -> int:
+    def validate_user(user_id) -> UserModel:
         """
         Args:
             user_id: username to be checked
@@ -66,19 +71,3 @@ class GamesPlayedView(APIView):
                 "message": "Invalid credentials."
             }, status=400)
         return user
-
-    @staticmethod
-    def validate_game(game: str) -> Enum:
-        """
-        Args:
-            game: game to be checked
-
-        Returns:
-            Game Enum or a status 400 error.
-        """
-        if Game.value_of(game) == Game.INVALID_GAME:
-            return JsonResponse({
-                "message": "Invalid game."
-            }, status=400)
-        else:
-            return Game.value_of(game)

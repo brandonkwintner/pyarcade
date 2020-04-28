@@ -40,8 +40,6 @@ class Game(Enum):
             return cls.GO_FISH
         elif game_str in ("horseman", "Game.HORSEMAN"):
             return cls.HORSEMAN
-        else:
-            return cls.INVALID_GAME
 
 
 class GameModel(models.Model):

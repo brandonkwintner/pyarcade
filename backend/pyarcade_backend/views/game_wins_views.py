@@ -54,9 +54,12 @@ class GameWinsView(APIView):
 
     def post(self, request):
         """
-
-        :param request: Request with a game JSON object in the body
-        :return: JSONResponse
+        Add new game played to database.
+        Args:
+            request: contains a JSON object in the form: {
+                                                            "game" : game,
+                                                            "won" : bool
+                                                         }
         """
         user_id = request.user.id
         user = GameWinsView.validate_user(user_id)

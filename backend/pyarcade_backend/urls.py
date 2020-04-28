@@ -11,6 +11,6 @@ urlpatterns = [
     path("users/login/", LogInView.as_view(), name="login"),
     path("stats/reset/", ResetUserStatsView.as_view(), name="reset_stats"),
     path("games_played/", GamesPlayedView.as_view(),
-         name="gamesplayed"),
+         name="games_played"),
     path("game_wins/", GameWinsView.as_view(), name="game_wins")
 ]
