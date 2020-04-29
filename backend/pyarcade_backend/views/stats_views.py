@@ -1,4 +1,6 @@
 from django.http import JsonResponse
+from django.db.models import Count
+from django.db.models import Q
 
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
@@ -19,7 +21,8 @@ class ResetUserStatsView(APIView):
         games = [g for g in Game]
 
         for game in games:
-            new_game = GameModel(player=user, game_played="master")
+            new_game = GameModel(player=user, game_played=Game.CONNECT4,
+                                 did_win=False)
             new_game.save()
 
         return JsonResponse({"msg": "ok"})
@@ -56,7 +59,12 @@ class ResetUserStatsView(APIView):
                 # Game is an enum which is iterable
                 games = [g.name for g in Game]
             else:
-                games = [Game.value_of(body["game"].lower())]
+                game = Game.value_of(body["game"].lower())
+
+                if game is None:
+                    raise Exception("invalid game")
+
+                games = [game]
 
         except (KeyError, Exception):
             return JsonResponse({
@@ -93,12 +101,23 @@ class ScoreboardView(APIView):
             sort - username, wins, plays (if no sort is given, default wins)
             example request - .../?game=mastermind&sort=win
 
+            An invalid game defaults to all.
+
         Returns:
-            columns are: username, wins, amount played
+            e.g.,
             {
+                "game": "MASTERMIND"
                 "board": [
-                    ["user1", 20, 40],
-                    ["user2", 10, 20],
+                    {
+                        "user": "user1",
+                        "wins": 20,
+                        "total": 40
+                    },
+                    {
+                        "user": "user2",
+                        "wins": 10,
+                        "total": 20
+                    },
                 ],
                 "access": "access token",
                 "refresh: "refresh token",
@@ -117,39 +136,82 @@ class ScoreboardView(APIView):
             }, status=400)
 
         try:
-            games = Game.value_of(queries["game"].lower())
+            game = Game.value_of(queries["game"].lower())
 
-            if games is None:
-                raise KeyError("invalid key value")
-            else:
-                games = [games]
         except (KeyError, ValueError, Exception):
-            games = [g.name for g in Game]
+            game = None
 
         try:
             sort = queries["sort"].lower()
 
-            if sort not in ["username", "wins", "plays"]:
-                raise KeyError("invalid key value")
+            if sort not in ["wins", "total",]:
+                raise ValueError("invalid key value")
 
         except (KeyError, ValueError, Exception):
             sort = "wins"
 
-        board = []
 
+        entries = GameModel.objects.values("player").filter(is_deleted=False)
 
+        if game is not None:
+            entries = entries.filter(game_played=game)
+            # todo enum to name function
+            game = game.name
+        else:
+            game = "ALL"
 
-        # create and save game object
-        # game = GameModel(player=user, game_played=Game.MASTERMIND)
-        # game.save()
+        entries = entries.annotate(
+            wins=(Count("player", filter=Q(did_win=True))),
+            total=(Count("player"))
+        )
 
-        # retrieves all games by a user id
-        # games = GameModel.objects.filter(player=user_id)
+        if sort == "wins":
+            entries = entries.order_by("-wins")
+        elif sort == "total":
+            entries = entries.order_by("-total")
+
+        board = ScoreboardView.get_board_from_db_rows(entries)
 
         token = Token.get_tokens_for_user(user)
 
         return JsonResponse({
+            "game": game,
             "board": board,
             "access": token["access"],
             "refresh": token["refresh"],
         })
+
+    @staticmethod
+    def get_board_from_db_rows(entries: [dict]) -> [dict]:
+        """
+        Given a array of dict's from the database return the board response.
+        e.g., [{ "player": 1, "wins": 10, "total": 40 }]
+
+        Args:
+            entries: array of dict objects
+
+        Returns:
+            2d array
+            e.g., [{ "user": "username", "wins": 10, "total": 40 }]
+
+        """
+
+        board = []
+
+        for entry in entries:
+            try:
+                user = UserModel.objects.get(id__iexact=entry["player"])
+                wins = entry["wins"]
+                total = entry["total"]
+            except UserModel.DoesNotExist:
+                continue
+            except (KeyError, Exception):
+                return []
+
+            board.append({
+                "user": user.username,
+                "wins": wins,
+                "total": total,
+            })
+
+        return board
