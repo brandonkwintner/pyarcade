@@ -65,7 +65,7 @@ class GameWinsView(APIView):
         user = GameWinsView.validate_user(user_id)
 
         queries = request.POST.dict()
-        game = Game.valueOf(queries['game'].lower())
+        game = Game.value_of(queries['game'].lower())
 
         if game is None:
             return JsonResponse({
