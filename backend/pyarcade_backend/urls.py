@@ -6,6 +6,7 @@ from .views.stats_views import ResetUserStatsView
 from .views.stats_views import ScoreboardView
 from .views.games_played_views import GamesPlayedView
 from .views.game_wins_views import GameWinsView
+from .views.status_views import StatusView
 
 urlpatterns = [
     path("users/signup/", SignUpView.as_view(), name="signup"),
@@ -14,5 +15,6 @@ urlpatterns = [
     path("stats/board/", ScoreboardView.as_view(), name="scoreboard"),
     path("games_played/", GamesPlayedView.as_view(),
          name="games_played"),
-    path("game_wins/", GameWinsView.as_view(), name="game_wins")
+    path("game_wins/", GameWinsView.as_view(), name="game_wins"),
+    path("status/", StatusView.as_view(), name="status")
 ]
