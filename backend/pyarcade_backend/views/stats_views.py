@@ -10,6 +10,7 @@ from ..models.game_model import GameModel
 from ..models.game_model import Game
 
 from ..utilities.tokens import Token
+from ..utilities.data_validation import UserValidator
 
 
 class ResetUserStatsView(APIView):
@@ -44,9 +45,9 @@ class ResetUserStatsView(APIView):
             }
         """
 
-        try:
-            user = UserModel.objects.get(id__iexact=request.user.id)
-        except UserModel.DoesNotExist:
+        user = UserValidator.validate_user(request.user.id)
+
+        if user is None:
             return JsonResponse({
                 "message": "Invalid credentials.",
             }, status=400)
@@ -125,14 +126,17 @@ class ScoreboardView(APIView):
 
         """
 
-        user_id = request.user.id
         queries = request.GET.dict()
+        user = UserValidator.validate_user(request.user.id)
 
-        try:
-           user = UserModel.objects.get(id__iexact=user_id)
-        except UserModel.DoesNotExist:
+        if user is None:
             return JsonResponse({
-                "message": "Invalid credentials."
+                "message": "Invalid credentials.",
+            }, status=400)
+
+        if user is None:
+            return JsonResponse({
+                "message": "Invalid credentials.",
             }, status=400)
 
         try:

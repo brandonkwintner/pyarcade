@@ -7,8 +7,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from ..models.game_model import GameModel
 from ..models.game_model import Game
-from ..models.user_model import UserModel
 from ..utilities.tokens import Token
+from ..utilities.data_validation import UserValidator
 
 
 class GamesPlayedView(APIView):
@@ -22,12 +22,16 @@ class GamesPlayedView(APIView):
 
         Ex) .../games_played?game=war DO NOT INCLUDE A " / " AFTER THE GAME!!
         """
-        user_id = request.user.id
-        user = GamesPlayedView.validate_user(user_id)
+        user = UserValidator.validate_user(request.user.id)
         queries = request.GET.dict()
 
+        if user is None:
+            return JsonResponse({
+                "message": "Invalid credentials."
+            }, status=400)
+
         if len(queries) == 0:
-            game = "ALL"
+            game = "All"
             games_played = len(GameModel.objects.filter(player__exact=user))
         elif len(queries) == 1:
             game = Game.value_of(queries['game'].lower())
@@ -39,7 +43,7 @@ class GamesPlayedView(APIView):
                 games_played = len(GameModel.objects.filter(player__exact=user,
                                                             game_played__exact=
                                                             game))
-                game = game.name
+                game = game.value
         else:
             return JsonResponse({
                 "message": "Invalid URL."
@@ -49,25 +53,8 @@ class GamesPlayedView(APIView):
 
         return JsonResponse({
             "username": user.username,
-            "game": str(game),
+            "game": game,
             "games_played": games_played,
             "access": token["access"],
             "refresh": token["refresh"],
         })
-
-    @staticmethod
-    def validate_user(user_id) -> UserModel:
-        """
-        Args:
-            user_id: username to be checked
-
-        Returns:
-            Nothing or a status 400 error.
-        """
-        try:
-            user = UserModel.objects.get(id__iexact=user_id)
-        except UserModel.DoesNotExist:
-            return JsonResponse({
-                "message": "Invalid credentials."
-            }, status=400)
-        return user
