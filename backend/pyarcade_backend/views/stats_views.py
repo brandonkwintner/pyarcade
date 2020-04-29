@@ -155,10 +155,9 @@ class ScoreboardView(APIView):
 
         if game is not None:
             entries = entries.filter(game_played=game)
-            # todo enum to name function
-            game = game.name
+            game = game.value
         else:
-            game = "ALL"
+            game = "All"
 
         entries = entries.annotate(
             wins=(Count("player", filter=Q(did_win=True))),
