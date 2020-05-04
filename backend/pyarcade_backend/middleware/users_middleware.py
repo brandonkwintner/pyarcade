@@ -2,6 +2,9 @@ from django.http import JsonResponse
 
 
 class UserLoginMiddleware:
+    """
+    API Paths for user to sign up / login.
+    """
     ALLOWED_PATHS = {
         "/api/users/signup/",
         "/api/users/login/",

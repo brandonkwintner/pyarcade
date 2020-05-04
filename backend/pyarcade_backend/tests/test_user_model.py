@@ -9,6 +9,9 @@ from ..models.user_model import UserModel
 
 
 class UserModelTestCase(TestCase):
+    """
+    Tests for User creation.
+    """
     def test_create_simple_user(self):
         user = UserModel(username="bob", password="test")
 

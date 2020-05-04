@@ -6,6 +6,9 @@ from typing import List
 
 
 class GoFishUI:
+    """
+    UI for Go Fish.
+    """
     def __init__(self, window, scroll_idx, user):
         self.window = window
         # self.scroll_idx = scroll_idx
@@ -13,6 +16,11 @@ class GoFishUI:
         self.display = Display(self.window, self.scroll_idx, user)
 
     def go_fish_menu(self) -> List[str]:
+        """
+        Go Fish menu screen.
+        Returns:
+            List containing information about game played.
+        """
         menu = Options.GAME_STARTUP.value
         result = []
 
@@ -32,6 +40,11 @@ class GoFishUI:
         return result
 
     def play_go_fish(self) -> List[str]:
+        """
+        Go Fish game screen.
+        Returns:
+            List containing information about the game played.
+        """
         input_system = InputSystem(Game.GO_FISH)
         games_won = 0
         option_list = Options.GO_FISH_OPTIONS.value

@@ -7,6 +7,9 @@ from typing import List
 
 
 class HorsemanUI:
+    """
+    UI for Horseman.
+    """
     def __init__(self, window, scroll_idx, user):
         self.window = window
         # self.scroll_idx = scroll_idx
@@ -14,6 +17,11 @@ class HorsemanUI:
         self.display = Display(self.window, self.scroll_idx, user)
 
     def horseman_menu(self) -> List[str]:
+        """
+        Horseman menu screen.
+        Returns:
+            List containing information about the game played.
+        """
         menu = Options.GAME_STARTUP_DIFFICULT.value
         result = []
 
@@ -39,6 +47,14 @@ class HorsemanUI:
         return result
 
     def play_horseman(self, mode=Difficulty.NORMAL) -> List[str]:
+        """
+        Horseman game screen.
+        Args:
+            mode: Game difficulty.
+
+        Returns:
+            List containing information about the game played.
+        """
         input_system = InputSystem(Game.HORSEMAN, mode)
         games_won = 0
         option_list = Options.HORSEMAN_OPTIONS.value

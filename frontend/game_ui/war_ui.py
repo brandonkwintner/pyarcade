@@ -6,6 +6,9 @@ from typing import List
 
 
 class WarUI:
+    """
+    UI for War.
+    """
     def __init__(self, window, scroll_idx, user):
         self.window = window
         # self.scroll_idx = scroll_idx
@@ -13,6 +16,11 @@ class WarUI:
         self.display = Display(self.window, self.scroll_idx, user)
 
     def war_menu(self) -> List[str]:
+        """
+        War menu screen
+        Returns:
+            List containing game information.
+        """
         menu = Options.GAME_STARTUP.value
         result = []
 
@@ -32,6 +40,11 @@ class WarUI:
         return result
 
     def play_war(self) -> List[str]:
+        """
+        War game screen.
+        Returns:
+            List containing information about the game played.
+        """
         input_system = InputSystem(Game.WAR)
         games_won = 0
         option_list = Options.WAR_OPTIONS.value

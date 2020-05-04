@@ -11,6 +11,15 @@ class ConnectRequest(Enum):
 class Connections:
     @staticmethod
     def sign_up_account(username: str, password: str) -> dict:
+        """
+        Sign up new account.
+        Args:
+            username: username for account.
+            password: password for account.
+
+        Returns:
+            Status code and either access / message.
+        """
         post_body = {
             "username": username,
             "password": password,
@@ -33,6 +42,15 @@ class Connections:
 
     @staticmethod
     def login_account(username: str, password: str) -> dict:
+        """
+        Login to an existing account.
+        Args:
+            username: username for account.
+            password: password for account.
+
+        Returns:
+            Status code and either access / message.
+        """
         post_body = {
             "username": username,
             "password": password,

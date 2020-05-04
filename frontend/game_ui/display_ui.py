@@ -5,6 +5,9 @@ import curses.textpad as textpad
 
 
 class Display:
+    """
+    Display utility for UI.
+    """
     def __init__(self, window, scroll_idx, user):
         self.window = window
         self.user = user
@@ -13,6 +16,15 @@ class Display:
         self.scroll_idx = scroll_idx
 
     def display_options(self, opts: List[str], info: List[str]) -> List[str]:
+        """
+        Displays options list for screen.
+        Args:
+            opts: List of options.
+            info: Game information.
+
+        Returns:
+            List of options.
+        """
         self.window.clear()
         self.window.addstr(0, self.x_start_position, self.user)
         line_num = self.display_game_info(info) + 2
@@ -32,6 +44,14 @@ class Display:
         return opts
 
     def display_game_info(self, info: List[str]) -> int:
+        """
+        Display game information.
+        Args:
+            info: Game information
+
+        Returns:
+            Line number.
+        """
         line_num = 3
         name = info[0]
 
@@ -134,6 +154,15 @@ class Display:
         return line_num
 
     def scroll_options(self, opts: List[str], info: List[str]) -> int:
+        """
+        Scroll Options for screen.
+        Args:
+            opts: List of options.
+            info: Game information.
+
+        Returns:
+            Current scroll index (What option is being highlighted).
+        """
         while True:
             key = self.window.getch()
             self.window.clear()
@@ -148,6 +177,15 @@ class Display:
             self.window.refresh()
 
     def user_input_window(self, message: str, user_input: str) -> str:
+        """
+        User input window.
+        Args:
+            message: Message to be initially displayed.
+            user_input: User's input.
+
+        Returns:
+            User's input.
+        """
         rect = 13
         self.window.clear()
         self.window.addstr(0, self.x_start_position, message)
@@ -169,6 +207,14 @@ class Display:
         return user_input
 
     def account_login_signup(self, is_sign_up) -> (str, str):
+        """
+        Account login signup / login.
+        Args:
+            is_sign_up: Determines if the user wants to sign up or login.
+
+        Returns:
+            Tuple containing username and password of user.
+        """
         self.window.clear()
 
         if is_sign_up:
@@ -202,6 +248,9 @@ class Display:
         return username, password
 
     def about_screen(self):
+        """
+        About Screen.
+        """
         self.window.clear()
 
         self.window.addstr(2, self.x_start_position, "Created by:")

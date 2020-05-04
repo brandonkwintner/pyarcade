@@ -6,6 +6,9 @@ from typing import List
 
 
 class BlackjackUI:
+    """
+    UI for Black Jack.
+    """
     def __init__(self, window, scroll_idx, user):
         self.window = window
         # self.scroll_idx = scroll_idx
@@ -13,6 +16,11 @@ class BlackjackUI:
         self.display = Display(self.window, self.scroll_idx, user)
 
     def blackjack_menu(self) -> List[str]:
+        """
+        Black Jack menu screen.
+        Returns:
+            List containing result of Black Jack game.
+        """
         menu = Options.GAME_STARTUP.value
         result = []
 
@@ -32,6 +40,11 @@ class BlackjackUI:
         return result
 
     def play_blackjack(self) -> List[str]:
+        """
+        Black Jack game screen.
+        Returns:
+            List containing information about the game played.
+        """
         input_system = InputSystem(Game.BLACKJACK)
         games_won = 0
         option_list = Options.BLACKJACK_OPTIONS.value

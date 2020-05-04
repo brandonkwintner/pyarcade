@@ -21,6 +21,9 @@ class GamesPlayedView(APIView):
         game.
 
         Ex) .../games_played?game=war DO NOT INCLUDE A " / " AFTER THE GAME!!
+
+        Returns:
+            JSON response.
         """
         user = UserValidator.validate_user(request.user.id)
         queries = request.GET.dict()

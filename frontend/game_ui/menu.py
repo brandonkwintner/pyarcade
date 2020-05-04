@@ -12,6 +12,9 @@ import curses
 
 
 class Menu:
+    """
+    UI for menus.
+    """
     def __init__(self):
         self.window = curses.initscr()
         curses.noecho()
@@ -39,6 +42,11 @@ class Menu:
         curses.endwin()
 
     def main_menu(self) -> List[str]:
+        """
+        UI for main menu.
+        Returns:
+            Result of selected option.
+        """
         menu_option = Options.MAIN_MENU_OPTIONS.value
         result = []
 
@@ -61,6 +69,11 @@ class Menu:
         return result
 
     def game_menu(self) -> List[str]:
+        """
+        UI for game menu.
+        Returns:
+            Result of selected option.
+        """
         games = Options.GAME_OPTIONS.value
         result = []
 
@@ -99,6 +112,11 @@ class Menu:
         return result
 
     def options_menu(self) -> List[str]:
+        """
+        UI for options menu.
+        Returns:
+            List containing all options.
+        """
         if self.is_login:
             option_list = Options.FEATURE_LOGOUT_OPTIONS.value
         else:
