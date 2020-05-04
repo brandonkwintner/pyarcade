@@ -20,6 +20,9 @@ class GameWinsView(APIView):
         game.
 
         Ex) .../game_wins/?game=war DO NOT INCLUDE A " / " AFTER THE GAME!!
+
+        Returns:
+            JSON response.
         """
 
         user = UserValidator.validate_user(request.user.id)
@@ -70,6 +73,8 @@ class GameWinsView(APIView):
                                                             "game" : game,
                                                             "won" : bool
                                                          }
+        Returns:
+            JSON response.
         """
         user = UserValidator.validate_user(request.user.id)
 

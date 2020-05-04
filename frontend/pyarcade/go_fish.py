@@ -6,6 +6,7 @@ from pyarcade.cards import Ranks, Suits
 
 
 class GoFish(AbstractGame):
+
     def __init__(self):
         AbstractGame.__init__(self)
         self.deck_of_cards = GoFish.generate_new_deck()
@@ -19,6 +20,11 @@ class GoFish(AbstractGame):
 
     @staticmethod
     def generate_new_deck() -> [(Ranks, Suits)]:
+        """
+        Generate new deck.
+        Returns:
+            New deck.
+        """
         deck = []
 
         for rank in Ranks:
@@ -30,6 +36,11 @@ class GoFish(AbstractGame):
         return deck
 
     def shuffle_deck(self) -> List[Tuple[Ranks, Suits]]:
+        """
+        Shuffles deck.
+        Returns:
+            Shuffled deck.
+        """
         for idx in range((len(self.deck_of_cards) - 1), -1, -1):
             card = self.deck_of_cards[idx]
             random_position = random.randint(0, idx)
@@ -39,6 +50,9 @@ class GoFish(AbstractGame):
         return self.deck_of_cards
 
     def deal_out_cards(self):
+        """
+        Deal 5 cards.
+        """
         for i in range(5):
             self.player_one_hand.append(self.deck_of_cards.pop())
             self.computer_hand.append(self.deck_of_cards.pop())
@@ -99,6 +113,11 @@ class GoFish(AbstractGame):
 
     @staticmethod
     def parse_user_guess(input_str: str):
+        """
+        Parse user's guess.
+        Args:
+            input_str: user's guess.
+        """
         guess_rank = input_str.lower()
 
         if guess_rank == "two":
@@ -136,6 +155,9 @@ class GoFish(AbstractGame):
         return guess_rank
 
     def player_two_guesses(self):
+        """
+        Guess for player 2.
+        """
         rand_index = random.randint(0, len(self.computer_hand) - 1)
         (rank_picked, suit_picked) = self.computer_hand[rand_index]
         found = False
@@ -158,6 +180,14 @@ class GoFish(AbstractGame):
 
     @staticmethod
     def check_for_winner(player_hand: list) -> bool:
+        """
+        Determines if there is a winner.
+        Args:
+            player_hand: Player's hand.
+
+        Returns:
+            True if there is a winner, False otherwise.
+        """
         amount = {}
         for card in player_hand:
             if card[0] not in amount.keys():
@@ -171,6 +201,9 @@ class GoFish(AbstractGame):
         return False
 
     def reset_game(self):
+        """
+        Reset game.
+        """
         super().reset_game()
 
         self.player_one_hand = []
@@ -183,12 +216,20 @@ class GoFish(AbstractGame):
         self.isFish = False
 
     def clear_game(self):
+        """
+        Clear game history.
+        """
         super().clear_game()
 
         self.reset_game()
         self.entire_history = []
 
     def get_last_turn(self) -> Tuple[str, bool, int]:
+        """
+        Gets information about previous turn.
+        Returns:
+            Information about previous turn.
+        """
         super().get_last_turn()
 
         player_cards = self._hand_to_str(self.player_one_hand)
@@ -197,6 +238,14 @@ class GoFish(AbstractGame):
 
     @staticmethod
     def _hand_to_str(hand):
+        """
+        Converts hand to a string.
+        Args:
+            hand: Hand to be converted.
+
+        Returns:
+            String representation of hand.
+        """
         hand_str = ""
         for card in hand:
             hand_str += card[0].name + ", "

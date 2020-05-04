@@ -17,6 +17,13 @@ class ResetUserStatsView(APIView):
     permission_classes = [IsAuthenticated,]
 
     def get(self, request):
+        """
+        Args:
+            request: parameters for API call.
+
+        Returns:
+            JSON response.
+        """
         # creates sample games
         user = UserModel.objects.get(id__iexact=request.user.id)
         games = [g for g in Game]
@@ -153,7 +160,6 @@ class ScoreboardView(APIView):
 
         except (KeyError, ValueError, Exception):
             sort = "wins"
-
 
         entries = GameModel.objects.values("player").filter(is_deleted=False)
 

@@ -10,6 +10,9 @@ from ..models.game_model import Game
 
 
 class UserModelTestCase(TestCase):
+    """
+    Tests for User Model / Game Model interaction.
+    """
     # test case method
     def setUp(self):
         UserModel.objects.create(username="user", password="test")

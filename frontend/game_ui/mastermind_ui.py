@@ -7,12 +7,20 @@ from typing import List
 
 
 class MastermindUI:
+    """
+    UI for Mastermind.
+    """
     def __init__(self, window, scroll_idx, user):
         self.window = window
         self.scroll_idx = scroll_idx
         self.display = Display(self.window, self.scroll_idx, user)
 
     def mastermind_menu(self) -> List[str]:
+        """
+        Mastermind menu screen.
+        Returns:
+            List containing game information.
+        """
         menu = Options.GAME_STARTUP_DIFFICULT.value
         result = []
 
@@ -35,7 +43,16 @@ class MastermindUI:
 
         return result
 
-    def play_mastermind(self,width, mode=Difficulty.NORMAL) -> List[str]:
+    def play_mastermind(self, width, mode=Difficulty.NORMAL) -> List[str]:
+        """
+        Mastermind game screen.
+        Args:
+            width: Length of hidden sequence.
+            mode: Game difficulty.
+
+        Returns:
+            List containing information about game played.
+        """
         input_system = InputSystem(Game.MASTERMIND, mode)
         option_list = Options.MASTERMIND_OPTIONS.value
         game_info = ["Mastermind", "", 0, ""]

@@ -6,6 +6,9 @@ from typing import List
 
 
 class Connect4UI:
+    """
+    UI for Connect 4.
+    """
     def __init__(self, window, scroll_idx, user):
         self.window = window
         # self.scroll_idx = scroll_idx
@@ -13,6 +16,11 @@ class Connect4UI:
         self.display = Display(self.window, self.scroll_idx, user)
 
     def connect_four_menu(self) -> str:
+        """
+        Connect 4 menu screen.
+        Returns:
+            String containing result of game played.
+        """
         menu = Options.GAME_STARTUP.value
         result = []
 
@@ -32,6 +40,11 @@ class Connect4UI:
         return result
 
     def play_connect_four(self) -> List[str]:
+        """
+        Connect 4 game screen.
+        Returns:
+            List containing information about the game played.
+        """
         option_list = Options.CONNECT_FOUR_OPTIONS.value
         input_system = InputSystem(Game.CONNECT4)
         games_won = 0
