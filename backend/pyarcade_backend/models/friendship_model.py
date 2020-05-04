@@ -11,7 +11,6 @@ class Friendship(Enum):
 
     FRIENDS = "friends"
     PENDING = "pending"
-    NOT_FRIENDS = "not friends"
 
 
 class FriendshipModel(models.Model):
@@ -20,6 +19,7 @@ class FriendshipModel(models.Model):
         Note: The users in each entry are in alphabetical order base on username.
     """
 
-    user_one = models.ForeignKey(UserModel, on_delete=models.CASCADE)
-    user_two = models.ForeignKey(UserModel, on_delete=models.CASCADE)
-    friendship_status = models.CharField(choices=[(friendship.name, friendship.value) for friendship in Friendship])
+    user_one = models.CharField(max_length=30)
+    user_two = models.CharField(max_length=30)
+    friendship_status = models.CharField(choices=[(friendship.name, friendship.value) for friendship in Friendship],
+                                         max_length=8)
