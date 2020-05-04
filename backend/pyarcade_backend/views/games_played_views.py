@@ -35,7 +35,8 @@ class GamesPlayedView(APIView):
 
         if len(queries) == 0:
             game = "All"
-            games_played = len(GameModel.objects.filter(player__exact=user))
+            games_played = len(GameModel.objects.filter(player=user,
+                                                        is_deleted=False))
         elif len(queries) == 1:
             game = Game.value_of(queries['game'].lower())
             if game is None:
@@ -43,9 +44,9 @@ class GamesPlayedView(APIView):
                     "message": "Invalid request."
                 }, status=400)
             else:
-                games_played = len(GameModel.objects.filter(player__exact=user,
-                                                            game_played__exact=
-                                                            game))
+                games_played = len(GameModel.objects.filter(player=user,
+                                                            game_played= game,
+                                                            is_deleted=False))
                 game = game.value
         else:
             return JsonResponse({
