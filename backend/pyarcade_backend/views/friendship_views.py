@@ -4,6 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
 from ..models.friendship_model import FriendshipModel
+from ..models.user_model import UserModel
 from django.db.models import Q
 from ..utilities.data_validation import UserValidator
 from ..utilities.tokens import Token
@@ -33,19 +34,19 @@ class FriendshipView(APIView):
             }, status=400)
 
         # grab all friendships that this user has in the database
-        friends_list = FriendshipModel.objects.filter(Q(user_one=user) | Q(user_two=user),
+        friends_list = FriendshipModel.objects.filter(Q(user_one=user.username) | Q(user_two=user.username),
                                                       Q(friendship_status="friends") | Q(friendship_status="pending"))
 
         # this list will just contain the friends of the user as Strings
         filtered_friends_list = []
         for friendship in friends_list.values():
             friend_string = ""
-            if friendship["status"] is "pending":
+            if friendship["friendship_status"] == "pending":
                 friend_string += "(Pending) "
 
-            if friendship["user_one"] is not user.username:
+            if friendship["user_one"] != user.username:
                 filtered_friends_list.append(friend_string + friendship["user_one"])
-            elif friendship["user_two"] is not user.username:
+            elif friendship["user_two"] != user.username:
                 filtered_friends_list.append(friend_string + friendship["user_two"])
 
         token = Token.get_tokens_for_user(user)
@@ -62,9 +63,7 @@ class FriendshipView(APIView):
         Adds or updates a friendship in the database
         Args:
             request: contains a JSON object in the form: {
-                                                            "user1" : "user1 id"
-                                                            "user2" : "user2 id",
-                                                            "status" : str
+                                                            "user2": username
                                                          }
             **status can only be one of three strings:
                 "friends": this would be the equivalent of accepting a friend request
@@ -78,42 +77,34 @@ class FriendshipView(APIView):
 
         # Attempt to get all of the query params.
         try:
-            user1 = queries['user1']  # this is the user requesting user
-            user2 = queries['user2']  # this is the user who the requesting user wants to be friends with or un-friend
-            status = queries['status']
+            user2_username = queries["user2"]
         except (KeyError, ValueError, Exception):
             return JsonResponse({
                 "message": "Invalid request."
             }, status=400)
 
-        user1 = UserValidator.validate_user(user1)
-        user2 = UserValidator.validate_user(user2)
-
-        if user1 is None or user2 is None:
+        # validate requesting user
+        user1 = UserValidator.validate_user(request.user.id)
+        if user1 is None:
             return JsonResponse({
                 "message": "Invalid credentials.",
             }, status=400)
 
-        user_list = [].append(user1).append(user2).sort(key=lambda x: x.username)  # sort users by username
-
-        # if the friendship already exists, update its status and save, else create it
+        # validate requested user
         try:
-            friendship = FriendshipModel.objects.get(user_one=user_list[0])
+            user2 = UserModel.objects.get(username=user2_username)
+        except UserModel.DoesNotExist:
+            return JsonResponse({
+                "message": "Invalid request.",
+            }, status=400)
 
-            # either the user is accepting or rejecting a friend request, or is un-friending
-            if status is not "friends" or "not friends":
-                friendship.status = status
-            else:  # reach this point if the Friendship was already created but request did not specify how to update
-                return JsonResponse({
-                    "message": "Invalid request."
-                }, status=400)
+        # if the friendship already exists, then a user must be accepting the request
+        try:
+            friendship = FriendshipModel.objects.get(user_two=user1.username, user_one=user2.username)
+            friendship.friendship_status = "friends"
+
         except FriendshipModel.DoesNotExist:  # if friendship does not exists, this should be a friend request
-            friendship = FriendshipModel(user_one=user_list[0], user_two=user_list[1], status="pending")
-
-            if status is not "":  # you cannot make a new friend request with a status in it
-                return JsonResponse({
-                    "message": "Invalid request."
-                }, status=400)
+            friendship = FriendshipModel(user_one=user1.username, user_two=user2.username, friendship_status="pending")
 
         friendship.save()
 
@@ -121,7 +112,7 @@ class FriendshipView(APIView):
 
         return JsonResponse({
             "username": user1.username,
-            "friendship": friendship,
+            "requested_user": user2.username,
             "access": token["access"],
             "refresh": token["refresh"],
         })
