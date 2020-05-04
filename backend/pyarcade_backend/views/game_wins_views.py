@@ -37,7 +37,8 @@ class GameWinsView(APIView):
         if len(queries) == 0:
             game = "All"
             total_games_won = len(GameModel.objects.filter(player=user,
-                                                           did_win=True))
+                                                           did_win=True,
+                                                           is_deleted=False))
         elif len(queries) == 1:
             game = Game.value_of(queries['game'].lower())
             if game is None:
@@ -48,7 +49,8 @@ class GameWinsView(APIView):
                 total_games_won = len(GameModel.objects
                                       .filter(player=user,
                                               did_win=True,
-                                              game_played__iexact=game))
+                                              game_played__iexact=game,
+                                              is_deleted=False))
                 game = game.value
         else:
             return JsonResponse({
