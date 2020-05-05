@@ -98,11 +98,31 @@ class FriendshipView(APIView):
                 "message": "Invalid request.",
             }, status=400)
 
+        if user1.username == user2.username:
+            return JsonResponse({
+                "message": "Invalid request. You cannot friend yourself",
+            }, status=400)
+
+        try:
+            FriendshipModel.objects.get(user_one=user1.username, user_two=user2.username)
+            return JsonResponse({
+                "message": "Already exists.",
+            }, status=400)
+        except FriendshipModel.MultipleObjectsReturned:
+            return JsonResponse({
+                "message": "Already exists.",
+            }, status=400)
+        except FriendshipModel.DoesNotExist:
+            pass
+
         # if the friendship already exists, then a user must be accepting the request
         try:
             friendship = FriendshipModel.objects.get(user_two=user1.username, user_one=user2.username)
             friendship.friendship_status = "friends"
-
+        except FriendshipModel.MultipleObjectsReturned:
+            return JsonResponse({
+                "message": "Already exists.",
+            }, status=400)
         except FriendshipModel.DoesNotExist:  # if friendship does not exists, this should be a friend request
             friendship = FriendshipModel(user_one=user1.username, user_two=user2.username, friendship_status="pending")
 
