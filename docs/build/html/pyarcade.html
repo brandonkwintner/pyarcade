@@ -1,0 +1,1449 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pyarcade package &#8212; PyArcade 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="pyarcade-package">
+<h1>pyarcade package<a class="headerlink" href="#pyarcade-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pyarcade.abstract_game">
+<span id="pyarcade-abstract-game-module"></span><h2>pyarcade.abstract_game module<a class="headerlink" href="#module-pyarcade.abstract_game" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.abstract_game.AbstractGame">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.abstract_game.</code><code class="sig-name descname">AbstractGame</code><a class="headerlink" href="#pyarcade.abstract_game.AbstractGame" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="pyarcade.abstract_game.AbstractGame.clear_game">
+<em class="property">abstract </em><code class="sig-name descname">clear_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.abstract_game.AbstractGame.clear_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears entire game. (input clear)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.abstract_game.AbstractGame.enter_user_turn">
+<em class="property">abstract </em><code class="sig-name descname">enter_user_turn</code><span class="sig-paren">(</span><em class="sig-param">guess</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.abstract_game.AbstractGame.enter_user_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if guess is correct in some way according
+to the current game.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>guess: User’s to the game.</p>
+</dd>
+<dt>Returns:</dt><dd><p>result (bool): True if correct, false otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.abstract_game.AbstractGame.get_last_turn">
+<em class="property">abstract </em><code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.abstract_game.AbstractGame.get_last_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the last turn/state of game.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Meaningful state of the current game.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.abstract_game.AbstractGame.get_regex_pattern">
+<em class="property">abstract static </em><code class="sig-name descname">get_regex_pattern</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.abstract_game.AbstractGame.get_regex_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets validator for game.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Regex string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.abstract_game.AbstractGame.reset_game">
+<em class="property">abstract </em><code class="sig-name descname">reset_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.abstract_game.AbstractGame.reset_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset single game. (input reset)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.blackjack">
+<span id="pyarcade-blackjack-module"></span><h2>pyarcade.blackjack module<a class="headerlink" href="#module-pyarcade.blackjack" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.blackjack.Blackjack">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.blackjack.</code><code class="sig-name descname">Blackjack</code><a class="headerlink" href="#pyarcade.blackjack.Blackjack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyarcade.abstract_game.AbstractGame" title="pyarcade.abstract_game.AbstractGame"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyarcade.abstract_game.AbstractGame</span></code></a></p>
+<dl class="attribute">
+<dt id="pyarcade.blackjack.Blackjack.MAX_WINNING_LIMIT">
+<code class="sig-name descname">MAX_WINNING_LIMIT</code><em class="property"> = 21</em><a class="headerlink" href="#pyarcade.blackjack.Blackjack.MAX_WINNING_LIMIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.blackjack.Blackjack.NPC_STOP_LIMIT">
+<code class="sig-name descname">NPC_STOP_LIMIT</code><em class="property"> = 17</em><a class="headerlink" href="#pyarcade.blackjack.Blackjack.NPC_STOP_LIMIT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.calculate_winner">
+<code class="sig-name descname">calculate_winner</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pyarcade.blackjack_players.BlackJackWinner<a class="headerlink" href="#pyarcade.blackjack.Blackjack.calculate_winner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine who won the game.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Winner of the game.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.change_ace_to_one">
+<em class="property">static </em><code class="sig-name descname">change_ace_to_one</code><span class="sig-paren">(</span><em class="sig-param">card_hand: [&lt;enum 'Ranks'&gt;]</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.blackjack.Blackjack.change_ace_to_one" title="Permalink to this definition">¶</a></dt>
+<dd><p>Changes Ace high value to low value.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>card_hand: Hand to be altered.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if an Ace was changed to low value, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.clear_game">
+<code class="sig-name descname">clear_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.blackjack.Blackjack.clear_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear game history.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.enter_user_turn">
+<code class="sig-name descname">enter_user_turn</code><span class="sig-paren">(</span><em class="sig-param">cmd: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.blackjack.Blackjack.enter_user_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enter’s a user’s input to the blackjack game.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cmd: either “stand” or “hit”.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if player stands (end of game). False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.evaluate_hand">
+<code class="sig-name descname">evaluate_hand</code><span class="sig-paren">(</span><em class="sig-param">card_hand: List[Tuple[pyarcade.cards.Ranks, pyarcade.cards.Suits]]</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pyarcade.blackjack.Blackjack.evaluate_hand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines value of hand.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>card_hand: Hand to be evaluated.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Hand total.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.generate_new_deck">
+<em class="property">static </em><code class="sig-name descname">generate_new_deck</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]<a class="headerlink" href="#pyarcade.blackjack.Blackjack.generate_new_deck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate new deck.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>New deck.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.get_last_turn">
+<code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[Tuple[str, str], bool]<a class="headerlink" href="#pyarcade.blackjack.Blackjack.get_last_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get information about the last turn played.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Information about the last turn played.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.get_regex_pattern">
+<em class="property">static </em><code class="sig-name descname">get_regex_pattern</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.blackjack.Blackjack.get_regex_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets pattern for blackjack.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Pattern match for game.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.hit">
+<code class="sig-name descname">hit</code><span class="sig-paren">(</span><em class="sig-param">) -&gt; (&lt;enum 'Ranks'&gt;</em>, <em class="sig-param">&lt;enum 'Suits'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.blackjack.Blackjack.hit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Player decides to hit.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>First card of the deck.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.npc_draw">
+<code class="sig-name descname">npc_draw</code><span class="sig-paren">(</span><em class="sig-param">npc_hand: [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.blackjack.Blackjack.npc_draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computer draws card.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>npc_hand: Computer’s hand.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.player_draw">
+<code class="sig-name descname">player_draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.blackjack.Blackjack.player_draw" title="Permalink to this definition">¶</a></dt>
+<dd><p>Player draws a card.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>True if the player can hit, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.reset_game">
+<code class="sig-name descname">reset_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.blackjack.Blackjack.reset_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset game</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.shuffle_deck">
+<code class="sig-name descname">shuffle_deck</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[Tuple[pyarcade.cards.Ranks, pyarcade.cards.Suits]]<a class="headerlink" href="#pyarcade.blackjack.Blackjack.shuffle_deck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuffles deck.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Shuffled deck.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.stand">
+<code class="sig-name descname">stand</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pyarcade.blackjack_players.BlackJackWinner<a class="headerlink" href="#pyarcade.blackjack.Blackjack.stand" title="Permalink to this definition">¶</a></dt>
+<dd><p>Player stands.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Winner of the game.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.blackjack.Blackjack.start_game">
+<code class="sig-name descname">start_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.blackjack.Blackjack.start_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Starts new game.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.blackjack_players">
+<span id="pyarcade-blackjack-players-module"></span><h2>pyarcade.blackjack_players module<a class="headerlink" href="#module-pyarcade.blackjack_players" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.blackjack_players.BlackJackWinner">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.blackjack_players.</code><code class="sig-name descname">BlackJackWinner</code><a class="headerlink" href="#pyarcade.blackjack_players.BlackJackWinner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Represents the winner of a blackjack round</p>
+<p>“PLAYER” - player.</p>
+<p>“DEALER” - dealer.</p>
+<dl class="attribute">
+<dt id="pyarcade.blackjack_players.BlackJackWinner.DEALER">
+<code class="sig-name descname">DEALER</code><em class="property"> = 'Dealer'</em><a class="headerlink" href="#pyarcade.blackjack_players.BlackJackWinner.DEALER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.blackjack_players.BlackJackWinner.PLAYER">
+<code class="sig-name descname">PLAYER</code><em class="property"> = 'Player'</em><a class="headerlink" href="#pyarcade.blackjack_players.BlackJackWinner.PLAYER" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.cards">
+<span id="pyarcade-cards-module"></span><h2>pyarcade.cards module<a class="headerlink" href="#module-pyarcade.cards" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.cards.Ranks">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.cards.</code><code class="sig-name descname">Ranks</code><a class="headerlink" href="#pyarcade.cards.Ranks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.ACE">
+<code class="sig-name descname">ACE</code><em class="property"> = 11</em><a class="headerlink" href="#pyarcade.cards.Ranks.ACE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.EIGHT">
+<code class="sig-name descname">EIGHT</code><em class="property"> = 8</em><a class="headerlink" href="#pyarcade.cards.Ranks.EIGHT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.FIVE">
+<code class="sig-name descname">FIVE</code><em class="property"> = 5</em><a class="headerlink" href="#pyarcade.cards.Ranks.FIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.FOUR">
+<code class="sig-name descname">FOUR</code><em class="property"> = 4</em><a class="headerlink" href="#pyarcade.cards.Ranks.FOUR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.JACK">
+<code class="sig-name descname">JACK</code><em class="property"> = 10.1</em><a class="headerlink" href="#pyarcade.cards.Ranks.JACK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.KING">
+<code class="sig-name descname">KING</code><em class="property"> = 10.3</em><a class="headerlink" href="#pyarcade.cards.Ranks.KING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.NINE">
+<code class="sig-name descname">NINE</code><em class="property"> = 9</em><a class="headerlink" href="#pyarcade.cards.Ranks.NINE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.ONE">
+<code class="sig-name descname">ONE</code><em class="property"> = 1</em><a class="headerlink" href="#pyarcade.cards.Ranks.ONE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.QUEEN">
+<code class="sig-name descname">QUEEN</code><em class="property"> = 10.2</em><a class="headerlink" href="#pyarcade.cards.Ranks.QUEEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.SEVEN">
+<code class="sig-name descname">SEVEN</code><em class="property"> = 7</em><a class="headerlink" href="#pyarcade.cards.Ranks.SEVEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.SIX">
+<code class="sig-name descname">SIX</code><em class="property"> = 6</em><a class="headerlink" href="#pyarcade.cards.Ranks.SIX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.TEN">
+<code class="sig-name descname">TEN</code><em class="property"> = 10</em><a class="headerlink" href="#pyarcade.cards.Ranks.TEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.THREE">
+<code class="sig-name descname">THREE</code><em class="property"> = 3</em><a class="headerlink" href="#pyarcade.cards.Ranks.THREE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Ranks.TWO">
+<code class="sig-name descname">TWO</code><em class="property"> = 2</em><a class="headerlink" href="#pyarcade.cards.Ranks.TWO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyarcade.cards.Suits">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.cards.</code><code class="sig-name descname">Suits</code><a class="headerlink" href="#pyarcade.cards.Suits" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="pyarcade.cards.Suits.CLUBS">
+<code class="sig-name descname">CLUBS</code><em class="property"> = 'Clubs'</em><a class="headerlink" href="#pyarcade.cards.Suits.CLUBS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Suits.DIAMONDS">
+<code class="sig-name descname">DIAMONDS</code><em class="property"> = 'Diamonds'</em><a class="headerlink" href="#pyarcade.cards.Suits.DIAMONDS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Suits.HEARTS">
+<code class="sig-name descname">HEARTS</code><em class="property"> = 'Hearts'</em><a class="headerlink" href="#pyarcade.cards.Suits.HEARTS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.cards.Suits.SPADES">
+<code class="sig-name descname">SPADES</code><em class="property"> = 'Spades'</em><a class="headerlink" href="#pyarcade.cards.Suits.SPADES" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.connect4">
+<span id="pyarcade-connect4-module"></span><h2>pyarcade.connect4 module<a class="headerlink" href="#module-pyarcade.connect4" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.connect4.Connect4">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.connect4.</code><code class="sig-name descname">Connect4</code><span class="sig-paren">(</span><em class="sig-param">use_ai=False</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.connect4.Connect4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyarcade.abstract_game.AbstractGame" title="pyarcade.abstract_game.AbstractGame"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyarcade.abstract_game.AbstractGame</span></code></a></p>
+<p>A class representing a Connect4 game session</p>
+<dl class="attribute">
+<dt id="pyarcade.connect4.Connect4.MAX_COLS">
+<code class="sig-name descname">MAX_COLS</code><em class="property"> = 7</em><a class="headerlink" href="#pyarcade.connect4.Connect4.MAX_COLS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.connect4.Connect4.MAX_ROWS">
+<code class="sig-name descname">MAX_ROWS</code><em class="property"> = 6</em><a class="headerlink" href="#pyarcade.connect4.Connect4.MAX_ROWS" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.check_win">
+<code class="sig-name descname">check_win</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.connect4.Connect4.check_win" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a player has won on the current board.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>True if game has been won.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.check_win_cols">
+<code class="sig-name descname">check_win_cols</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.connect4.Connect4.check_win_cols" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a player has won vertically.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>True if game has been won False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.check_win_diag_down">
+<code class="sig-name descname">check_win_diag_down</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.connect4.Connect4.check_win_diag_down" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a player has won diagonally.
+(y = -x).</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>True if game has been won False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.check_win_diag_up">
+<code class="sig-name descname">check_win_diag_up</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.connect4.Connect4.check_win_diag_up" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a player has won diagonally.
+(y = x).</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>True if game has been won False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.check_win_rows">
+<code class="sig-name descname">check_win_rows</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.connect4.Connect4.check_win_rows" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a player has won horizontally.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>True if game has been won False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.clear_game">
+<code class="sig-name descname">clear_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.connect4.Connect4.clear_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears entire game. (input clear)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.enter_user_turn">
+<code class="sig-name descname">enter_user_turn</code><span class="sig-paren">(</span><em class="sig-param">col: int</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.connect4.Connect4.enter_user_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inputs a player’s move.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>col: (int) column to drop “piece” in</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if winning move was made False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.get_free_row">
+<code class="sig-name descname">get_free_row</code><span class="sig-paren">(</span><em class="sig-param">col: int</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pyarcade.connect4.Connect4.get_free_row" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets a free row given a column.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>col: (int) column to drop piece in.</p>
+</dd>
+<dt>Returns:</dt><dd><p>index of free row or -1 if row is full or invalid input.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.get_last_turn">
+<code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><em class="sig-param">) -&gt; (&lt;class 'str'&gt;</em>, <em class="sig-param">&lt;class 'str'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.connect4.Connect4.get_last_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the latest board state.</p>
+<dl class="simple">
+<dt>Returns (List[List[str]]):</dt><dd><p>2D array of strings representing
+player location and empty slots.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.get_regex_pattern">
+<em class="property">static </em><code class="sig-name descname">get_regex_pattern</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.connect4.Connect4.get_regex_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets pattern for connect 4.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Pattern for only number between 1-MAX_COLS.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.get_turn">
+<code class="sig-name descname">get_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; pyarcade.connect4_states.C4State<a class="headerlink" href="#pyarcade.connect4.Connect4.get_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines the turn of the 2 players.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>C4State.X if turn even
+C4State.O if turn odd</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.get_wins">
+<code class="sig-name descname">get_wins</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Mapping[str, int]<a class="headerlink" href="#pyarcade.connect4.Connect4.get_wins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the wins of each player throughout the game.</p>
+<dl class="simple">
+<dt>Returns</dt><dd><p>(Mapping[str, int]): {X: # of wins, O: # of wins}</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.is_full_board">
+<code class="sig-name descname">is_full_board</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.connect4.Connect4.is_full_board" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.player_won">
+<code class="sig-name descname">player_won</code><span class="sig-paren">(</span><em class="sig-param">player: pyarcade.connect4_states.C4State</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.connect4.Connect4.player_won" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets game state after player has won.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>player: (C4State) player who won.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.reset_game">
+<code class="sig-name descname">reset_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.connect4.Connect4.reset_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset single game. (input reset)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connect4.Connect4.setup_board">
+<em class="property">static </em><code class="sig-name descname">setup_board</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[List[pyarcade.connect4_states.C4State]]<a class="headerlink" href="#pyarcade.connect4.Connect4.setup_board" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sets up a blank connect 4 game.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>MAX_ROWS x MAX_COLS 2D array of empty states.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.connect4_states">
+<span id="pyarcade-connect4-states-module"></span><h2>pyarcade.connect4_states module<a class="headerlink" href="#module-pyarcade.connect4_states" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.connect4_states.C4State">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.connect4_states.</code><code class="sig-name descname">C4State</code><a class="headerlink" href="#pyarcade.connect4_states.C4State" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Represents the state of each slot on the board</p>
+<p>“E” - Empty slot</p>
+<p>“X” - Player X occupies slot</p>
+<p>“O” - Player O occupies slot</p>
+<dl class="attribute">
+<dt id="pyarcade.connect4_states.C4State.E">
+<code class="sig-name descname">E</code><em class="property"> = '-'</em><a class="headerlink" href="#pyarcade.connect4_states.C4State.E" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.connect4_states.C4State.O">
+<code class="sig-name descname">O</code><em class="property"> = 'O'</em><a class="headerlink" href="#pyarcade.connect4_states.C4State.O" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.connect4_states.C4State.X">
+<code class="sig-name descname">X</code><em class="property"> = 'X'</em><a class="headerlink" href="#pyarcade.connect4_states.C4State.X" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.connection">
+<span id="pyarcade-connection-module"></span><h2>pyarcade.connection module<a class="headerlink" href="#module-pyarcade.connection" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.connection.ConnectRequest">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.connection.</code><code class="sig-name descname">ConnectRequest</code><a class="headerlink" href="#pyarcade.connection.ConnectRequest" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>An enumeration.</p>
+<dl class="attribute">
+<dt id="pyarcade.connection.ConnectRequest.LOGIN">
+<code class="sig-name descname">LOGIN</code><em class="property"> = 'http://pyarcade_proxy/api/users/login/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.LOGIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.connection.ConnectRequest.SIGNUP">
+<code class="sig-name descname">SIGNUP</code><em class="property"> = 'http://pyarcade_proxy/api/users/signup/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.SIGNUP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyarcade.connection.Connections">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.connection.</code><code class="sig-name descname">Connections</code><a class="headerlink" href="#pyarcade.connection.Connections" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="pyarcade.connection.Connections.login_account">
+<em class="property">static </em><code class="sig-name descname">login_account</code><span class="sig-paren">(</span><em class="sig-param">username: str</em>, <em class="sig-param">password: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.login_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Login to an existing account.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>username: username for account.
+password: password for account.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and either access / message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connection.Connections.sign_up_account">
+<em class="property">static </em><code class="sig-name descname">sign_up_account</code><span class="sig-paren">(</span><em class="sig-param">username: str</em>, <em class="sig-param">password: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.sign_up_account" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sign up new account.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>username: username for account.
+password: password for account.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and either access / message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.difficulties">
+<span id="pyarcade-difficulties-module"></span><h2>pyarcade.difficulties module<a class="headerlink" href="#module-pyarcade.difficulties" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.difficulties.Difficulty">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.difficulties.</code><code class="sig-name descname">Difficulty</code><a class="headerlink" href="#pyarcade.difficulties.Difficulty" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Represents the game difficulty.</p>
+<p>EASY - Easy game mode.</p>
+<p>NORMAL - Default game mode.</p>
+<p>HARD - Hard game mode.</p>
+<dl class="attribute">
+<dt id="pyarcade.difficulties.Difficulty.EASY">
+<code class="sig-name descname">EASY</code><em class="property"> = 'Easy'</em><a class="headerlink" href="#pyarcade.difficulties.Difficulty.EASY" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.difficulties.Difficulty.HARD">
+<code class="sig-name descname">HARD</code><em class="property"> = 'Hard'</em><a class="headerlink" href="#pyarcade.difficulties.Difficulty.HARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.difficulties.Difficulty.NORMAL">
+<code class="sig-name descname">NORMAL</code><em class="property"> = 'Normal'</em><a class="headerlink" href="#pyarcade.difficulties.Difficulty.NORMAL" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.eval_input">
+<span id="pyarcade-eval-input-module"></span><h2>pyarcade.eval_input module<a class="headerlink" href="#module-pyarcade.eval_input" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.eval_input.Evaluation">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.eval_input.</code><code class="sig-name descname">Evaluation</code><a class="headerlink" href="#pyarcade.eval_input.Evaluation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Represents the evaluation of each digit for sequence guessing.</p>
+<p>INCORRECT - Nowhere in 4 the hidden sequence at all</p>
+<p>SOMEWHERE - Somewhere in the hidden sequence, but not in the location
+it was submitted</p>
+<p>CORRECT - Is in the hidden sequence at the location it was submitted.</p>
+<dl class="attribute">
+<dt id="pyarcade.eval_input.Evaluation.CORRECT">
+<code class="sig-name descname">CORRECT</code><em class="property"> = 'Correct'</em><a class="headerlink" href="#pyarcade.eval_input.Evaluation.CORRECT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.eval_input.Evaluation.INCORRECT">
+<code class="sig-name descname">INCORRECT</code><em class="property"> = 'Incorrect'</em><a class="headerlink" href="#pyarcade.eval_input.Evaluation.INCORRECT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.eval_input.Evaluation.SOMEWHERE">
+<code class="sig-name descname">SOMEWHERE</code><em class="property"> = 'Somewhere'</em><a class="headerlink" href="#pyarcade.eval_input.Evaluation.SOMEWHERE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.game_option">
+<span id="pyarcade-game-option-module"></span><h2>pyarcade.game_option module<a class="headerlink" href="#module-pyarcade.game_option" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.game_option.Game">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.game_option.</code><code class="sig-name descname">Game</code><a class="headerlink" href="#pyarcade.game_option.Game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Enum representing each game.</p>
+<dl class="attribute">
+<dt id="pyarcade.game_option.Game.BLACKJACK">
+<code class="sig-name descname">BLACKJACK</code><em class="property"> = 'BlackJack'</em><a class="headerlink" href="#pyarcade.game_option.Game.BLACKJACK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.game_option.Game.CONNECT4">
+<code class="sig-name descname">CONNECT4</code><em class="property"> = 'Connect4'</em><a class="headerlink" href="#pyarcade.game_option.Game.CONNECT4" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.game_option.Game.GO_FISH">
+<code class="sig-name descname">GO_FISH</code><em class="property"> = 'Go Fish'</em><a class="headerlink" href="#pyarcade.game_option.Game.GO_FISH" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.game_option.Game.HORSEMAN">
+<code class="sig-name descname">HORSEMAN</code><em class="property"> = 'Horseman'</em><a class="headerlink" href="#pyarcade.game_option.Game.HORSEMAN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.game_option.Game.MASTERMIND">
+<code class="sig-name descname">MASTERMIND</code><em class="property"> = 'Mastermind'</em><a class="headerlink" href="#pyarcade.game_option.Game.MASTERMIND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.game_option.Game.WAR">
+<code class="sig-name descname">WAR</code><em class="property"> = 'War'</em><a class="headerlink" href="#pyarcade.game_option.Game.WAR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.go_fish">
+<span id="pyarcade-go-fish-module"></span><h2>pyarcade.go_fish module<a class="headerlink" href="#module-pyarcade.go_fish" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.go_fish.GoFish">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.go_fish.</code><code class="sig-name descname">GoFish</code><a class="headerlink" href="#pyarcade.go_fish.GoFish" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyarcade.abstract_game.AbstractGame" title="pyarcade.abstract_game.AbstractGame"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyarcade.abstract_game.AbstractGame</span></code></a></p>
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.check_for_winner">
+<em class="property">static </em><code class="sig-name descname">check_for_winner</code><span class="sig-paren">(</span><em class="sig-param">player_hand: list</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.go_fish.GoFish.check_for_winner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks the ‘player_hand’ list for four of a kind.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>player_hand: Player’s hand of cards.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if list has four of a kind, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.clear_game">
+<code class="sig-name descname">clear_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.go_fish.GoFish.clear_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears entire game. (input clear)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.deal_out_cards">
+<code class="sig-name descname">deal_out_cards</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.go_fish.GoFish.deal_out_cards" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deals out 5 cards to each player.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.enter_user_turn">
+<code class="sig-name descname">enter_user_turn</code><span class="sig-paren">(</span><em class="sig-param">guess</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.go_fish.GoFish.enter_user_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if computer has this card.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>guess: User’s card they guessed</p>
+</dd>
+<dt>Returns:</dt><dd><p>result: (bool) True if player has 4 of a kind (end of game), false otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.generate_new_deck">
+<em class="property">static </em><code class="sig-name descname">generate_new_deck</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]<a class="headerlink" href="#pyarcade.go_fish.GoFish.generate_new_deck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates the deck of cards that will be used for the game.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>List of Card objects.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.get_last_turn">
+<code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[str, bool, int]<a class="headerlink" href="#pyarcade.go_fish.GoFish.get_last_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the current state of the game.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Tuple containing the player’s cards, is they guessed a correct card or not, and if there is a winner.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.get_regex_pattern">
+<em class="property">static </em><code class="sig-name descname">get_regex_pattern</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.go_fish.GoFish.get_regex_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets pattern for mastermind.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Pattern for only numbers between 0-9 inclusive.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.go_fish">
+<code class="sig-name descname">go_fish</code><span class="sig-paren">(</span><em class="sig-param">player_hand</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.go_fish.GoFish.go_fish" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Args:</dt><dd><p>player_hand: Adds a Card to the player’s hand.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.parse_user_guess">
+<em class="property">static </em><code class="sig-name descname">parse_user_guess</code><span class="sig-paren">(</span><em class="sig-param">input_str: str</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pyarcade.go_fish.GoFish.parse_user_guess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parses the user’s input string.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>input_str: User’s guess.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Integer value associated with the user’s guess (-1 if invalid).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.player_two_guesses">
+<code class="sig-name descname">player_two_guesses</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.go_fish.GoFish.player_two_guesses" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computer guesses a card.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.reset_game">
+<code class="sig-name descname">reset_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.go_fish.GoFish.reset_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset single game. (input reset)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.go_fish.GoFish.shuffle_deck">
+<code class="sig-name descname">shuffle_deck</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[Tuple[pyarcade.cards.Ranks, pyarcade.cards.Suits]]<a class="headerlink" href="#pyarcade.go_fish.GoFish.shuffle_deck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shuffles the game’s deck of cards.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>List of Card tuples.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.horseman">
+<span id="pyarcade-horseman-module"></span><h2>pyarcade.horseman module<a class="headerlink" href="#module-pyarcade.horseman" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.horseman.Horseman">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.horseman.</code><code class="sig-name descname">Horseman</code><span class="sig-paren">(</span><em class="sig-param">difficulty: Optional[pyarcade.difficulties.Difficulty] = &lt;Difficulty.NORMAL: 'Normal'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.horseman.Horseman" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyarcade.abstract_game.AbstractGame" title="pyarcade.abstract_game.AbstractGame"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyarcade.abstract_game.AbstractGame</span></code></a></p>
+<p>A class representing a Horseman game session</p>
+<dl class="method">
+<dt id="pyarcade.horseman.Horseman.check_for_winner">
+<code class="sig-name descname">check_for_winner</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.horseman.Horseman.check_for_winner" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if word is filled out</p>
+<p>Returns: True if word is filled out</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.horseman.Horseman.check_letter">
+<code class="sig-name descname">check_letter</code><span class="sig-paren">(</span><em class="sig-param">guessed_letter: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.horseman.Horseman.check_letter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if guess is in the word</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>guessed_letter (): User’s guessed letter.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if guess is in word</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.horseman.Horseman.clear_game">
+<code class="sig-name descname">clear_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.horseman.Horseman.clear_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears entire game. (input clear)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.horseman.Horseman.eight_letter_words">
+<code class="sig-name descname">eight_letter_words</code><em class="property"> = ['accident', 'accepted', 'assigned', 'bacteria', 'campaign', 'chemical', 'criminal', 'congress', 'fighting', 'findings', 'graphics', 'greatest', 'hardware', 'graduate', 'honestly', 'language', 'lifetime', 'millions', 'painting', 'personal', 'terrible', 'template']</em><a class="headerlink" href="#pyarcade.horseman.Horseman.eight_letter_words" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.horseman.Horseman.enter_user_turn">
+<code class="sig-name descname">enter_user_turn</code><span class="sig-paren">(</span><em class="sig-param">guess</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.horseman.Horseman.enter_user_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if letter is in the word.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>guess: User’s guessed letter.</p>
+</dd>
+<dt>Returns:</dt><dd><p>result (bool): True if game is over, false otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.horseman.Horseman.four_letter_words">
+<code class="sig-name descname">four_letter_words</code><em class="property"> = ['four', 'beer', 'baby', 'ball', 'dark', 'data', 'deck', 'edge', 'firm', 'food', 'hear', 'hate', 'huge', 'idea', 'main', 'mass', 'moon', 'rice', 'rich', 'rule', 'said', 'sees', 'send', 'snow', 'shot', 'sick', 'tape', 'then', 'than', 'unit', 'user', 'view']</em><a class="headerlink" href="#pyarcade.horseman.Horseman.four_letter_words" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.horseman.Horseman.get_last_turn">
+<code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.horseman.Horseman.get_last_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the last turn/state of game (the amount of the word guessed).</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Meaningful state of the current game.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.horseman.Horseman.get_regex_pattern">
+<em class="property">static </em><code class="sig-name descname">get_regex_pattern</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.horseman.Horseman.get_regex_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets validator for game.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Regex string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.horseman.Horseman.pick_word">
+<code class="sig-name descname">pick_word</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[str]<a class="headerlink" href="#pyarcade.horseman.Horseman.pick_word" title="Permalink to this definition">¶</a></dt>
+<dd><p>Chooses a word from the given list</p>
+<p>Returns: The chosen word</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.horseman.Horseman.reset_game">
+<code class="sig-name descname">reset_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.horseman.Horseman.reset_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset single game. (input reset)</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.horseman.Horseman.six_letter_words">
+<code class="sig-name descname">six_letter_words</code><em class="property"> = ['accept', 'access', 'across', 'button', 'buyers', 'butter', 'camera', 'charge', 'cheese', 'dining', 'direct', 'doctor', 'earned', 'eating', 'energy', 'fabric', 'failed', 'finger', 'health', 'handle', 'humans', 'laptop', 'leaves', 'layout', 'muscle', 'nation', 'normal']</em><a class="headerlink" href="#pyarcade.horseman.Horseman.six_letter_words" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.input_system">
+<span id="pyarcade-input-system-module"></span><h2>pyarcade.input_system module<a class="headerlink" href="#module-pyarcade.input_system" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.input_system.InputSystem">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.input_system.</code><code class="sig-name descname">InputSystem</code><span class="sig-paren">(</span><em class="sig-param">game: pyarcade.game_option.Game = &lt;Game.MASTERMIND: 'Mastermind'&gt;</em>, <em class="sig-param">difficulty=&lt;Difficulty.NORMAL: 'Normal'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.input_system.InputSystem" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents input system for validation and game usage.
+And executes commands on user input.</p>
+<dl class="method">
+<dt id="pyarcade.input_system.InputSystem.clear">
+<code class="sig-name descname">clear</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.input_system.InputSystem.clear" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clear the all game history.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.input_system.InputSystem.get_last_guess">
+<code class="sig-name descname">get_last_guess</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Union[str, Tuple[Tuple[str, str], bool]]<a class="headerlink" href="#pyarcade.input_system.InputSystem.get_last_guess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the player’s last move/guess.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>List[Tuple[int, str]]: The evaluation of last guess (mastermind).
+List[List[str]]: Board state of last move (connect4).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.input_system.InputSystem.get_round_info">
+<code class="sig-name descname">get_round_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.input_system.InputSystem.get_round_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets the round information.
+If game is Mastermind, return round number
+If game is Connect4, return the current player’s turn</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Returns:</dt><dd><p>round_info (str)</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.input_system.InputSystem.is_valid_input_for_game">
+<code class="sig-name descname">is_valid_input_for_game</code><span class="sig-paren">(</span><em class="sig-param">cmd: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.input_system.InputSystem.is_valid_input_for_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determines if cmd is valid for the current game instance.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cmd (str): User’s input.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if valid for current game.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.input_system.InputSystem.make_guess_for_game">
+<code class="sig-name descname">make_guess_for_game</code><span class="sig-paren">(</span><em class="sig-param">cmd: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.input_system.InputSystem.make_guess_for_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make a guess based on current game.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>cmd: (str) user’s guess list.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if correct according to the game, False otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.input_system.InputSystem.reset">
+<code class="sig-name descname">reset</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.input_system.InputSystem.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the current game to starting state.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.input_system.InputSystem.take_input">
+<code class="sig-name descname">take_input</code><span class="sig-paren">(</span><em class="sig-param">cmd: str</em><span class="sig-paren">)</span> &#x2192; Tuple[bool, bool]<a class="headerlink" href="#pyarcade.input_system.InputSystem.take_input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes in a user’s input and interacts with mastermind
+accordingly.</p>
+<dl>
+<dt>Args:</dt><dd><p>cmd: (string) user’s command.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A 2-tuple boolean representing (win, valid_cmd).</p>
+<p>win (bool): True iff correct sequence was guessed.
+valid_cmd (bool): True iff a valid cmd was inputted.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.mastermind">
+<span id="pyarcade-mastermind-module"></span><h2>pyarcade.mastermind module<a class="headerlink" href="#module-pyarcade.mastermind" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.mastermind.Mastermind">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.mastermind.</code><code class="sig-name descname">Mastermind</code><span class="sig-paren">(</span><em class="sig-param">difficulty: Optional[pyarcade.difficulties.Difficulty] = &lt;Difficulty.NORMAL: 'Normal'&gt;</em>, <em class="sig-param">width: Optional[int] = 4</em>, <em class="sig-param">max_range: Optional[int] = 9</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.mastermind.Mastermind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyarcade.abstract_game.AbstractGame" title="pyarcade.abstract_game.AbstractGame"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyarcade.abstract_game.AbstractGame</span></code></a></p>
+<p>A class representing a Mastermind game session</p>
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.check_guess">
+<code class="sig-name descname">check_guess</code><span class="sig-paren">(</span><em class="sig-param">guess: List[int]</em><span class="sig-paren">)</span> &#x2192; List[Tuple[int, pyarcade.eval_input.Evaluation]]<a class="headerlink" href="#pyarcade.mastermind.Mastermind.check_guess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Evaluates a guess to the current generated sequence.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>guess: User’s list of int to guess</p>
+</dd>
+<dt>Returns:</dt><dd><p>Evaluation list of tuples(int, evaluation).
+Empty list if invalid array given.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.clear_all_history">
+<code class="sig-name descname">clear_all_history</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.mastermind.Mastermind.clear_all_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears history of entire game.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.clear_game">
+<code class="sig-name descname">clear_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.mastermind.Mastermind.clear_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears entire game. (input clear)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.clear_history">
+<code class="sig-name descname">clear_history</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.mastermind.Mastermind.clear_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears history of current session.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.correct_guess">
+<code class="sig-name descname">correct_guess</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.mastermind.Mastermind.correct_guess" title="Permalink to this definition">¶</a></dt>
+<dd><p>Correct guess was issued, add current history to entire history
+Generate new sequence.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.enter_user_turn">
+<code class="sig-name descname">enter_user_turn</code><span class="sig-paren">(</span><em class="sig-param">guess: List[int]</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.mastermind.Mastermind.enter_user_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if guess matches the hidden sequence.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>guess: User’s list of int to guess</p>
+</dd>
+<dt>Returns:</dt><dd><p>result: (bool) True if correct, false otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.generate_hidden_sequence">
+<code class="sig-name descname">generate_hidden_sequence</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; List[int]<a class="headerlink" href="#pyarcade.mastermind.Mastermind.generate_hidden_sequence" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates a hidden sequence for mastermind game.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>hidden_sequence: List[int] A sequence of integers to be guessed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.get_last_turn">
+<code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.mastermind.Mastermind.get_last_turn" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieves the player’s last guess.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>List[Tuple[int, str]]: The evaluation list of last guess.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.get_regex_pattern">
+<em class="property">static </em><code class="sig-name descname">get_regex_pattern</code><span class="sig-paren">(</span><em class="sig-param">mode=&lt;Difficulty.NORMAL: 'Normal'&gt;</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.mastermind.Mastermind.get_regex_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets pattern for mastermind.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Pattern for only numbers between 0-9 inclusive.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.mastermind.Mastermind.reset_game">
+<code class="sig-name descname">reset_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.mastermind.Mastermind.reset_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset single game. (input reset)</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.start">
+<span id="pyarcade-start-module"></span><h2>pyarcade.start module<a class="headerlink" href="#module-pyarcade.start" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pyarcade.start.run_pyarcade">
+<code class="sig-prename descclassname">pyarcade.start.</code><code class="sig-name descname">run_pyarcade</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.start.run_pyarcade" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade.war">
+<span id="pyarcade-war-module"></span><h2>pyarcade.war module<a class="headerlink" href="#module-pyarcade.war" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyarcade.war.Ranks">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.war.</code><code class="sig-name descname">Ranks</code><a class="headerlink" href="#pyarcade.war.Ranks" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>Enumerated Type for card ranks of War.</p>
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.ACE">
+<code class="sig-name descname">ACE</code><em class="property"> = 14</em><a class="headerlink" href="#pyarcade.war.Ranks.ACE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.EIGHT">
+<code class="sig-name descname">EIGHT</code><em class="property"> = 8</em><a class="headerlink" href="#pyarcade.war.Ranks.EIGHT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.FIVE">
+<code class="sig-name descname">FIVE</code><em class="property"> = 5</em><a class="headerlink" href="#pyarcade.war.Ranks.FIVE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.FOUR">
+<code class="sig-name descname">FOUR</code><em class="property"> = 4</em><a class="headerlink" href="#pyarcade.war.Ranks.FOUR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.JACK">
+<code class="sig-name descname">JACK</code><em class="property"> = 11</em><a class="headerlink" href="#pyarcade.war.Ranks.JACK" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.KING">
+<code class="sig-name descname">KING</code><em class="property"> = 13</em><a class="headerlink" href="#pyarcade.war.Ranks.KING" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.NINE">
+<code class="sig-name descname">NINE</code><em class="property"> = 9</em><a class="headerlink" href="#pyarcade.war.Ranks.NINE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.QUEEN">
+<code class="sig-name descname">QUEEN</code><em class="property"> = 12</em><a class="headerlink" href="#pyarcade.war.Ranks.QUEEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.SEVEN">
+<code class="sig-name descname">SEVEN</code><em class="property"> = 7</em><a class="headerlink" href="#pyarcade.war.Ranks.SEVEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.SIX">
+<code class="sig-name descname">SIX</code><em class="property"> = 6</em><a class="headerlink" href="#pyarcade.war.Ranks.SIX" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.TEN">
+<code class="sig-name descname">TEN</code><em class="property"> = 10</em><a class="headerlink" href="#pyarcade.war.Ranks.TEN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.THREE">
+<code class="sig-name descname">THREE</code><em class="property"> = 3</em><a class="headerlink" href="#pyarcade.war.Ranks.THREE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.war.Ranks.TWO">
+<code class="sig-name descname">TWO</code><em class="property"> = 2</em><a class="headerlink" href="#pyarcade.war.Ranks.TWO" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyarcade.war.War">
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.war.</code><code class="sig-name descname">War</code><a class="headerlink" href="#pyarcade.war.War" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyarcade.abstract_game.AbstractGame" title="pyarcade.abstract_game.AbstractGame"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyarcade.abstract_game.AbstractGame</span></code></a></p>
+<dl class="method">
+<dt id="pyarcade.war.War.clear_game">
+<code class="sig-name descname">clear_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.war.War.clear_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Clears entire game. (input clear)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.compare_to">
+<em class="property">static </em><code class="sig-name descname">compare_to</code><span class="sig-paren">(</span><em class="sig-param">card_one: (&lt;enum 'Ranks'&gt;</em>, <em class="sig-param">&lt;enum 'Suits'&gt;)</em>, <em class="sig-param">card_two: (&lt;enum 'Ranks'&gt;</em>, <em class="sig-param">&lt;enum 'Suits'&gt;)</em><span class="sig-paren">)</span> &#x2192; int<a class="headerlink" href="#pyarcade.war.War.compare_to" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Args:</dt><dd><p>card_one: Player one card.
+card_two: Player two card.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Positive number if player one wins turn, negative if player two wins
+turn, zero if there is a war.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.deal_hands">
+<em class="property">static </em><code class="sig-name descname">deal_hands</code><span class="sig-paren">(</span><em class="sig-param">deck: [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]) -&gt; ([(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)], [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.war.War.deal_hands" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Args:</dt><dd><p>deck: Deck which cards will be dealt.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Two lists of 26 cards.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.enter_user_turn">
+<code class="sig-name descname">enter_user_turn</code><span class="sig-paren">(</span><em class="sig-param">cmd: str</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.war.War.enter_user_turn" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Args:</dt><dd><p>cmd: “Flip Card”</p>
+</dd>
+<dt>Returns:</dt><dd><p>Outcome of turn. (False if there is a winner)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.flip">
+<em class="property">static </em><code class="sig-name descname">flip</code><span class="sig-paren">(</span><em class="sig-param">deck: [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.war.War.flip" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Args:</dt><dd><p>deck: Deck of cards.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Top card of the deck.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.generate_new_deck">
+<em class="property">static </em><code class="sig-name descname">generate_new_deck</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]<a class="headerlink" href="#pyarcade.war.War.generate_new_deck" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Returns:</dt><dd><p>New deck of cards.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.get_last_turn">
+<code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><em class="sig-param">) -&gt; (&lt;class 'str'&gt;</em>, <em class="sig-param">&lt;class 'str'&gt;</em>, <em class="sig-param">&lt;class 'int'&gt;</em>, <em class="sig-param">&lt;class 'int'&gt;</em>, <em class="sig-param">&lt;class 'bool'&gt;</em>, <em class="sig-param">&lt;class 'int'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.war.War.get_last_turn" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Returns:</dt><dd><p>A Tuple containing:
+str: Player One’s card.
+str: Player Two’s card.
+int: Number of cards Player One has.
+int: Number of cards Player Two has.
+bool: Returns True if there is a winner, False otherwise.
+int: 1 or 2 depending on who won last turn.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.get_regex_pattern">
+<em class="property">static </em><code class="sig-name descname">get_regex_pattern</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.war.War.get_regex_pattern" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets regex pattern for War.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Pattern match for game.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.new_game">
+<code class="sig-name descname">new_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.war.War.new_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deals new hands to players.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.play_turn">
+<code class="sig-name descname">play_turn</code><span class="sig-paren">(</span><em class="sig-param">pile: [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.war.War.play_turn" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Args:</dt><dd><p>pile: Cards to be given to winner of turn.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if the game is to be continued, False if there is a winner.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.reset_game">
+<code class="sig-name descname">reset_game</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.war.War.reset_game" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset single game. (input reset)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.shuffle_deck">
+<em class="property">static </em><code class="sig-name descname">shuffle_deck</code><span class="sig-paren">(</span><em class="sig-param">deck: [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]</em><span class="sig-paren">)</span> &#x2192; [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]<a class="headerlink" href="#pyarcade.war.War.shuffle_deck" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Args:</dt><dd><p>deck: List of cards to be shuffled.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Shuffled deck.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.to_str">
+<em class="property">static </em><code class="sig-name descname">to_str</code><span class="sig-paren">(</span><em class="sig-param">deck: [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]</em><span class="sig-paren">)</span> &#x2192; str<a class="headerlink" href="#pyarcade.war.War.to_str" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="simple">
+<dt>Args:</dt><dd><p>deck: List of cards.</p>
+</dd>
+<dt>Returns:</dt><dd><p>String containing all ranks in hand.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.update_current_history">
+<code class="sig-name descname">update_current_history</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.war.War.update_current_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds each player’s hand and previous turn winner to current history.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.update_entire_history">
+<code class="sig-name descname">update_entire_history</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.war.War.update_entire_history" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds winner of game, and current history, to entire history.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.war.War.war">
+<code class="sig-name descname">war</code><span class="sig-paren">(</span><em class="sig-param">pile: [(&lt;enum 'Ranks'&gt;, &lt;enum 'Suits'&gt;)]</em><span class="sig-paren">)</span> &#x2192; bool<a class="headerlink" href="#pyarcade.war.War.war" title="Permalink to this definition">¶</a></dt>
+<dd><p>Case where turn results in a war. Each player adds 3 additional cards
+to the pile before playing a new turn.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>pile: Cards to be given to winner of turn.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Recursive call to play_turn with an updated pile.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyarcade">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyarcade" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">PyArcade</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">group_01</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Brandon Kwintner, Ryan Ziemski, Nam Quach, Andy Zhang.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.2.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/pyarcade.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
