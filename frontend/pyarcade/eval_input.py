@@ -6,11 +6,10 @@ class Evaluation(Enum):
 
         INCORRECT - Nowhere in 4 the hidden sequence at all
 
-        SOMEWHERE - Somewhere in the hidden sequence,
+        SOMEWHERE - Somewhere in the hidden sequence, but not in the location
+        it was submitted
 
-            but not in the location it was submitted
         CORRECT - Is in the hidden sequence at the location it was submitted.
-
     """
 
     INCORRECT = "Incorrect"

@@ -84,6 +84,7 @@ class War(AbstractGame):
         """
         Case where turn results in a war. Each player adds 3 additional cards
         to the pile before playing a new turn.
+
         Args:
             pile: Cards to be given to winner of turn.
 
@@ -256,6 +257,7 @@ class War(AbstractGame):
     def get_regex_pattern() -> str:
         """
         Gets regex pattern for War.
+        
         Returns:
             Pattern match for game.
         """

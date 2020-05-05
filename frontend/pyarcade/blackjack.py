@@ -23,6 +23,7 @@ class Blackjack(AbstractGame):
     def generate_new_deck() -> [(Ranks, Suits)]:
         """
         Generate new deck.
+
         Returns:
             New deck.
         """
@@ -39,6 +40,7 @@ class Blackjack(AbstractGame):
     def shuffle_deck(self) -> List[Tuple[Ranks, Suits]]:
         """
         Shuffles deck.
+
         Returns:
             Shuffled deck.
         """
@@ -63,6 +65,7 @@ class Blackjack(AbstractGame):
     def player_draw(self) -> bool:
         """
         Player draws a card.
+
         Returns:
             True if the player can hit, False otherwise.
         """
@@ -76,6 +79,7 @@ class Blackjack(AbstractGame):
     def npc_draw(self, npc_hand: [(Ranks, Suits)]):
         """
         Computer draws card.
+
         Args:
             npc_hand: Computer's hand.
         """
@@ -88,6 +92,7 @@ class Blackjack(AbstractGame):
     def hit(self) -> (Ranks, Suits):
         """
         Player decides to hit.
+
         Returns:
             First card of the deck.
         """
@@ -102,6 +107,7 @@ class Blackjack(AbstractGame):
     def evaluate_hand(self, card_hand: List[Tuple[Ranks, Suits]]) -> int:
         """
         Determines value of hand.
+
         Args:
             card_hand: Hand to be evaluated.
 
@@ -126,6 +132,7 @@ class Blackjack(AbstractGame):
     def change_ace_to_one(card_hand: [Ranks]) -> bool:
         """
         Changes Ace high value to low value.
+
         Args:
             card_hand: Hand to be altered.
 
@@ -142,6 +149,7 @@ class Blackjack(AbstractGame):
     def stand(self) -> BlackJackWinner:
         """
         Player stands.
+
         Returns:
             Winner of the game.
         """
@@ -155,6 +163,7 @@ class Blackjack(AbstractGame):
     def calculate_winner(self) -> BlackJackWinner:
         """
         Determine who won the game.
+
         Returns:
             Winner of the game.
         """
@@ -200,6 +209,7 @@ class Blackjack(AbstractGame):
     def get_last_turn(self) -> Tuple[Tuple[str, str], bool]:
         """
         Get information about the last turn played.
+
         Returns:
             Information about the last turn played.
         """
@@ -216,6 +226,7 @@ class Blackjack(AbstractGame):
     def _hand_to_str(hand):
         """
         Converts hand to a string.
+
         Args:
             hand: Hand of cards.
 
