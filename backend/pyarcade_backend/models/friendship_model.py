@@ -1,7 +1,6 @@
 from django.db import models
 
 from enum import Enum
-from .user_model import UserModel
 
 
 class Friendship(Enum):
@@ -21,5 +20,7 @@ class FriendshipModel(models.Model):
 
     user_one = models.CharField(max_length=30)
     user_two = models.CharField(max_length=30)
-    friendship_status = models.CharField(choices=[(friendship.name, friendship.value) for friendship in Friendship],
+    friendship_status = models.CharField(choices=[(friendship.name,
+                                                   friendship.value) for\
+                                                  friendship in Friendship],
                                          max_length=8)
