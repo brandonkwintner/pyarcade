@@ -12,7 +12,7 @@ class Display:
         self.window = window
         self.user = user
         self.height, self.width = self.window.getmaxyx()
-        self.x_start_position = self.width // 2 - self.width // 8
+        self.x_start_position = self.width // 2 - self.width // 5
         self.scroll_idx = scroll_idx
 
     def display_options(self, opts: List[str], info: List[str]) -> List[str]:
@@ -26,7 +26,7 @@ class Display:
             List of options.
         """
         self.window.clear()
-        self.window.addstr(0, self.x_start_position, self.user)
+        self.window.addstr(0, self.x_start_position, self.user["username"])
         line_num = self.display_game_info(info) + 2
 
         for idx, text in enumerate(opts):
@@ -58,7 +58,7 @@ class Display:
         self.window.addstr(line_num - 1, self.x_start_position, name)
 
         if name == "Mastermind":
-            game_state = "Game #" + info[2]
+            game_state = "Games Played: " + info[2]
             self.window.addstr(0, 0, game_state)
 
             for row in info[1].split('\n'):
@@ -69,37 +69,45 @@ class Display:
             self.window.addstr(line_num, self.x_start_position, info[3])
 
         elif name == "Connect Four":
-            game_state = "Game #" + info[2]
+            game_state = "Games Played: " + info[3]
             self.window.addstr(0, 0, game_state)
-
-            game_turn = "Turn: " + info[3]
-            self.window.addstr(1, 0, game_turn)
+            game_state = "Games Won: " + info[2]
+            self.window.addstr(1, 0, game_state)
 
             for row in info[1][0].split('\n'):
                 line_num += 1
                 self.window.addstr(line_num, self.x_start_position, row)
 
         elif name == "Blackjack":
-            game_state = "Games Won: " + info[2]
+            game_state = "Games Played: " + info[4]
             self.window.addstr(0, 0, game_state)
+            game_state = "Games Won: " + info[2]
+            self.window.addstr(1, 0, game_state)
 
             line_num += 1
+            player_hand = info[1][0].split(":")
+
             self.window.addstr(line_num, self.x_start_position,
-                               "Player Hand: ")
-            self.window.addstr(line_num + 1, self.x_start_position, info[1][0])
+                               "Player Hand: " + player_hand[1])
+            self.window.addstr(line_num + 1, self.x_start_position,
+                               player_hand[0])
 
             if info[3] == "Show":
                 line_num += 3
+                dealer_hand = info[1][1].split(":")
+
                 self.window.addstr(line_num, self.x_start_position,
-                                   "Dealer Hand: ")
+                                   "Dealer Hand: " + dealer_hand[1])
                 self.window.addstr(line_num + 1, self.x_start_position,
-                                   info[1][1])
+                                   dealer_hand[0])
 
             line_num += 2
 
         elif name == "War":
-            game_state = "Games Won: " + info[2]
+            game_state = "Games Played: " + info[3]
             self.window.addstr(0, 0, game_state)
+            game_state = "Games Won: " + info[2]
+            self.window.addstr(1, 0, game_state)
 
             line_num += 1
             self.window.addstr(line_num, self.x_start_position,
@@ -115,8 +123,10 @@ class Display:
             line_num += 2
 
         elif name == "Go Fish":
-            game_state = "Games Won: " + info[2]
+            game_state = "Games Played: " + info[4]
             self.window.addstr(0, 0, game_state)
+            game_state = "Games Won: " + info[2]
+            self.window.addstr(1, 0, game_state)
 
             line_num += 1
             self.window.addstr(line_num, self.x_start_position,
@@ -130,8 +140,10 @@ class Display:
             line_num += 2
 
         elif name == "Horseman":
-            game_state = "Games Won: " + info[2]
+            game_state = "Games Played: " + info[6]
             self.window.addstr(0, 0, game_state)
+            game_state = "Games Won: " + info[2]
+            self.window.addstr(1, 0, game_state)
 
             line_num += 1
             self.window.addstr(line_num, self.x_start_position, info[3])
@@ -147,7 +159,7 @@ class Display:
             line_num += 3
             self.window.addstr(line_num, self.x_start_position, info[4])
 
-        elif name == "Options":
+        elif name == "Pyarcade":
             line_num += 2
             self.window.addstr(line_num, self.x_start_position, info[1])
 
@@ -264,6 +276,81 @@ class Display:
                            curses.color_pair(5) | curses.A_BOLD)
         self.window.getch()
 
+        self.window.refresh()
+
+    def display_instruction(self, goal: str, rules: str, instruction: str):
+        """ Display instructions for the game
+
+        Args:
+            goal (): Goal of the game
+            rules (): Special conditions for the game
+            instruction (): Description of the purpose of each command
+
+        """
+        self.window.clear()
+
+        self.window.addstr(2, self.x_start_position, "Goal:")
+        self.window.addstr(3, self.x_start_position, goal)
+
+        self.window.addstr(5, self.x_start_position, "Rules:")
+
+        num_line = 6
+        for line in rules.split("\n"):
+            self.window.addstr(num_line, self.x_start_position, line)
+            num_line += 1
+
+        num_line += 1
+        self.window.addstr(num_line, self.x_start_position, "Instructions:")
+        num_line += 1
+
+        for line in instruction.split("\n"):
+            self.window.addstr(num_line, self.x_start_position, line)
+            num_line += 1
+
+        self.window.getch()
+        self.window.refresh()
+
+    def display_leaderboard(self, game: str, board: [dict]):
+        """ Display the stats of the players with the most wins for the
+            desired game (top 25 players at most)
+
+        Args:
+            game (): Name of the desired game
+            board (): Leaderboard for the desired game
+
+        """
+        self.window.clear()
+
+        self.window.addstr(5, self.x_start_position, "Username")
+        self.window.addstr(5, self.x_start_position + 30, "Games Won")
+        self.window.addstr(5, self.x_start_position + 50, "Games Played")
+
+        num = 1
+        line = 6
+        for user in board["board"]:
+            if num > 25:
+                break
+
+            self.window.addstr(line, self.x_start_position - 3, str(num) +
+                               ") " + user["user"])
+            self.window.addstr(line, self.x_start_position + 30,
+                               str(user["wins"]))
+            self.window.addstr(line, self.x_start_position + 50,
+                               str(user["total"]))
+            line += 1
+            num += 1
+
+        if num == 1:
+            self.window.addstr(2, self.x_start_position,
+                               game + " Leaderboard")
+        else:
+            if num < 25:
+                num -= 1
+
+            self.window.addstr(2, self.x_start_position, game + " Leaderboard:"
+                               + " Top " + str(num) + " Users")
+
+        self.window.getch()
         self.window.refresh()
 
 
