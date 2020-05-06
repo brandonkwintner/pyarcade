@@ -334,13 +334,13 @@ class Connect4TestCase(unittest.TestCase):
             expected.append([element.value for element in row])
 
         expected_str = Connect4TestCase._2d_to_str(expected)
-        self.assertEqual(expected_str, game.get_last_turn())
+        self.assertEqual(expected_str, game.get_last_turn()[0])
 
         game.enter_user_turn(0)
         expected[Connect4.MAX_ROWS-1][0] = C4State.X.value
         expected_str = Connect4TestCase._2d_to_str(expected)
 
-        self.assertEqual(expected_str, game.get_last_turn())
+        self.assertEqual(expected_str, game.get_last_turn()[0])
 
     def test_interactions(self):
         game = Connect4()

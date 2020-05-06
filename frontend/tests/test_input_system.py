@@ -49,7 +49,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(in_sys.game_num, 1)
 
     def test_init_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
 
         self.assertTrue(isinstance(in_sys.game, Connect4))
         self.assertEqual(in_sys.round, 1)
@@ -75,7 +75,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertIsNot(old_sequence, in_sys.game.gen_sequence)
 
     def test_reset_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
 
         in_sys.round = 100
         in_sys.game.current_history = []
@@ -111,7 +111,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(len(in_sys.game.entire_history), 0)
 
     def test_clear_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
 
         self.assertFalse(in_sys.make_guess_for_game("0"))
 
@@ -158,7 +158,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual((False, True), in_sys.take_input("   1  2 3 5   "))
 
     def test_guess_take_input_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
 
         self.assertEqual(f"Player {C4State.X.value}", in_sys.get_round_info())
         win, valid = in_sys.take_input("1")
@@ -214,7 +214,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertNotEqual(in_sys.game.gen_sequence, old_seq)
 
     def test_reset_take_input_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
 
         in_sys.take_input("1")
         win, valid = in_sys.take_input("reset")
@@ -241,11 +241,12 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual(expected_str, in_sys.get_last_guess())
 
     def test_get_last_guess_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
+
         expected = InputSystemTestCase._get_empty_c4_board_str()
 
         expected_str = InputSystemTestCase._2d_to_str(expected)
-        self.assertEqual(expected_str,in_sys.get_last_guess())
+        self.assertEqual(expected_str, in_sys.get_last_guess()[0])
 
         in_sys.take_input("1")
 
@@ -255,8 +256,7 @@ class InputSystemTestCase(unittest.TestCase):
 
         expected.insert(len(expected), last_row)
         expected_str = InputSystemTestCase._2d_to_str(expected)
-
-        self.assertEqual(expected_str, in_sys.get_last_guess())
+        self.assertEqual(expected_str, in_sys.get_last_guess()[0])
 
     def test_clear_take_input_mastermind(self):
         in_sys = InputSystem()
@@ -275,7 +275,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertNotEqual(in_sys.game.gen_sequence, old_seq)
 
     def test_clear_take_input_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
 
         in_sys.take_input("1")
 
@@ -329,7 +329,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertTrue(valid)
 
     def test_correct_take_input_many_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
 
         self.assertEqual((False, True), in_sys.take_input("1"))
         self.assertEqual((False, True), in_sys.take_input("2"))
@@ -399,7 +399,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertFalse(valid)
 
     def test_incorrect_take_input_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
 
         win, valid = in_sys.take_input("someBadInput")
         self.assertFalse(win)
@@ -444,7 +444,7 @@ class InputSystemTestCase(unittest.TestCase):
         self.assertEqual("Round #2:", in_sys.get_round_info())
 
     def test_get_round_info_for_c4(self):
-        in_sys = InputSystem(Game.CONNECT4)
+        in_sys = InputSystem(Game.CONNECT4, "", False)
 
         self.assertEqual(f"Player {C4State.X.value}", in_sys.get_round_info())
         in_sys.take_input("1")

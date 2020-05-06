@@ -39,11 +39,21 @@ class HorsemanTestCase(unittest.TestCase):
         game.current_word = ['_', '_', '_', '_', '_']
         game.enter_user_turn("l")
 
-        self.assertEqual(("__ll_", False), game.get_last_turn())
+        self.assertEqual(("__ll_", 6, "hello"), game.get_last_turn())
 
         game.enter_user_turn("h")
 
-        self.assertEqual(("h_ll_", False), game.get_last_turn())
+        self.assertEqual(("h_ll_", 6, "hello"), game.get_last_turn())
+
+    def test_get_last_turn_wrong_guess(self):
+        game = Horseman()
+
+        game.word = ['h', 'e', 'l', 'l', 'o']
+        game.current_word = ['_', '_', '_', '_', '_']
+
+        game.enter_user_turn("a")
+
+        self.assertEqual(("_____", 5, "hello"), game.get_last_turn())
 
     def test_player_winning(self):
         game = Horseman()
