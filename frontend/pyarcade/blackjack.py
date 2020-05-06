@@ -3,6 +3,7 @@ from pyarcade.cards import Ranks, Suits
 from pyarcade.abstract_game import AbstractGame
 from pyarcade.blackjack_players import BlackJackWinner
 import random
+import math
 
 
 class Blackjack(AbstractGame):
@@ -71,6 +72,7 @@ class Blackjack(AbstractGame):
         """
         if self.evaluate_hand(self.player_hand) < self.MAX_WINNING_LIMIT:
             self.player_hand.append(self.hit())
+            self.evaluate_hand(self.player_hand)
             self.current_history.append(self.player_hand)
             return True
 
@@ -234,12 +236,18 @@ class Blackjack(AbstractGame):
             String representation of hand.
         """
         hand_str = ""
+        total = 0
         for card in hand:
             if card[0].name == Ranks.ONE.name:
                 hand_str += "ACE, "
+                total += 1
             else:
                 hand_str += card[0].name + ", "
-        return hand_str[:-2]
+                total += card[0].value
+
+        hand_str = hand_str[:-2]
+        hand_str += ": " + str(math.floor(total))
+        return hand_str
 
     def enter_user_turn(self, cmd: str) -> bool:
         """ Enter's a user's input to the blackjack game.
@@ -248,14 +256,13 @@ class Blackjack(AbstractGame):
             cmd: either "stand" or "hit".
 
         Returns:
-            True if player stands (end of game). False otherwise.
+            True if player cannot draw or stands (end round). False otherwise.
 
         """
         super().enter_user_turn(cmd)
 
         if cmd == "hit":
-            self.player_draw()
-            return False
+            return not self.player_draw()
         elif cmd == "stand":
             self.stand()
             return True
