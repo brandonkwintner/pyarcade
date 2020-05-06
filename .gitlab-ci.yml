@@ -1,0 +1,35 @@
+image: "python:3.6"
+
+before_script:
+  - pip install pytest
+
+test_blackjack:
+  script:
+    - pip install -r frontend/requirements.txt
+    - pytest frontend/tests/test_blackjack.py
+
+test_connect4:
+  script:
+    - pip install -r frontend/requirements.txt
+    - pytest frontend/tests/test_connect4.py
+
+test_gofish:
+  script:
+    - pip install -r frontend/requirements.txt
+    - pytest frontend/tests/test_gofish.py
+
+test_horseman:
+  script:
+    - pip install -r frontend/requirements.txt
+    - pytest frontend/tests/test_horseman.py
+
+test_war:
+  script:
+    - pip install -r frontend/requirements.txt
+    - pytest frontend/tests/test_war.py
+
+test_input_system:
+  script:
+    - pip install -r frontend/requirements.txt
+    - pytest frontend/tests/test_input_system.py
+
