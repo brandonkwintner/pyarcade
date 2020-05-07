@@ -3,28 +3,23 @@ from pyarcade.game_option import Game
 from game_ui.menu_options import Options
 from game_ui.display_ui import Display
 from pyarcade.connection import Connections
-from typing import List
 
 
 class GoFishUI:
     """
     UI for Go Fish.
     """
-    def __init__(self, window, scroll_idx, user):
+    def __init__(self, window, user):
         self.window = window
-        # self.scroll_idx = scroll_idx
         self.scroll_idx = 1
         self.display = Display(self.window, self.scroll_idx, user)
         self.user = user
 
-    def go_fish_menu(self) -> List[str]:
+    def go_fish_menu(self):
         """
         Go Fish menu screen.
-        Returns:
-            List containing information about game played.
         """
         menu = Options.GAME_STARTUP.value
-        result = []
 
         while True:
             self.display.display_options(menu, ["Go Fish Menu"])
@@ -32,7 +27,7 @@ class GoFishUI:
                                                           ["Go Fish Menu"])
 
             if menu[self.scroll_idx] == "New Game":
-                result = self.play_go_fish()
+                self.play_go_fish()
 
             elif menu[self.scroll_idx] == "Leaderboard":
                 self.go_fish_leaderboard()
@@ -45,13 +40,9 @@ class GoFishUI:
 
             self.display.scroll_idx = 1
 
-        return result
-
-    def play_go_fish(self) -> List[str]:
+    def play_go_fish(self):
         """
         Go Fish game screen.
-        Returns:
-            List containing information about the game played.
         """
         input_system = InputSystem(Game.GO_FISH)
         wins = Connections.get_num_wins("go fish",
@@ -117,10 +108,9 @@ class GoFishUI:
                 played = 0
 
             elif self.scroll_idx == len(option_list) - 1:
-                self.scroll_idx = 1
                 break
 
-        return option_list
+            self.display.scroll_idx = 1
 
     def go_fish_instruction(self):
         """Instructions to play Go Fish

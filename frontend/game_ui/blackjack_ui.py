@@ -3,7 +3,6 @@ from pyarcade.game_option import Game
 from game_ui.menu_options import Options
 from game_ui.display_ui import Display
 from pyarcade.connection import Connections
-from typing import List
 
 
 class BlackjackUI:
@@ -11,20 +10,17 @@ class BlackjackUI:
     UI for Black Jack.
     """
 
-    def __init__(self, window, scroll_idx, user):
+    def __init__(self, window, user):
         self.window = window
         self.scroll_idx = 1
         self.user = user
         self.display = Display(self.window, self.scroll_idx, user)
 
-    def blackjack_menu(self) -> List[str]:
+    def blackjack_menu(self):
         """
         Black Jack menu screen.
-        Returns:
-            List containing result of Black Jack game.
         """
         menu = Options.GAME_STARTUP.value
-        result = []
 
         while True:
             self.display.display_options(menu, ["Blackjack Menu"])
@@ -32,7 +28,7 @@ class BlackjackUI:
                                                           ["Blackjack Menu"])
 
             if menu[self.scroll_idx] == "New Game":
-                result = self.play_blackjack()
+                self.play_blackjack()
 
             elif menu[self.scroll_idx] == "Leaderboard":
                 self.blackjack_leaderboard()
@@ -45,13 +41,9 @@ class BlackjackUI:
 
             self.display.scroll_idx = 1
 
-        return result
-
-    def play_blackjack(self) -> List[str]:
+    def play_blackjack(self):
         """
         Black Jack game screen.
-        Returns:
-            List containing information about the game played.
         """
         input_system = InputSystem(Game.BLACKJACK)
 
@@ -117,12 +109,9 @@ class BlackjackUI:
                                                 self.user["token"])
 
             elif self.scroll_idx == len(option_list) - 1:
-                self.scroll_idx = 1
                 break
 
             self.display.scroll_idx = 1
-
-        return option_list
 
     def blackjack_instruction(self):
         """Instructions to play Blackjack

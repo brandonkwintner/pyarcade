@@ -15,18 +15,16 @@ class Display:
         self.x_start_position = self.width // 2 - self.width // 5
         self.scroll_idx = scroll_idx
 
-    def display_options(self, opts: List[str], info: List[str]) -> List[str]:
+    def display_options(self, opts: List[str], info: List[str]):
         """
         Displays options list for screen.
         Args:
             opts: List of options.
             info: Game information.
 
-        Returns:
-            List of options.
         """
         self.window.clear()
-        self.window.addstr(0, self.x_start_position, self.user["username"])
+        self.window.addstr(1, self.x_start_position, self.user["username"])
         line_num = self.display_game_info(info) + 2
 
         for idx, text in enumerate(opts):
@@ -41,18 +39,16 @@ class Display:
 
         self.window.refresh()
 
-        return opts
-
-    def display_game_info(self, info: List[str]) -> int:
+    def display_game_info(self, info: List[str])  -> int:
         """
         Display game information.
         Args:
             info: Game information
-
         Returns:
             Line number.
+
         """
-        line_num = 3
+        line_num = 4
         name = info[0]
 
         self.window.addstr(line_num - 1, self.x_start_position, name)
@@ -159,7 +155,7 @@ class Display:
             line_num += 3
             self.window.addstr(line_num, self.x_start_position, info[4])
 
-        elif name == "Pyarcade":
+        elif name == "Pyarcade" or name == "Friend List":
             line_num += 2
             self.window.addstr(line_num, self.x_start_position, info[1])
 
@@ -352,6 +348,49 @@ class Display:
 
         self.window.getch()
         self.window.refresh()
+
+    def friend_username(self) -> str:
+        """Field to enter the desired friend's username
+
+        Returns:
+            Username of the desired friend
+        """
+        self.window.clear()
+        self.window.addstr(4, self.x_start_position, "Enter the username of "
+                                                     "the friend")
+        rectangle(self.window, 10, self.x_start_position, 12,
+                  self.x_start_position + 27)
+
+        message = "Press the 'ENTER KEY' to confirm input"
+        self.window.addstr(21, self.x_start_position, message)
+
+        self.window.refresh()
+
+        user_win = curses.newwin(1, 26, 11, self.x_start_position + 1)
+        username = textpad.Textbox(user_win, insert_mode=True).edit()
+
+        return username
+
+    def display_friend_list(self, friend_list: []):
+        """ Display all friend in friend list
+
+        Args:
+            friend_list (): List of all user's friends
+
+        """
+        self.window.clear()
+        self.window.addstr(2, self.x_start_position, "Friend List")
+
+        line = 4
+
+        for friend in friend_list:
+            self.window.addstr(line, self.x_start_position, friend)
+            line += 1
+
+        self.window.getch()
+        self.window.refresh()
+
+
 
 
 

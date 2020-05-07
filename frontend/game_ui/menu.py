@@ -7,7 +7,6 @@ from game_ui.war_ui import WarUI
 from game_ui.go_fish_ui import GoFishUI
 from game_ui.horseman_ui import HorsemanUI
 from game_ui.display_ui import Display
-from typing import List
 import curses
 
 
@@ -42,13 +41,10 @@ class Menu:
         curses.echo()
         curses.endwin()
 
-    def main_menu(self) -> List[str]:
+    def main_menu(self):
         """
         UI for main menu.
-        Returns:
-            Result of selected option.
         """
-        result = []
         display = ["Pyarcade", ""]
 
         while True:
@@ -62,7 +58,7 @@ class Menu:
                                                           display)
 
             if menu_option[self.scroll_idx] == "Play Games":
-                result = self.game_menu()
+                self.game_menu()
 
             elif menu_option[self.scroll_idx] == "Signup":
                 username, password = self.display.account_login_signup(True)
@@ -83,7 +79,7 @@ class Menu:
                 status = Connections.login_account(username.strip(),
                                                    password.strip())
                 if status["code"] == 200:
-                    self.user["username"] = "Hello " + username
+                    self.user["username"] = "Hello, " + username
                     self.user["token"] = status["access"]
                     self.display.user = self.user
                     self.is_login = True
@@ -96,60 +92,81 @@ class Menu:
                 self.user = {"username": "", "token": ""}
                 self.display.user = {"username": "", "token": ""}
                 self.is_login = False
-                menu_option = Options.MAIN_MENU_OPTIONS.value
 
             elif menu_option[self.scroll_idx] == "About":
                 self.display.about_screen()
 
+            elif menu_option[self.scroll_idx] == "Friends":
+                self.friend_menu()
+
             elif self.scroll_idx == len(menu_option) - 1:
-                # result = menu_option
                 self.close_curse()
                 break
-            self.display.scroll_idx = 1
-        return result
 
-    def game_menu(self) -> List[str]:
+            self.display.scroll_idx = 1
+
+    def game_menu(self):
         """
         UI for game menu.
-        Returns:
-            Result of selected option.
         """
         games = Options.GAME_OPTIONS.value
-        result = []
 
         while True:
             self.display.display_options(games, ["Game List"])
             self.scroll_idx = self.display.scroll_options(games, ["Game List"])
 
             if games[self.scroll_idx] == "Play Mastermind":
-                result = MastermindUI(self.window, self.scroll_idx, self.user) \
-                    .mastermind_menu()
+                MastermindUI(self.window, self.user).mastermind_menu()
 
             elif games[self.scroll_idx] == "Play Connect Four":
-                result = Connect4UI(self.window, self.scroll_idx, self.user) \
-                    .connect_four_menu()
+                Connect4UI(self.window, self.user).connect_four_menu()
 
             elif games[self.scroll_idx] == "Play Blackjack":
-                result = BlackjackUI(self.window, self.scroll_idx, self.user) \
-                    .blackjack_menu()
+                BlackjackUI(self.window, self.user).blackjack_menu()
 
             elif games[self.scroll_idx] == "Play War":
-                result = WarUI(self.window, self.scroll_idx,
-                               self.user).war_menu()
+                WarUI(self.window, self.user).war_menu()
 
             elif games[self.scroll_idx] == "Play Go Fish":
-                result = GoFishUI(self.window, self.scroll_idx,
-                                  self.user).go_fish_menu()
+                GoFishUI(self.window, self.user).go_fish_menu()
 
             elif games[self.scroll_idx] == "Play Horseman":
-                result = HorsemanUI(self.window, self.scroll_idx,
-                                    self.user).horseman_menu()
+                HorsemanUI(self.window, self.user).horseman_menu()
 
             elif self.scroll_idx == len(games) - 1:
-                result = games
                 break
 
-        return result
+            self.display.scroll_idx = 1
+
+    def friend_menu(self):
+        """UI for friend menu.
+        """
+
+        menu_option = Options.FRIEND_OPTION.value
+        info = ["Friend List", ""]
+
+        while True:
+            self.display.display_options(menu_option, info)
+            self.scroll_idx = self.display.scroll_options(menu_option,
+                                                          info)
+
+            if menu_option[self.scroll_idx] == "Friend List":
+                friends = Connections.get_friends(self.user["token"])
+                self.display.display_friend_list(friends["friends"])
+
+            elif menu_option[self.scroll_idx] == "Add Friend":
+                username = self.display.friend_username().strip()
+                status = Connections.add_friend(username, self.user["token"])
+
+                if status["code"] != 200:
+                    info[1] = status["message"]
+                else:
+                    info[1] = "Friend Added"
+
+            elif self.scroll_idx == len(menu_option) - 1:
+                break
+
+            self.display.scroll_idx = 1
 
     @staticmethod
     def run():
@@ -158,5 +175,5 @@ class Menu:
 
 
 if __name__ == "__main__":
-    menu = Menu()
-    menu.main_menu()
+    option = Menu()
+    option.main_menu()
