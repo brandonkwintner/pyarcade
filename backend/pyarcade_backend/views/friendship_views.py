@@ -103,10 +103,6 @@ class FriendshipView(APIView):
                 "message": "Invalid request. You cannot friend yourself",
             }, status=400)
 
-        # sort the usernames, swap if user2's username comes before user1
-        if user2.username < user1.username:
-            user2, user1 = user1, user2
-
         try:
             FriendshipModel.objects.get(user_one=user1.username, user_two=user2.username)
             return JsonResponse({
