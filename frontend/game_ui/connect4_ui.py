@@ -3,28 +3,23 @@ from pyarcade.game_option import Game
 from game_ui.menu_options import Options
 from game_ui.display_ui import Display
 from pyarcade.connection import Connections
-from typing import List
 
 
 class Connect4UI:
     """
     UI for Connect 4.
     """
-    def __init__(self, window, scroll_idx, user):
+    def __init__(self, window, user):
         self.window = window
-        # self.scroll_idx = scroll_idx
         self.scroll_idx = 1
         self.display = Display(self.window, self.scroll_idx, user)
         self.user = user
 
-    def connect_four_menu(self) -> str:
+    def connect_four_menu(self):
         """
         Connect 4 menu screen.
-        Returns:
-            String containing result of game played.
         """
         menu = Options.GAME_STARTUP.value
-        result = []
 
         while True:
             self.display.display_options(menu, ["Connect 4 Menu"])
@@ -32,7 +27,7 @@ class Connect4UI:
                                                           ["Connect 4 Menu"])
 
             if menu[self.scroll_idx] == "New Game":
-                result = self.play_connect_four()
+                self.play_connect_four()
 
             elif menu[self.scroll_idx] == "Leaderboard":
                 self.connect4_leaderboard()
@@ -45,13 +40,9 @@ class Connect4UI:
 
             self.display.scroll_idx = 1
 
-        return result
-
-    def play_connect_four(self) -> List[str]:
+    def play_connect_four(self):
         """
         Connect 4 game screen.
-        Returns:
-            List containing information about the game played.
         """
         option_list = Options.CONNECT_FOUR_OPTIONS.value
         input_system = InputSystem(Game.CONNECT4)
@@ -104,10 +95,9 @@ class Connect4UI:
                 played = 0
 
             elif self.scroll_idx == len(option_list) - 1:
-                self.scroll_idx = 1
                 break
 
-        return option_list
+            self.display.scroll_idx = 1
 
     def connect4_instruction(self):
         """Instructions to play Connect 4

@@ -4,28 +4,23 @@ from game_ui.menu_options import Options
 from game_ui.display_ui import Display
 from pyarcade.difficulties import Difficulty
 from pyarcade.connection import Connections
-from typing import List
 
 
 class HorsemanUI:
     """
     UI for Horseman.
     """
-    def __init__(self, window, scroll_idx, user):
+    def __init__(self, window, user):
         self.window = window
-        # self.scroll_idx = scroll_idx
         self.scroll_idx = 1
         self.display = Display(self.window, self.scroll_idx, user)
         self.user = user
 
-    def horseman_menu(self) -> List[str]:
+    def horseman_menu(self):
         """
         Horseman menu screen.
-        Returns:
-            List containing information about the game played.
         """
         menu = Options.GAME_STARTUP_DIFFICULT.value
-        result = []
 
         while True:
             self.display.display_options(menu, ["Horseman Menu"])
@@ -33,13 +28,13 @@ class HorsemanUI:
                                                           ["Horseman Menu"])
 
             if menu[self.scroll_idx] == "Normal Mode":
-                result = self.play_horseman()
+                self.play_horseman()
 
             elif menu[self.scroll_idx] == "Easy Mode":
-                result = self.play_horseman(Difficulty.EASY)
+                self.play_horseman(Difficulty.EASY)
 
             elif menu[self.scroll_idx] == "Hard Mode":
-                result = self.play_horseman(Difficulty.HARD)
+                self.play_horseman(Difficulty.HARD)
 
             elif menu[self.scroll_idx] == "Leaderboard":
                 self.horseman_leaderboard()
@@ -52,16 +47,12 @@ class HorsemanUI:
 
             self.display.scroll_idx = 1
 
-        return result
-
-    def play_horseman(self, mode=Difficulty.NORMAL) -> List[str]:
+    def play_horseman(self, mode=Difficulty.NORMAL):
         """
         Horseman game screen.
         Args:
             mode: Game difficulty.
 
-        Returns:
-            List containing information about the game played.
         """
         input_system = InputSystem(Game.HORSEMAN, mode)
         wins = Connections.get_num_wins("horseman",
@@ -90,7 +81,7 @@ class HorsemanUI:
                     status = input_system.get_last_guess()
 
                     horse = "HORSE!"
-                    game_info[3] = horse[:6 - status[1]]
+                    game_info[3] = horse[:6 - int(status[1])]
                     game_info[5] += guess
 
                     if result[0]:
@@ -98,12 +89,12 @@ class HorsemanUI:
                         played += 1
 
                         if status[1] == 0:
-                            game_info[4] = "You Lose! The word was "\
+                            option_list[0] = "You Lose! The word was "\
                                            + status[2]
                             Connections.update_num_wins("horseman", False,
                                                         self.user["token"])
                         else:
-                            game_info[4] = "You Win!"
+                            option_list[0] = "You Win!"
                             Connections.update_num_wins("horseman", True,
                                                         self.user["token"])
                             wins += 1
@@ -125,10 +116,9 @@ class HorsemanUI:
                 played = 0
 
             elif self.scroll_idx == len(option_list) - 1:
-                self.scroll_idx = 1
                 break
 
-        return option_list
+            self.display.scroll_idx = 1
 
     def horseman_instruction(self):
         """Instructions to play Horseman

@@ -1,5 +1,7 @@
 import random
 from enum import Enum
+from typing import Tuple
+
 from pyarcade.cards import Suits
 from pyarcade.abstract_game import AbstractGame
 
@@ -130,7 +132,7 @@ class War(AbstractGame):
             self.update_entire_history()
             return False
 
-    def get_last_turn(self) -> (str, str, int, int, bool, int):
+    def get_last_turn(self) -> Tuple[str, str, int, int, bool, int]:
         """
         Returns:
             A Tuple containing:

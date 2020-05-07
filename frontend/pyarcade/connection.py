@@ -4,7 +4,6 @@ from enum import Enum
 
 class ConnectRequest(Enum):
     _server_address = "http://pyarcade_proxy/api"
-    _test = "http://127.0.0.1:8000/api"
     SIGNUP = _server_address + "/users/signup/"
     LOGIN = _server_address + "/users/login/"
     GAMES_WIN = _server_address + "/game_wins/"
@@ -24,7 +23,7 @@ class Connections:
             password: password for account.
 
         Returns:
-            Status code and either access / message.
+            Status code and either token or a message.
         """
         post_body = {
             "username": username,
@@ -55,7 +54,7 @@ class Connections:
             password: password for account.
 
         Returns:
-            Status code and either access / message.
+            Status code and either token or a message.
         """
         post_body = {
             "username": username,
@@ -78,12 +77,14 @@ class Connections:
         }
 
     @staticmethod
-    def get_num_wins(game: str, token: str):
+    def get_num_wins(game: str, token: str) -> dict:
         """ Get the number of wins for the desired game.
 
         Args:
             game (): The desired game
             token (): The user's token for validation
+        Returns:
+            Status code and either number of wins or a message.
 
         """
         header = {
@@ -111,14 +112,15 @@ class Connections:
         }
 
     @staticmethod
-    def update_num_wins(game: str, did_win: bool, token: str):
+    def update_num_wins(game: str, did_win: bool, token: str) -> dict:
         """ Get the number of wins for the desired game.
 
         Args:
             game (): The desired game
             did_win (): Did player win the round
             token (): The user's token for validation
-
+        Returns:
+            Status code and a message in failed.
         """
         header = {
             "authorization": token
@@ -137,7 +139,6 @@ class Connections:
         if status_code == 200:
             return {
                 "code": status_code,
-                "access": response_body["access"]
             }
 
         return {
@@ -146,13 +147,14 @@ class Connections:
         }
 
     @staticmethod
-    def get_num_played(game: str, token: str):
+    def get_num_played(game: str, token: str) -> dict:
         """ Get the number of games played for the desired game.
 
         Args:
             game (): The desired game
             token (): The user's token for validation
-
+        Returns:
+            Status code and either number of games played or a message.
         """
         header = {
             "authorization": token
@@ -179,13 +181,14 @@ class Connections:
         }
 
     @staticmethod
-    def reset_game_stat(game: str, token: str):
+    def reset_game_stat(game: str, token: str) -> dict:
         """ Resets the number of wins and games played
 
         Args:
             game (): The desired game
             token (): The user's token for validation
-
+        Returns:
+            Status code and a message if failed.
         """
         header = {
             "authorization": token
@@ -203,7 +206,6 @@ class Connections:
         if status_code == 200:
             return {
                 "code": status_code,
-                "access": response_body["access"]
             }
 
         return {
@@ -212,14 +214,15 @@ class Connections:
         }
 
     @staticmethod
-    def get_leaderboard(game: str, token: str):
+    def get_leaderboard(game: str, token: str) -> dict:
         """ Get the leader board for the desired game
 
-                Args:
-                    game (): The desired game
-                    token (): The user's token for validation
-
-                """
+        Args:
+            game (): The desired game
+            token (): The user's token for validation
+        Returns:
+            Status code and either leaderboard or a message.
+        """
         header = {
             "authorization": token
         }
@@ -245,12 +248,13 @@ class Connections:
         }
 
     @staticmethod
-    def get_friends(token: str):
+    def get_friends(token: str) -> dict:
         """ Get the friend list of the user
 
-            Args:
-                token (): The user's token for validation
-
+        Args:
+            token (): The user's token for validation
+        Returns:
+            Status code and either friend list or a message.
         """
         header = {
             "authorization": token
@@ -272,13 +276,14 @@ class Connections:
         }
 
     @staticmethod
-    def add_friend(username: str, token: str):
+    def add_friend(username: str, token: str) -> dict:
         """ Sends a friend request to user/ Accepts the friend invite
 
         Args:
             username (): The username of the friend
             token (): The user's token for validation
-
+        Returns:
+            Status code and a message if failed.
         """
         header = {
             "authorization": token
@@ -288,7 +293,7 @@ class Connections:
             "user2": username
         }
 
-        response = requests.post(ConnectRequest.RESET_STAT.value,
+        response = requests.post(ConnectRequest.FRIEND.value,
                                  headers=header, data=post_body)
         status_code = response.status_code
         response_body = response.json()
@@ -296,7 +301,6 @@ class Connections:
         if status_code == 200:
             return {
                 "code": status_code,
-                "friends": response_body["friends"]
             }
 
         return {

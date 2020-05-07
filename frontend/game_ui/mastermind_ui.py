@@ -4,7 +4,6 @@ from game_ui.menu_options import Options
 from game_ui.display_ui import Display
 from pyarcade.difficulties import Difficulty
 from pyarcade.connection import Connections
-from typing import List
 
 
 class MastermindUI:
@@ -12,20 +11,17 @@ class MastermindUI:
     UI for Mastermind.
     """
 
-    def __init__(self, window, scroll_idx, user):
+    def __init__(self, window, user):
         self.window = window
-        self.scroll_idx = scroll_idx
+        self.scroll_idx = 1
         self.user = user
         self.display = Display(self.window, self.scroll_idx, user)
 
-    def mastermind_menu(self) -> List[str]:
+    def mastermind_menu(self):
         """
         Mastermind menu screen.
-        Returns:
-            List containing game information.
         """
         menu = Options.GAME_STARTUP_DIFFICULT.value
-        result = []
 
         while True:
             self.display.display_options(menu, ["Mastermind Menu"])
@@ -33,13 +29,13 @@ class MastermindUI:
                                                           ["Mastermind Menu"])
 
             if menu[self.scroll_idx] == "Normal Mode":
-                result = self.play_mastermind(4)
+                self.play_mastermind(4)
 
             elif menu[self.scroll_idx] == "Easy Mode":
-                result = self.play_mastermind(2, Difficulty.EASY)
+                self.play_mastermind(2, Difficulty.EASY)
 
             elif menu[self.scroll_idx] == "Hard Mode":
-                result = self.play_mastermind(6, Difficulty.HARD)
+                self.play_mastermind(6, Difficulty.HARD)
 
             elif menu[self.scroll_idx] == "Leaderboard":
                 self.mastermind_leaderboard()
@@ -52,17 +48,13 @@ class MastermindUI:
 
             self.display.scroll_idx = 1
 
-        return result
-
-    def play_mastermind(self, width, mode=Difficulty.NORMAL) -> List[str]:
+    def play_mastermind(self, width, mode=Difficulty.NORMAL):
         """
         Mastermind game screen.
         Args:
             width: Length of hidden sequence.
             mode: Game difficulty.
 
-        Returns:
-            List containing information about game played.
         """
         input_system = InputSystem(Game.MASTERMIND, mode)
         option_list = Options.MASTERMIND_OPTIONS.value
@@ -120,10 +112,9 @@ class MastermindUI:
                 game_num = 0
 
             elif self.scroll_idx == len(option_list) - 1:
-                self.scroll_idx = 1
                 break
 
-        return option_list
+            self.display.scroll_idx = 1
 
     def mastermind_instruction(self):
         """Instructions to play Mastermind
