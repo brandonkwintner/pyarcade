@@ -1,5 +1,6 @@
 from curses.textpad import rectangle
 from typing import List
+from pyarcade.game_option import Game
 import curses
 import curses.textpad as textpad
 
@@ -390,8 +391,62 @@ class Display:
         self.window.getch()
         self.window.refresh()
 
+    def display_profile_page(self, wins_list: dict, total_list: dict,
+                             message: str):
+        """
+            Display the user's profile
+        Args:
+            wins_list (): List of wins for all games
+            total_list (): List of games played for all games
+            message (): User status message
 
+        """
+        self.window.clear()
 
+        self.window.addstr(2, self.x_start_position, self.user["username"])
 
+        self.window.addstr(4, self.x_start_position + 25, "Games Played")
+        self.window.addstr(4, self.x_start_position + 45, "Games Won")
 
+        line = 5
+        self.window.addstr(line, self.x_start_position, "Total")
+        self.window.addstr(line, self.x_start_position + 25,
+                           str(total_list["total"]))
+        self.window.addstr(line, self.x_start_position + 45,
+                           str(wins_list["total"]))
+        line += 1
+        games = [g for g in Game]
 
+        for game in games:
+            self.window.addstr(line, self.x_start_position, game.value)
+            self.window.addstr(line, self.x_start_position + 25,
+                               str(total_list[game]))
+            self.window.addstr(line, self.x_start_position + 45,
+                               str(wins_list[game]))
+            line += 1
+
+        self.window.addstr(line + 3, self.x_start_position, message)
+
+        self.window.getch()
+        self.window.refresh()
+
+    def user_message(self) -> str:
+        """Field to enter the updated message
+
+        Returns:
+            The updated message
+        """
+        self.window.clear()
+        self.window.addstr(4, self.x_start_position, "Enter status message")
+        rectangle(self.window, 9, self.x_start_position, 11,
+                  self.x_start_position + 31)
+
+        message = "Press the 'ENTER KEY' to confirm input"
+        self.window.addstr(21, self.x_start_position, message)
+
+        self.window.refresh()
+
+        message_win = curses.newwin(1, 30, 10, self.x_start_position + 1)
+        message = textpad.Textbox(message_win, insert_mode=True).edit()
+
+        return message

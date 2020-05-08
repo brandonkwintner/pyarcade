@@ -35,7 +35,8 @@ class Horseman(AbstractGame):
             Hard - 8 letter words
 
             Args:
-                difficulty: (Difficulty) The difficulty of the new game to be played
+                difficulty: (Difficulty) The difficulty of the new game to be
+                played
 
         """
         AbstractGame.__init__(self)
@@ -147,7 +148,8 @@ class Horseman(AbstractGame):
         """
         super().get_last_turn()
 
-        return ''.join(self.current_word), self.num_guesses_left, ''.join(self.word)
+        return ''.join(self.current_word), self.num_guesses_left, ''.join(
+            self.word)
 
     @staticmethod
     def get_regex_pattern() -> str:

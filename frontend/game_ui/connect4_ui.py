@@ -106,7 +106,7 @@ class Connect4UI:
         goal = "Try to get 4 X in a row"
         rules = "First to get 4 in a row wins\n" \
                 "It can be connect horizontally XXXX, vertically X," \
-                " or diagonally x\n                                         " \
+                " or diagonally X\n                                         " \
                 "       X               X\n                                 " \
                 "               X              X\n                          " \
                 "                      X             X"

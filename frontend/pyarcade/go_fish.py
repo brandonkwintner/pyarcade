@@ -63,7 +63,8 @@ class GoFish(AbstractGame):
             guess: User's card they guessed
 
         Returns:
-            result: (bool) True if player has 4 of a kind (end of game), false otherwise.
+            result: (bool) True if player has 4 of a kind (end of game),
+            false otherwise.
 
         """
         guessed_rank = GoFish.parse_user_guess(guess)
@@ -93,15 +94,19 @@ class GoFish(AbstractGame):
 
         if player_one_wins:
             self.has_won = True
-            self.current_history.append(("Player Wins", self._hand_to_str(self.player_one_hand)))
-            self.entire_history.append(("Player Wins", self._hand_to_str(self.player_one_hand)))
+            self.current_history.append(("Player Wins", self._hand_to_str(
+                self.player_one_hand)))
+            self.entire_history.append(("Player Wins", self._hand_to_str(
+                self.player_one_hand)))
             self.winner = 1
             return True
 
         elif computer_wins:
             self.has_won = True
-            self.current_history.append(("Computer Wins", self._hand_to_str(self.computer_hand)))
-            self.entire_history.append(("Computer Wins", self._hand_to_str(self.player_one_hand)))
+            self.current_history.append(("Computer Wins", self._hand_to_str(
+                self.computer_hand)))
+            self.entire_history.append(("Computer Wins", self._hand_to_str(
+                self.player_one_hand)))
             self.winner = 2
             return True
 
@@ -232,7 +237,8 @@ class GoFish(AbstractGame):
         """ Returns the current state of the game.
 
         Returns:
-            Tuple containing the player's cards, is they guessed a correct card or not, and if there is a winner.
+            Tuple containing the player's cards, is they guessed a correct
+            card or not, and if there is a winner.
         """
         super().get_last_turn()
 

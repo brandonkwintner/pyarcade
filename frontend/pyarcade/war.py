@@ -245,8 +245,8 @@ class War(AbstractGame):
             card_two: Player two card.
 
         Returns:
-            Positive number if player one wins turn, negative if player two wins
-            turn, zero if there is a war.
+            Positive number if player one wins turn, negative if player two
+            wins turn, zero if there is a war.
         """
         if card_one[0].value > card_two[0].value:
             return 1

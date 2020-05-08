@@ -11,6 +11,7 @@ class ConnectRequest(Enum):
     RESET_STAT = _server_address + "/stats/reset/"
     LEADERBOARD = _server_address + "/stats/board/"
     FRIEND = _server_address + "/friends/"
+    STATUS = _server_address + "/status/"
 
 
 class Connections:
@@ -91,9 +92,12 @@ class Connections:
             "authorization": token
         }
 
-        param = {
-            "game": game,
-        }
+        if game == "all":
+            param = {}
+        else:
+            param = {
+                "game": game,
+            }
 
         response = requests.get(ConnectRequest.GAMES_WIN.value,
                                 headers=header, params=param)
@@ -160,9 +164,12 @@ class Connections:
             "authorization": token
         }
 
-        param = {
-            "game": game,
-        }
+        if game == "all":
+            param = {}
+        else:
+            param = {
+                "game": game,
+            }
 
         response = requests.get(ConnectRequest.GAMES_PLAYED.value,
                                 headers=header, params=param)
@@ -307,3 +314,67 @@ class Connections:
             "code": status_code,
             "message": response_body["message"]
         }
+
+    @staticmethod
+    def get_status(token: str) -> dict:
+        """Get the profile status message
+
+        Args:
+            token (): The user's token for validation
+        Returns:
+            Status code and status message or failed message.
+        """
+        header = {
+            "authorization": token
+        }
+
+        response = requests.get(ConnectRequest.STATUS.value, headers=header)
+        status_code = response.status_code
+        response_body = response.json()
+
+        if status_code == 200:
+            return {
+                "code": status_code,
+                "status": response_body["status"]
+            }
+
+        return {
+            "code": status_code,
+            "message": response_body["message"]
+        }
+
+    @staticmethod
+    def update_status(status: str, token: str) -> dict:
+        """Update user's status message
+
+        Args:
+            status (): New user status message
+            token (): The user's token for validation
+        Returns:
+            Status code and status message or failed message.
+        """
+        header = {
+            "authorization": token
+        }
+
+        post_body = {
+            "status": status
+        }
+
+        response = requests.post(ConnectRequest.STATUS.value,
+                                 headers=header, data=post_body)
+        status_code = response.status_code
+        response_body = response.json()
+
+        if status_code == 200:
+            return {
+                "code": status_code,
+                "status": response_body["status"]
+            }
+
+        return {
+            "code": status_code,
+            "message": response_body["message"]
+        }
+
+
