@@ -7,6 +7,7 @@ from game_ui.war_ui import WarUI
 from game_ui.go_fish_ui import GoFishUI
 from game_ui.horseman_ui import HorsemanUI
 from game_ui.display_ui import Display
+from pyarcade.game_option import Game
 import curses
 
 
@@ -96,6 +97,9 @@ class Menu:
             elif menu_option[self.scroll_idx] == "About":
                 self.display.about_screen()
 
+            elif menu_option[self.scroll_idx] == "Profile":
+                self.profile_menu()
+
             elif menu_option[self.scroll_idx] == "Friends":
                 self.friend_menu()
 
@@ -110,6 +114,7 @@ class Menu:
         UI for game menu.
         """
         games = Options.GAME_OPTIONS.value
+        self.display.scroll_idx = 1
 
         while True:
             self.display.display_options(games, ["Game List"])
@@ -136,19 +141,17 @@ class Menu:
             elif self.scroll_idx == len(games) - 1:
                 break
 
-            self.display.scroll_idx = 1
-
     def friend_menu(self):
         """UI for friend menu.
         """
 
         menu_option = Options.FRIEND_OPTION.value
         info = ["Friend List", ""]
+        self.display.scroll_idx = 1
 
         while True:
             self.display.display_options(menu_option, info)
-            self.scroll_idx = self.display.scroll_options(menu_option,
-                                                          info)
+            self.scroll_idx = self.display.scroll_options(menu_option, info)
 
             if menu_option[self.scroll_idx] == "Friend List":
                 friends = Connections.get_friends(self.user["token"])
@@ -166,7 +169,52 @@ class Menu:
             elif self.scroll_idx == len(menu_option) - 1:
                 break
 
-            self.display.scroll_idx = 1
+    def profile_menu(self):
+        """UI for profile menu
+        """
+
+        menu_option = Options.PROFILE_OPTION.value
+        info = ["Profile", ""]
+        self.display.scroll_idx = 1
+
+        while True:
+            self.display.display_options(menu_option, info)
+            self.scroll_idx = self.display.scroll_options(menu_option, info)
+
+            if menu_option[self.scroll_idx] == "User Profile":
+                self.user_profile()
+
+            elif menu_option[self.scroll_idx] == "Update Status":
+                message = self.display.user_message().strip()
+                status = Connections.update_status(message, self.user["token"])
+
+                if status["code"] != 200:
+                    info[1] = status["message"]
+                else:
+                    info[1] = ""
+
+            elif self.scroll_idx == len(menu_option) - 1:
+                break
+
+    def user_profile(self):
+        """UI for user profile page
+        """
+        token = self.user["token"]
+
+        wins_list = {"total": Connections.get_num_wins("all", token)["wins"]}
+        total_list = {"total": Connections.get_num_played("all", token)
+                      ["played"]}
+
+        games = [g for g in Game]
+
+        for game in games:
+            wins_list[game] = Connections.get_num_wins(game, token)["wins"]
+            total_list[game] = Connections.get_num_played(game, token)[
+                "played"]
+
+        message = Connections.get_status(token)["status"]
+
+        self.display.display_profile_page(wins_list, total_list, message)
 
     @staticmethod
     def run():
