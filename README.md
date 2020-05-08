@@ -2,6 +2,9 @@
 By default, the frontend communicates with the ec2 server.
 If this needs to be changed, comment/uncomment the corresponding lines in ```.../group_01/frontend/pyarcade/connection.py``` on line numbers 6 and 7
 
+Some changes to code on server:
+https://cmsc435.garrettvanhoy.com/group_01_group/group_01_server
+
 ## Build Instructions
 1. ```$ .../group_01/```
 1. ```docker-compose build```
@@ -78,7 +81,7 @@ passw: password
 ## Sprint 3
 - Andy - 25%
     - Leaderboard UI
-    - Account/Friends list UI
+    - Profile/Friends list UI
     - Instructions UI
 
 - Brandon - 25%
