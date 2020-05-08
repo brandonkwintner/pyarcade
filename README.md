@@ -1,6 +1,6 @@
 # Running the Program
 By default, the frontend communicates with the ec2 server.
-If this needs to be changed, comment/uncomment the corresponding lines in ```.../group_01/frontend/pyarcade/connection.py``` on line numbers 6 and 7
+If this needs to be changed, comment/uncomment the corresponding lines in ```.../group_01/frontend/pyarcade/connection.py``` on line numbers 6 and 7 (and make sure to re-build).
 
 Some changes to code on server:
 https://cmsc435.garrettvanhoy.com/group_01_group/group_01_server
@@ -18,13 +18,13 @@ https://cmsc435.garrettvanhoy.com/group_01_group/group_01_server
 
 # Users
 login: alice
-passw: password
-
+pass: password
+\
 login: bob
-passw: password
-
+pass: password
+\
 login: eve
-passw: password
+pass: password
 
 
 ## Run Tests
