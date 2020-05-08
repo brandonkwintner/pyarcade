@@ -12,16 +12,6 @@ from ..utilities.tokens import Token
 # Create your views here.
 
 class SignUpView(APIView):
-
-    def get(self, request):
-        """
-        Returns:
-            JSON response.
-        """
-        return JsonResponse({
-            "message": "success",
-        })
-
     def post(self, request):
         """
         Signs up a new user.

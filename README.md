@@ -21,6 +21,17 @@
 1. ```$ .../group_01/backend/```
 2. ```python manage.py test pyarcade_backend```
 
+# Users
+login: alice
+passw: password
+
+login: bob
+passw: password
+
+login: eve
+passw: password
+
+
 # Work
 - Andy - 25%
     - War and Go Fish UI
@@ -39,3 +50,5 @@
 - Ryan - 25%
     - Refactored and integrated Go Fish
     - Refactored Go Fish tests
+
+

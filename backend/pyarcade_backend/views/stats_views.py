@@ -12,6 +12,7 @@ from ..models.game_model import Game
 from ..utilities.tokens import Token
 from ..utilities.data_validation import UserValidator
 
+import random
 
 class ResetUserStatsView(APIView):
     permission_classes = [IsAuthenticated,]
@@ -29,8 +30,8 @@ class ResetUserStatsView(APIView):
         games = [g for g in Game]
 
         for game in games:
-            new_game = GameModel(player=user, game_played=Game.CONNECT4,
-                                 did_win=False)
+            new_game = GameModel(player=user, game_played=game,
+                                 did_win=random.randint(1,10) % 2 == 0)
             new_game.save()
 
         return JsonResponse({"msg": "ok"})
