@@ -140,7 +140,7 @@ to the current game.</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>cmd: either “stand” or “hit”.</p>
 </dd>
-<dt>Returns:</dt><dd><p>True if player stands (end of game). False otherwise.</p>
+<dt>Returns:</dt><dd><p>True if player cannot draw or stands (end round). False otherwise.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -592,13 +592,43 @@ C4State.O if turn odd</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
 <p>An enumeration.</p>
 <dl class="attribute">
+<dt id="pyarcade.connection.ConnectRequest.FRIEND">
+<code class="sig-name descname">FRIEND</code><em class="property"> = 'https://cmsc435.namquach.com/api/friends/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.FRIEND" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.connection.ConnectRequest.GAMES_PLAYED">
+<code class="sig-name descname">GAMES_PLAYED</code><em class="property"> = 'https://cmsc435.namquach.com/api/games_played/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.GAMES_PLAYED" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.connection.ConnectRequest.GAMES_WIN">
+<code class="sig-name descname">GAMES_WIN</code><em class="property"> = 'https://cmsc435.namquach.com/api/game_wins/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.GAMES_WIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.connection.ConnectRequest.LEADERBOARD">
+<code class="sig-name descname">LEADERBOARD</code><em class="property"> = 'https://cmsc435.namquach.com/api/stats/board/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.LEADERBOARD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
 <dt id="pyarcade.connection.ConnectRequest.LOGIN">
-<code class="sig-name descname">LOGIN</code><em class="property"> = 'http://pyarcade_proxy/api/users/login/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.LOGIN" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">LOGIN</code><em class="property"> = 'https://cmsc435.namquach.com/api/users/login/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.LOGIN" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.connection.ConnectRequest.RESET_STAT">
+<code class="sig-name descname">RESET_STAT</code><em class="property"> = 'https://cmsc435.namquach.com/api/stats/reset/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.RESET_STAT" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyarcade.connection.ConnectRequest.SIGNUP">
-<code class="sig-name descname">SIGNUP</code><em class="property"> = 'http://pyarcade_proxy/api/users/signup/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.SIGNUP" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">SIGNUP</code><em class="property"> = 'https://cmsc435.namquach.com/api/users/signup/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.SIGNUP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyarcade.connection.ConnectRequest.STATUS">
+<code class="sig-name descname">STATUS</code><em class="property"> = 'https://cmsc435.namquach.com/api/status/'</em><a class="headerlink" href="#pyarcade.connection.ConnectRequest.STATUS" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -608,6 +638,82 @@ C4State.O if turn odd</p>
 <em class="property">class </em><code class="sig-prename descclassname">pyarcade.connection.</code><code class="sig-name descname">Connections</code><a class="headerlink" href="#pyarcade.connection.Connections" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="method">
+<dt id="pyarcade.connection.Connections.add_friend">
+<em class="property">static </em><code class="sig-name descname">add_friend</code><span class="sig-paren">(</span><em class="sig-param">username: str</em>, <em class="sig-param">token: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.add_friend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends a friend request to user/ Accepts the friend invite</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>username (): The username of the friend
+token (): The user’s token for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and a message if failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connection.Connections.get_friends">
+<em class="property">static </em><code class="sig-name descname">get_friends</code><span class="sig-paren">(</span><em class="sig-param">token: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.get_friends" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the friend list of the user</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>token (): The user’s token for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and either friend list or a message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connection.Connections.get_leaderboard">
+<em class="property">static </em><code class="sig-name descname">get_leaderboard</code><span class="sig-paren">(</span><em class="sig-param">game: str</em>, <em class="sig-param">token: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.get_leaderboard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the leader board for the desired game</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>game (): The desired game
+token (): The user’s token for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and either leaderboard or a message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connection.Connections.get_num_played">
+<em class="property">static </em><code class="sig-name descname">get_num_played</code><span class="sig-paren">(</span><em class="sig-param">game: str</em>, <em class="sig-param">token: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.get_num_played" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of games played for the desired game.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>game (): The desired game
+token (): The user’s token for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and either number of games played or a message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connection.Connections.get_num_wins">
+<em class="property">static </em><code class="sig-name descname">get_num_wins</code><span class="sig-paren">(</span><em class="sig-param">game: str</em>, <em class="sig-param">token: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.get_num_wins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of wins for the desired game.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>game (): The desired game
+token (): The user’s token for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and either number of wins or a message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connection.Connections.get_status">
+<em class="property">static </em><code class="sig-name descname">get_status</code><span class="sig-paren">(</span><em class="sig-param">token: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.get_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the profile status message</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>token (): The user’s token for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and status message or failed message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyarcade.connection.Connections.login_account">
 <em class="property">static </em><code class="sig-name descname">login_account</code><span class="sig-paren">(</span><em class="sig-param">username: str</em>, <em class="sig-param">password: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.login_account" title="Permalink to this definition">¶</a></dt>
 <dd><p>Login to an existing account.</p>
@@ -615,7 +721,20 @@ C4State.O if turn odd</p>
 <dt>Args:</dt><dd><p>username: username for account.
 password: password for account.</p>
 </dd>
-<dt>Returns:</dt><dd><p>Status code and either access / message.</p>
+<dt>Returns:</dt><dd><p>Status code and either token or a message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connection.Connections.reset_game_stat">
+<em class="property">static </em><code class="sig-name descname">reset_game_stat</code><span class="sig-paren">(</span><em class="sig-param">game: str</em>, <em class="sig-param">token: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.reset_game_stat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Resets the number of wins and games played</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>game (): The desired game
+token (): The user’s token for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and a message if failed.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -628,7 +747,34 @@ password: password for account.</p>
 <dt>Args:</dt><dd><p>username: username for account.
 password: password for account.</p>
 </dd>
-<dt>Returns:</dt><dd><p>Status code and either access / message.</p>
+<dt>Returns:</dt><dd><p>Status code and either token or a message.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connection.Connections.update_num_wins">
+<em class="property">static </em><code class="sig-name descname">update_num_wins</code><span class="sig-paren">(</span><em class="sig-param">game: str</em>, <em class="sig-param">did_win: bool</em>, <em class="sig-param">token: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.update_num_wins" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the number of wins for the desired game.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>game (): The desired game
+did_win (): Did player win the round
+token (): The user’s token for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and a message in failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyarcade.connection.Connections.update_status">
+<em class="property">static </em><code class="sig-name descname">update_status</code><span class="sig-paren">(</span><em class="sig-param">status: str</em>, <em class="sig-param">token: str</em><span class="sig-paren">)</span> &#x2192; dict<a class="headerlink" href="#pyarcade.connection.Connections.update_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update user’s status message</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>status (): New user status message
+token (): The user’s token for validation</p>
+</dd>
+<dt>Returns:</dt><dd><p>Status code and status message or failed message.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -770,7 +916,8 @@ it was submitted</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>guess: User’s card they guessed</p>
 </dd>
-<dt>Returns:</dt><dd><p>result: (bool) True if player has 4 of a kind (end of game), false otherwise.</p>
+<dt>Returns:</dt><dd><p>result: (bool) True if player has 4 of a kind (end of game),
+false otherwise.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -790,7 +937,8 @@ it was submitted</p>
 <code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[str, bool, int]<a class="headerlink" href="#pyarcade.go_fish.GoFish.get_last_turn" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns the current state of the game.</p>
 <dl class="simple">
-<dt>Returns:</dt><dd><p>Tuple containing the player’s cards, is they guessed a correct card or not, and if there is a winner.</p>
+<dt>Returns:</dt><dd><p>Tuple containing the player’s cards, is they guessed a correct
+card or not, and if there is a winner.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -950,7 +1098,7 @@ it was submitted</p>
 <span id="pyarcade-input-system-module"></span><h2>pyarcade.input_system module<a class="headerlink" href="#module-pyarcade.input_system" title="Permalink to this headline">¶</a></h2>
 <dl class="class">
 <dt id="pyarcade.input_system.InputSystem">
-<em class="property">class </em><code class="sig-prename descclassname">pyarcade.input_system.</code><code class="sig-name descname">InputSystem</code><span class="sig-paren">(</span><em class="sig-param">game: pyarcade.game_option.Game = &lt;Game.MASTERMIND: 'Mastermind'&gt;</em>, <em class="sig-param">difficulty=&lt;Difficulty.NORMAL: 'Normal'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.input_system.InputSystem" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">pyarcade.input_system.</code><code class="sig-name descname">InputSystem</code><span class="sig-paren">(</span><em class="sig-param">game: pyarcade.game_option.Game = &lt;Game.MASTERMIND: 'Mastermind'&gt;</em>, <em class="sig-param">difficulty=&lt;Difficulty.NORMAL: 'Normal'&gt;</em>, <em class="sig-param">ai=True</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.input_system.InputSystem" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>Represents input system for validation and game usage.
 And executes commands on user input.</p>
@@ -1228,8 +1376,8 @@ Generate new sequence.</p>
 <dt>Args:</dt><dd><p>card_one: Player one card.
 card_two: Player two card.</p>
 </dd>
-<dt>Returns:</dt><dd><p>Positive number if player one wins turn, negative if player two wins
-turn, zero if there is a war.</p>
+<dt>Returns:</dt><dd><p>Positive number if player one wins turn, negative if player two
+wins turn, zero if there is a war.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1278,7 +1426,7 @@ turn, zero if there is a war.</p>
 
 <dl class="method">
 <dt id="pyarcade.war.War.get_last_turn">
-<code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><em class="sig-param">) -&gt; (&lt;class 'str'&gt;</em>, <em class="sig-param">&lt;class 'str'&gt;</em>, <em class="sig-param">&lt;class 'int'&gt;</em>, <em class="sig-param">&lt;class 'int'&gt;</em>, <em class="sig-param">&lt;class 'bool'&gt;</em>, <em class="sig-param">&lt;class 'int'&gt;</em><span class="sig-paren">)</span><a class="headerlink" href="#pyarcade.war.War.get_last_turn" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">get_last_turn</code><span class="sig-paren">(</span><span class="sig-paren">)</span> &#x2192; Tuple[str, str, int, int, bool, int]<a class="headerlink" href="#pyarcade.war.War.get_last_turn" title="Permalink to this definition">¶</a></dt>
 <dd><dl class="simple">
 <dt>Returns:</dt><dd><p>A Tuple containing:
 str: Player One’s card.
