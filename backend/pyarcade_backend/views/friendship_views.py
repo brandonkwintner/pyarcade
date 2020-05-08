@@ -24,7 +24,8 @@ class FriendshipView(APIView):
 
         Returns:
             JSON Object with a list of all friendships for requesting user.
-            This will also show all pending requests, so user knows they have requests pending
+            This will also show all pending requests,
+            so user knows they have requests pending
         """
         user = UserValidator.validate_user(request.user.id)
 
@@ -34,8 +35,9 @@ class FriendshipView(APIView):
             }, status=400)
 
         # grab all friendships that this user has in the database
-        friends_list = FriendshipModel.objects.filter(Q(user_one=user.username) | Q(user_two=user.username),
-                                                      Q(friendship_status="friends") | Q(friendship_status="pending"))
+        friends_list = FriendshipModel.objects.filter(
+            Q(user_one=user.username) | Q(user_two=user.username),
+            Q(friendship_status="friends") | Q(friendship_status="pending"))
 
         # this list will just contain the friends of the user as Strings
         filtered_friends_list = []
@@ -45,9 +47,11 @@ class FriendshipView(APIView):
                 friend_string += "(Pending) "
 
             if friendship["user_one"] != user.username:
-                filtered_friends_list.append(friend_string + friendship["user_one"])
+                filtered_friends_list.append(
+                    friend_string + friendship["user_one"])
             elif friendship["user_two"] != user.username:
-                filtered_friends_list.append(friend_string + friendship["user_two"])
+                filtered_friends_list.append(
+                    friend_string + friendship["user_two"])
 
         token = Token.get_tokens_for_user(user)
 
@@ -65,10 +69,10 @@ class FriendshipView(APIView):
             request: contains a JSON object in the form: {
                                                             "user2": username
                                                          }
-            **status can only be one of three strings:
-                "friends": this would be the equivalent of accepting a friend request
-                "not friends": this would be the equivalent of un-friending someone
-                "": this would be a new friend request
+        **status can only be one of three strings:
+            "friends": equivalent of accepting a friend request
+            not friends": this would be the equivalent of un-friending someone
+            "": this would be a new friend request
 
         Returns:
             JSON response of the Friendship created/updated.
@@ -104,7 +108,8 @@ class FriendshipView(APIView):
             }, status=400)
 
         try:
-            FriendshipModel.objects.get(user_one=user1.username, user_two=user2.username)
+            FriendshipModel.objects.get(user_one=user1.username,
+                                        user_two=user2.username)
             return JsonResponse({
                 "message": "Already exists.",
             }, status=400)
@@ -115,16 +120,21 @@ class FriendshipView(APIView):
         except FriendshipModel.DoesNotExist:
             pass
 
-        # if the friendship already exists, then a user must be accepting the request
+        # the friendship already exists,
+        # then a user must be accepting the request
         try:
-            friendship = FriendshipModel.objects.get(user_two=user1.username, user_one=user2.username)
+            friendship = FriendshipModel.objects.get(user_two=user1.username,
+                                                     user_one=user2.username)
             friendship.friendship_status = "friends"
         except FriendshipModel.MultipleObjectsReturned:
             return JsonResponse({
                 "message": "Already exists.",
             }, status=400)
-        except FriendshipModel.DoesNotExist:  # if friendship does not exists, this should be a friend request
-            friendship = FriendshipModel(user_one=user1.username, user_two=user2.username, friendship_status="pending")
+        except FriendshipModel.DoesNotExist:
+            # if friendship does not exists, this should be a friend request
+            friendship = FriendshipModel(user_one=user1.username,
+                                         user_two=user2.username,
+                                         friendship_status="pending")
 
         friendship.save()
 

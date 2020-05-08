@@ -15,7 +15,7 @@ class Friendship(Enum):
 class FriendshipModel(models.Model):
     """
         Friendship table in the database.
-        Note: The users in each entry are in alphabetical order base on username.
+        Note: Users in each entry are in alphabetical order base on username.
     """
 
     user_one = models.CharField(max_length=30)
