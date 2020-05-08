@@ -17,13 +17,13 @@ https://cmsc435.garrettvanhoy.com/group_01_group/group_01_server
 1. ```docker-compose down```
 
 # Users
-login: alice
+login: alice  
 pass: password
-\
-login: bob
+
+login: bob  
 pass: password
-\
-login: eve
+
+login: eve  
 pass: password
 
 
