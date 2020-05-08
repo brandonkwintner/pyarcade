@@ -3,7 +3,8 @@ from enum import Enum
 
 
 class ConnectRequest(Enum):
-    _server_address = "http://pyarcade_proxy/api"
+    _server_address = "https://cmsc435.namquach.com/api"
+    # _server_address = "http://pyarcade_proxy/api"
     SIGNUP = _server_address + "/users/signup/"
     LOGIN = _server_address + "/users/login/"
     GAMES_WIN = _server_address + "/game_wins/"
