@@ -1,5 +1,3 @@
-from enum import Enum
-
 from django.http import JsonResponse
 
 from rest_framework.views import APIView
@@ -7,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 
 from ..models.game_model import GameModel
 from ..models.game_model import Game
-from ..models.user_model import UserModel
 from ..utilities.tokens import Token
+from ..utilities.data_validation import UserValidator
 
 
 class GamesPlayedView(APIView):
@@ -21,20 +19,33 @@ class GamesPlayedView(APIView):
         game.
 
         Ex) .../games_played?game=war DO NOT INCLUDE A " / " AFTER THE GAME!!
+
+        Returns:
+            JSON response.
         """
-        user_id = request.user.id
-        user = GamesPlayedView.validate_user(user_id)
+        user = UserValidator.validate_user(request.user.id)
         queries = request.GET.dict()
 
+        if user is None:
+            return JsonResponse({
+                "message": "Invalid credentials."
+            }, status=400)
+
         if len(queries) == 0:
-            game = "ALL"
-            games_played = len(GameModel.objects.filter(player__exact=user))
+            game = "All"
+            games_played = len(GameModel.objects.filter(player=user,
+                                                        is_deleted=False))
         elif len(queries) == 1:
-            game = GamesPlayedView.validate_game(queries['game'].lower())
-            games_played = len(GameModel.objects.filter(player__exact=user,
-                                                        game_played__exact=game)
-                               )
-            game = game.name
+            game = Game.value_of(queries['game'].lower())
+            if game is None:
+                return JsonResponse({
+                    "message": "Invalid request."
+                }, status=400)
+            else:
+                games_played = len(GameModel.objects.filter(player=user,
+                                                            game_played= game,
+                                                            is_deleted=False))
+                game = game.value
         else:
             return JsonResponse({
                 "message": "Invalid URL."
@@ -44,41 +55,8 @@ class GamesPlayedView(APIView):
 
         return JsonResponse({
             "username": user.username,
-            "game": str(game),
+            "game": game,
             "games_played": games_played,
             "access": token["access"],
             "refresh": token["refresh"],
         })
-
-    @staticmethod
-    def validate_user(user_id) -> int:
-        """
-        Args:
-            user_id: username to be checked
-
-        Returns:
-            Nothing or a status 400 error.
-        """
-        try:
-            user = UserModel.objects.get(id__iexact=user_id)
-        except UserModel.DoesNotExist:
-            return JsonResponse({
-                "message": "Invalid credentials."
-            }, status=400)
-        return user
-
-    @staticmethod
-    def validate_game(game: str) -> Enum:
-        """
-        Args:
-            game: game to be checked
-
-        Returns:
-            Game Enum or a status 400 error.
-        """
-        if Game.value_of(game) == Game.INVALID_GAME:
-            return JsonResponse({
-                "message": "Invalid game."
-            }, status=400)
-        else:
-            return Game.value_of(game)

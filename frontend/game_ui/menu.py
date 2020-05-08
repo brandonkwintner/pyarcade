@@ -7,17 +7,21 @@ from game_ui.war_ui import WarUI
 from game_ui.go_fish_ui import GoFishUI
 from game_ui.horseman_ui import HorsemanUI
 from game_ui.display_ui import Display
-from typing import List
+from pyarcade.game_option import Game
 import curses
 
 
 class Menu:
+    """
+    UI for menus.
+    """
+
     def __init__(self):
         self.window = curses.initscr()
         curses.noecho()
         curses.cbreak()
         curses.start_color()
-        self.user = ""
+        self.user = {"username": "", "token": ""}
 
         self.window.keypad(True)
         self.scroll_idx = 1
@@ -38,117 +42,179 @@ class Menu:
         curses.echo()
         curses.endwin()
 
-    def main_menu(self) -> List[str]:
-        menu_option = Options.MAIN_MENU_OPTIONS.value
-        result = []
+    def main_menu(self):
+        """
+        UI for main menu.
+        """
+        display = ["Pyarcade", ""]
 
         while True:
-            self.display.display_options(menu_option, ["Pyarcade"])
+            if self.is_login:
+                menu_option = Options.MAIN_MENU_START.value
+            else:
+                menu_option = Options.MAIN_MENU_OPTIONS.value
+
+            self.display.display_options(menu_option, display)
             self.scroll_idx = self.display.scroll_options(menu_option,
-                                                          ["Pyarcade"])
+                                                          display)
 
             if menu_option[self.scroll_idx] == "Play Games":
-                result = self.game_menu()
+                self.game_menu()
 
-            elif menu_option[self.scroll_idx] == "Options":
-                result = self.options_menu()
+            elif menu_option[self.scroll_idx] == "Signup":
+                username, password = self.display.account_login_signup(True)
+                status = Connections.sign_up_account(username.strip(),
+                                                     password.strip())
+                if status["code"] == 200:
+                    self.user["username"] = "Hello " + username
+                    self.user["token"] = status["access"]
+                    self.display.user = self.user
+                    self.is_login = True
+                    display[1] = ""
+
+                else:
+                    display[1] = status["message"]
+
+            elif menu_option[self.scroll_idx] == "Login":
+                username, password = self.display.account_login_signup(False)
+                status = Connections.login_account(username.strip(),
+                                                   password.strip())
+                if status["code"] == 200:
+                    self.user["username"] = "Hello, " + username
+                    self.user["token"] = status["access"]
+                    self.display.user = self.user
+                    self.is_login = True
+                    display[1] = ""
+
+                else:
+                    display[1] = status["message"]
+
+            elif menu_option[self.scroll_idx] == "Logout":
+                self.user = {"username": "", "token": ""}
+                self.display.user = {"username": "", "token": ""}
+                self.is_login = False
+
+            elif menu_option[self.scroll_idx] == "About":
+                self.display.about_screen()
+
+            elif menu_option[self.scroll_idx] == "Profile":
+                self.profile_menu()
+
+            elif menu_option[self.scroll_idx] == "Friends":
+                self.friend_menu()
 
             elif self.scroll_idx == len(menu_option) - 1:
-                # result = menu_option
                 self.close_curse()
                 break
-            self.display.scroll_idx = 1
-        return result
 
-    def game_menu(self) -> List[str]:
+            self.display.scroll_idx = 1
+
+    def game_menu(self):
+        """
+        UI for game menu.
+        """
         games = Options.GAME_OPTIONS.value
-        result = []
+        self.display.scroll_idx = 1
 
         while True:
             self.display.display_options(games, ["Game List"])
             self.scroll_idx = self.display.scroll_options(games, ["Game List"])
 
             if games[self.scroll_idx] == "Play Mastermind":
-                result = MastermindUI(self.window, self.scroll_idx, self.user) \
-                    .mastermind_menu()
+                MastermindUI(self.window, self.user).mastermind_menu()
 
             elif games[self.scroll_idx] == "Play Connect Four":
-                result = Connect4UI(self.window, self.scroll_idx, self.user) \
-                    .connect_four_menu()
+                Connect4UI(self.window, self.user).connect_four_menu()
 
             elif games[self.scroll_idx] == "Play Blackjack":
-                result = BlackjackUI(self.window, self.scroll_idx, self.user) \
-                    .blackjack_menu()
+                BlackjackUI(self.window, self.user).blackjack_menu()
 
             elif games[self.scroll_idx] == "Play War":
-                result = WarUI(self.window, self.scroll_idx,
-                               self.user).war_menu()
+                WarUI(self.window, self.user).war_menu()
 
             elif games[self.scroll_idx] == "Play Go Fish":
-                result = GoFishUI(self.window, self.scroll_idx,
-                                  self.user).go_fish_menu()
+                GoFishUI(self.window, self.user).go_fish_menu()
 
             elif games[self.scroll_idx] == "Play Horseman":
-                result = HorsemanUI(self.window, self.scroll_idx,
-                                  self.user).horseman_menu()
+                HorsemanUI(self.window, self.user).horseman_menu()
 
             elif self.scroll_idx == len(games) - 1:
-                result = games
                 break
 
-        return result
+    def friend_menu(self):
+        """UI for friend menu.
+        """
 
-    def options_menu(self) -> List[str]:
-        if self.is_login:
-            option_list = Options.FEATURE_LOGOUT_OPTIONS.value
-        else:
-            option_list = Options.FEATURE_OPTIONS.value
-        display_list = ['Options', '']
+        menu_option = Options.FRIEND_OPTION.value
+        info = ["Friend List", ""]
         self.display.scroll_idx = 1
 
         while True:
-            self.display.display_options(option_list, display_list)
-            self.scroll_idx = self.display.scroll_options(option_list,
-                                                          display_list)
+            self.display.display_options(menu_option, info)
+            self.scroll_idx = self.display.scroll_options(menu_option, info)
 
-            if option_list[self.scroll_idx] == "Signup":
-                username, password = self.display.account_login_signup(True)
-                status = Connections.sign_up_account(username.strip(),
-                                                     password.strip())
-                if status["code"] == 200:
-                    self.user = "Hello " + username
-                    self.display.user = self.user
-                    self.is_login = True
-                    break
+            if menu_option[self.scroll_idx] == "Friend List":
+                friends = Connections.get_friends(self.user["token"])
+                self.display.display_friend_list(friends["friends"])
+
+            elif menu_option[self.scroll_idx] == "Add Friend":
+                username = self.display.friend_username().strip()
+                status = Connections.add_friend(username, self.user["token"])
+
+                if status["code"] != 200:
+                    info[1] = status["message"]
                 else:
-                    display_list[1] = status["message"]
+                    info[1] = "Friend Added"
 
-            elif option_list[self.scroll_idx] == "Login":
-                username, password = self.display.account_login_signup(False)
-                status = Connections.login_account(username.strip(),
-                                                   password.strip())
-                if status["code"] == 200:
-                    self.user = "Hello " + username
-                    self.display.user = self.user
-                    self.is_login = True
-                    break
-                else:
-                    display_list[1] = status["message"]
-
-            elif option_list[self.scroll_idx] == "Logout":
-                self.user = ""
-                self.display.user = ""
-                self.is_login = False
-                option_list = Options.FEATURE_OPTIONS.value
-
-            elif option_list[self.scroll_idx] == "About":
-                self.display.about_screen()
-
-            elif self.scroll_idx == len(option_list) - 1:
-                self.scroll_idx = 1
+            elif self.scroll_idx == len(menu_option) - 1:
                 break
 
-        return option_list
+    def profile_menu(self):
+        """UI for profile menu
+        """
+
+        menu_option = Options.PROFILE_OPTION.value
+        info = ["Profile", ""]
+        self.display.scroll_idx = 1
+
+        while True:
+            self.display.display_options(menu_option, info)
+            self.scroll_idx = self.display.scroll_options(menu_option, info)
+
+            if menu_option[self.scroll_idx] == "User Profile":
+                self.user_profile()
+
+            elif menu_option[self.scroll_idx] == "Update Status":
+                message = self.display.user_message().strip()
+                status = Connections.update_status(message, self.user["token"])
+
+                if status["code"] != 200:
+                    info[1] = status["message"]
+                else:
+                    info[1] = ""
+
+            elif self.scroll_idx == len(menu_option) - 1:
+                break
+
+    def user_profile(self):
+        """UI for user profile page
+        """
+        token = self.user["token"]
+
+        wins_list = {"total": Connections.get_num_wins("all", token)["wins"]}
+        total_list = {"total": Connections.get_num_played("all", token)
+                      ["played"]}
+
+        games = [g for g in Game]
+
+        for game in games:
+            wins_list[game] = Connections.get_num_wins(game, token)["wins"]
+            total_list[game] = Connections.get_num_played(game, token)[
+                "played"]
+
+        message = Connections.get_status(token)["status"]
+
+        self.display.display_profile_page(wins_list, total_list, message)
 
     @staticmethod
     def run():
@@ -157,5 +223,5 @@ class Menu:
 
 
 if __name__ == "__main__":
-    menu = Menu()
-    menu.main_menu()
+    option = Menu()
+    option.main_menu()

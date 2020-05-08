@@ -8,18 +8,18 @@ class Game(Enum):
     """ Enum representing each game.
     """
 
-    MASTERMIND = "mastermind"
-    CONNECT4 = "connect4"
-    BLACKJACK = "blackJack"
-    WAR = "war"
-    GO_FISH = "go_fish"
-    HORSEMAN = "horseman"
-    INVALID_GAME = "invalidGame"
+    MASTERMIND = "Mastermind"
+    CONNECT4 = "Connect 4"
+    BLACKJACK = "Blackjack"
+    WAR = "War"
+    GO_FISH = "Go Fish"
+    HORSEMAN = "Horseman"
 
     @classmethod
     def value_of(cls, game_str: str) -> Enum:
         """
-        Converts a string into a game enum
+        Converts a string into a game enum.
+
         Args:
             game_str: string to convert
 
@@ -27,21 +27,23 @@ class Game(Enum):
             Game enum
         """
 
-        if game_str in ("mastermind", "Game.MASTERMIND",):
+        game_str = game_str.lower()
+
+        if game_str in ("mastermind", "game.mastermind",):
             return cls.MASTERMIND
         elif game_str in ("connect4", "connect 4", "connect four",
-                          "Game.CONNECT4",):
+                          "game.connect4",):
             return cls.CONNECT4
-        elif game_str in ("blackjack", "Game.BLACKJACK",):
+        elif game_str in ("blackjack", "game.blackjack",):
             return cls.BLACKJACK
-        elif game_str in ("war", "Game.WAR",):
+        elif game_str in ("war", "game.war",):
             return cls.WAR
-        elif game_str in ("go_fish", "go fish", "Game.GO_FISH",):
+        elif game_str in ("go_fish", "go fish", "game.go_fish",):
             return cls.GO_FISH
-        elif game_str in ("horseman", "Game.HORSEMAN"):
+        elif game_str in ("horseman", "game.horseman"):
             return cls.HORSEMAN
         else:
-            return cls.INVALID_GAME
+            return None
 
 
 class GameModel(models.Model):

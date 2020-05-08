@@ -3,10 +3,11 @@ from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 
+from distutils.util import strtobool
 from ..models.game_model import GameModel
 from ..models.game_model import Game
-from ..models.user_model import UserModel
 from ..utilities.tokens import Token
+from ..utilities.data_validation import UserValidator
 
 
 class GameWinsView(APIView):
@@ -18,31 +19,39 @@ class GameWinsView(APIView):
         When args contains an argument - Returns number of wins for that
         game.
 
-        Ex) .../game_wins?game=war DO NOT INCLUDE A " / " AFTER THE GAME!!
-        """
-        user_id = request.user.id
+        Ex) .../game_wins/?game=war DO NOT INCLUDE A " / " AFTER THE GAME!!
 
-        try:
-            user = UserModel.objects.get(id__iexact=user_id)
-        except UserModel.DoesNotExist:
+        Returns:
+            JSON response.
+        """
+
+        user = UserValidator.validate_user(request.user.id)
+
+        if user is None:
             return JsonResponse({
-                "message": "Invalid credentials."
+                "message": "Invalid credentials.",
             }, status=400)
 
         queries = request.GET.dict()
 
         if len(queries) == 0:
-            game = "All Games"
-            total_games_won = len(GameModel.objects.filter(player__exact=user, did_win__exact=True))
+            game = "All"
+            total_games_won = len(GameModel.objects.filter(player=user,
+                                                           did_win=True,
+                                                           is_deleted=False))
         elif len(queries) == 1:
-            game = queries['game'].lower()
-            if Game.value_of(game) == Game.INVALID_GAME:
+            game = Game.value_of(queries['game'].lower())
+            if game is None:
                 return JsonResponse({
-                    "message": "Invalid game."
+                    "message": "Invalid request."
                 }, status=400)
             else:
-                total_games_won = len(GameModel.objects.filter(player__exact=user, did_win__exact=True,
-                                                               game_played__exact=game))
+                total_games_won = len(GameModel.objects
+                                      .filter(player=user,
+                                              did_win=True,
+                                              game_played__iexact=game,
+                                              is_deleted=False))
+                game = game.value
         else:
             return JsonResponse({
                 "message": "Invalid URL."
@@ -52,8 +61,53 @@ class GameWinsView(APIView):
 
         return JsonResponse({
             "username": user.username,
-            "game": str(game),
-            "Wins": total_games_won,
+            "game": game,
+            "wins": total_games_won,
+            "access": token["access"],
+            "refresh": token["refresh"],
+        })
+
+    def post(self, request):
+        """
+        Add new game played to database.
+        Args:
+            request: contains a JSON object in the form: {
+                                                            "game" : game,
+                                                            "won" : bool
+                                                         }
+        Returns:
+            JSON response.
+        """
+        user = UserValidator.validate_user(request.user.id)
+
+        if user is None:
+            return JsonResponse({
+                "message": "Invalid credentials.",
+            }, status=400)
+
+        queries = request.POST.dict()
+        game = Game.value_of(queries['game'].lower())
+
+        if game is None:
+            return JsonResponse({
+                "message": "Invalid request."
+            }, status=400)
+
+        # creating game and adding it to the database
+        try:
+            won = strtobool(queries["won"])
+
+        except (KeyError, ValueError, Exception):
+            return JsonResponse({
+                "message": "Invalid request."
+            }, status=400)
+
+        new_game = GameModel(player=user, game_played=game, did_win=won)
+        new_game.save()
+
+        token = Token.get_tokens_for_user(user)
+
+        return JsonResponse({
             "access": token["access"],
             "refresh": token["refresh"],
         })

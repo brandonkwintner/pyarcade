@@ -4,18 +4,25 @@ from pyarcade.blackjack_players import BlackJackWinner
 
 import unittest
 import copy
+import math
 
 
 class BlackJackTestCase(unittest.TestCase):
     @staticmethod
     def _hand_to_str(hand):
         hand_str = ""
+        total = 0
         for card in hand:
             if card[0].name == Ranks.ONE.name:
                 hand_str += "ACE, "
+                total += 1
             else:
                 hand_str += card[0].name + ", "
-        return hand_str[:-2]
+                total += card[0].value
+
+        hand_str = hand_str[:-2]
+        hand_str += ": " + str(math.floor(total))
+        return hand_str
 
     def test_create_deck(self):
         game = Blackjack()

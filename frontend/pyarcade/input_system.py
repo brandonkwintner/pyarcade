@@ -15,7 +15,8 @@ class InputSystem:
         And executes commands on user input.
 
     """
-    def __init__(self, game: Game = Game.MASTERMIND, difficulty=Difficulty.NORMAL):
+    def __init__(self, game: Game = Game.MASTERMIND,
+                 difficulty=Difficulty.NORMAL, ai=True):
         """ Input System session.
 
             Args:
@@ -24,7 +25,7 @@ class InputSystem:
         """
         # other parameters starts mastermind game by default
         if game == Game.CONNECT4:
-            self.game = Connect4(True)
+            self.game = Connect4(ai)
         elif game == Game.BLACKJACK:
             self.game = Blackjack()
         elif game == Game.WAR:

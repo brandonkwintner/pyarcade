@@ -1,5 +1,7 @@
 import random
 from enum import Enum
+from typing import Tuple
+
 from pyarcade.cards import Suits
 from pyarcade.abstract_game import AbstractGame
 
@@ -84,6 +86,7 @@ class War(AbstractGame):
         """
         Case where turn results in a war. Each player adds 3 additional cards
         to the pile before playing a new turn.
+
         Args:
             pile: Cards to be given to winner of turn.
 
@@ -129,7 +132,7 @@ class War(AbstractGame):
             self.update_entire_history()
             return False
 
-    def get_last_turn(self) -> (str, str, int, int, bool, int):
+    def get_last_turn(self) -> Tuple[str, str, int, int, bool, int]:
         """
         Returns:
             A Tuple containing:
@@ -242,8 +245,8 @@ class War(AbstractGame):
             card_two: Player two card.
 
         Returns:
-            Positive number if player one wins turn, negative if player two wins
-            turn, zero if there is a war.
+            Positive number if player one wins turn, negative if player two
+            wins turn, zero if there is a war.
         """
         if card_one[0].value > card_two[0].value:
             return 1
@@ -256,6 +259,7 @@ class War(AbstractGame):
     def get_regex_pattern() -> str:
         """
         Gets regex pattern for War.
+        
         Returns:
             Pattern match for game.
         """
